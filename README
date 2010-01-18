@@ -1,0 +1,19 @@
+2010-01-17
+
+I would like to be able to examine teamcity build configurations,
+so that I can see the interesting things at a glance.
+
+I have tried using the API itself to no avail, there seems to be no way to connect
+directly to teamcity via http.
+
+They tell me the way this is done is via some XML file exposed over HTTP.
+And that to expose it, a plugin is required:
+
+    @spav5: sounds like you need to export build configuration settings to xml format.
+    in fact they are in xml on disk, in config dir
+
+    @me: Can't I connect directly?
+
+    @spav5: there is no way to get these xml files by http, this can be done with help of a simple plugin
+
+See: http://www.jetbrains.net/confluence/display/TCD4/Plugins+Packaging
