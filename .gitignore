@@ -1,2 +1,4 @@
-.idea/
+.idea/copyright
+.idea/inspectionProfiles
+.idea/*.xml
 out/
