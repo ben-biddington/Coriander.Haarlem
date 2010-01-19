@@ -1,3 +1,5 @@
 package coriander.haarlem.plugins
 
-class SimplePlugin {}
+import jetbrains.buildServer.serverSide.BuildServerAdapter
+
+class SimplePlugin extends BuildServerAdapter { }

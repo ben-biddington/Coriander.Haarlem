@@ -17,3 +17,4 @@ And that to expose it, a plugin is required:
     @spav5: there is no way to get these xml files by http, this can be done with help of a simple plugin
 
 See: http://www.jetbrains.net/confluence/display/TCD4/Plugins+Packaging
+See: http://javadoc.jetbrains.net/teamcity/openapi/current/index-all.html
