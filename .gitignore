@@ -1,4 +1,5 @@
 .idea/copyright
 .idea/inspectionProfiles
 .idea/*.xml
+!.idea/libraries/
 out/
