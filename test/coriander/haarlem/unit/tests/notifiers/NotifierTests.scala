@@ -11,8 +11,9 @@ import jetbrains.buildServer.serverSide.SRunningBuild
 import jetbrains.buildServer.users.SUser
 import coriander.haarlem.notifiers.{Notifier}
 import java.util.HashSet
+import coriander.haarlem.unit.tests.UnitTest
 
-class NotifierTests {
+class NotifierTests extends UnitTest {
     @Test
 	def notifyBuildStarted_reads_the_current_build_path {
 		given_any_running_build
@@ -23,12 +24,4 @@ class NotifierTests {
 
 		verify(mockRunningBuild, times(1)).getCurrentPath()
     }
-
-	private def given_any_running_build {
-		mockRunningBuild = mock(classOf[SRunningBuild])
-		when(mockRunningBuild.getCurrentPath()).
-		thenReturn("xxx");
-	}
-
-	var mockRunningBuild : SRunningBuild = null
 }
