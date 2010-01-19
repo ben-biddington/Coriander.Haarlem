@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<project name="jarify" basedir=".">
+    <property name="app.name" value="Coriander.Haarlem"/>
+    <property name="plugin.name" value="simple-plugin"/>
+    <property name="app.path" value="/${app.name}"/>
+    <property name="app.version" value="0.0.1"/>
+    <property name="src.home" value="${basedir}/src"/>
+    <property name="build.home" value="${basedir}/out"/>
+    <property name="jar.home" value="${build.home}/jar"/>
+    <property name="jar.name" value="${plugin.name}-${app.version}.jar"/>
+
+    <target name="clean">
+        <delete dir="${jar.home}" verbose="true"/>
+    </target>
+
+    <target name="jar" depends="clean">
+        <mkdir dir="${jar.home}"/>
+        <jar
+            destfile="${jar.home}/${jar.name}"
+            basedir="${build.home}/production/${app.name}"
+        >
+            <metainf dir="${basedir}">
+                <include name="build-server-plugin-simple-plugin.xml" />
+            </metainf>
+            <manifest>
+                <attribute name="Author" value="Various"/>
+                <attribute name="Version" value="${app.version}"/>
+            </manifest>
+        </jar>
+    </target>
+</project>

@@ -20,6 +20,7 @@ class SimplePluginTests extends UnitTest {
 	@Test
 	def before_build_finish_adds_a_custom_message {
 		given_any_running_build
+		
     	val plugin = new SimplePlugin;
 
 		plugin.beforeBuildFinish(mockRunningBuild)
