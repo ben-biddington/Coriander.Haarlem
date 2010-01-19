@@ -6,13 +6,16 @@ import jetbrains.buildServer.responsibility.TestNameResponsibilityEntry
 import jetbrains.buildServer.serverSide.{SProject, SBuildType, SRunningBuild}
 import jetbrains.buildServer.vcs.VcsRoot
 import jetbrains.buildServer.users.SUser
+import java.util.Set
 
 class Notifier extends Notificator {
 	def getDisplayName = "xxx"
 
 	def getNotificatorType = "xxx"
 
-	def notifyBuildStarted(runningBuild : SRunningBuild, users : Set[SUser]) { }
+	def notifyBuildStarted(runningBuild : SRunningBuild, users : Set[SUser]) {
+		val theBuildPath = runningBuild.getCurrentPath;
+	}
 
     def notifyBuildSuccessful(runningBuild : SRunningBuild, users : Set[SUser]) {}
 
@@ -41,9 +44,9 @@ class Notifier extends Notificator {
 	) { }
 
     def notifyResponsibleAssigned(
-		testNameResponsibilityEntry : TestNameResponsibilityEntry ,
-		testNameResponsibilityEntry1 : TestNameResponsibilityEntry ,
+		testNameResponsibilityEntry : TestNameResponsibilityEntry,
+		testNameResponsibilityEntry1 : TestNameResponsibilityEntry,
 		project : SProject,
 		users : Set[SUser]
-	) {}
+	) { }
 }
