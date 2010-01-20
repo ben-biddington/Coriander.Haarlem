@@ -16,6 +16,7 @@
     <orderEntry type="library" name="lib" level="project" />
     <orderEntry type="library" name="spring" level="project" />
     <orderEntry type="library" name="jswdk" level="project" />
+    <orderEntry type="library" name="teamcity" level="project" />
   </component>
 </module>
 
