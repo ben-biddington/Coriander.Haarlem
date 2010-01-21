@@ -4,7 +4,7 @@ import jetbrains.buildServer.controllers.BaseController
 import org.springframework.web.servlet.ModelAndView
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import jetbrains.buildServer.serverSide.SBuildServer
-import org.coriander.{QueryParser, Query}
+import org.coriander.{QueryParser}
 
 class LogSearchController(buildServer : SBuildServer) extends BaseController(buildServer) {
 	def this() = this(null)
