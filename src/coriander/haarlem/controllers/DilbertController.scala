@@ -17,13 +17,14 @@ class DilbertController extends BaseController {
 				"<body>" +
 				"	<img src=\"" + getLatestDilbert + "\" />" +
 				"</body>" +
-			"</html>");
+			"</html>"
+		);
 
 		null
 	}
 
 	private def getLatestDilbert = {
-		// http://feeds.dilbert.com/DilbertDailyStrip?format=xml
+		// TODO: Get latest from: http://feeds.dilbert.com/DilbertDailyStrip?format=xml
 		"http://dilbert.com/dyn/str_strip/000000000/" +
 		"00000000/0000000/000000/70000/9000/500/79578/79578.strip.gif"
 	}
