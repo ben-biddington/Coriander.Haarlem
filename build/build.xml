@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<project name="jarify" basedir="..\">
+    <property name="app.name" value="Coriander.Haarlem"/>
+    <property name="plugin.name" value="coriander-haarlem-simple-plugin"/>
+    <property name="app.path" value="\${app.name}"/>
+    <property name="app.version" value="0.0.1"/>
+    <property name="src.home" value="${basedir}\src"/>
+    <property name="build.home" value="${basedir}\out"/>
+    <property name="jar.home" value="${build.home}\jar"/>
+    <property name="jar.name" value="${plugin.name}-${app.version}.jar"/>
+
+    <target name="clean">
+        <delete dir="${jar.home}" verbose="true"/>
+    </target>
+
+    <target name="jar" depends="clean">
+        <mkdir dir="${jar.home}"/>
+        <echo message="${basedir}\src\coriander\haarlem\views\simpleView.jsp" />
+                   
+        <jar
+            destfile="${jar.home}\${jar.name}"
+            basedir="${build.home}\production\${app.name}"
+        >
+            <metainf dir="${basedir}\build">
+                <include name="build-server-plugin-jlogsearchcontroller.xml" />
+                <include name="build-server-plugin-dilbertcontroller.xml" />
+            </metainf>
+            <metainf dir="${basedir}\src\coriander\haarlem\views">
+                <include name="simpleView.jsp" />
+            </metainf>
+            <manifest>
+                <attribute name="Author" value="Various"/>
+                <attribute name="Version" value="${app.version}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="local.deploy" depends="jar">
+        <exec executable="cmd">
+            <arg value="/c"/>
+            <arg value="local.deploy.bat ${jar.home}\${jar.name}"/>
+            <arg value="-p"/>
+        </exec>
+        <antcall target="local.teamcity.restart" />
+    </target>
+
+    <target name="local.teamcity.restart">
+        <exec executable="cmd">
+            <arg value="/c"/>
+            <arg value="restart-teamcity.bat ${jar.home}"/>
+            <arg value="-p"/>
+        </exec>
+    </target>
+</project>
