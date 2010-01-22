@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project name="jarify" basedir=".">
     <property name="app.name" value="Coriander.Haarlem"/>
-    <property name="plugin.name" value="simple-plugin"/>
+    <property name="plugin.name" value="coriander-haarlem-simple-plugin"/>
     <property name="app.path" value="/${app.name}"/>
     <property name="app.version" value="0.0.1"/>
     <property name="src.home" value="${basedir}/src"/>
@@ -20,7 +20,8 @@
             basedir="${build.home}/production/${app.name}"
         >
             <metainf dir="${basedir}">
-                <include name="build-server-plugin-simple-plugin.xml" />
+                <include name="build-server-plugin-jlogsearchcontroller.xml" />
+                <include name="build-server-plugin-dilbertcontroller.xml" />
             </metainf>
             <manifest>
                 <attribute name="Author" value="Various"/>
