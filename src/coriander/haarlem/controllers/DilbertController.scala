@@ -20,6 +20,8 @@ class DilbertController extends BaseController {
 			"</html>"
 		);
 
+		// TODO: The following fails because the jsp file cannot be located
+		// new ModelAndView("simpleView.jsp", null)
 		null
 	}
 
