@@ -22,8 +22,7 @@
             basedir="${build.home}\production\${app.name}"
         >
             <metainf dir="${basedir}\build">
-                <include name="build-server-plugin-jlogsearchcontroller.xml" />
-                <include name="build-server-plugin-dilbertcontroller.xml" />
+                <include name="build-server-plugin-coriander-haarlem.xml" />
             </metainf>
             <metainf dir="${basedir}\src\coriander\haarlem\views">
                 <include name="simpleView.jsp" />

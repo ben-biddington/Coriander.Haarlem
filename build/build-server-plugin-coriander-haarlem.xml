@@ -2,6 +2,7 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans default-autowire="constructor">
+     <bean id="DilbertController" class="coriander.haarlem.controllers.DilbertController" />
      <bean id="JLogSearchController" class="coriander.haarlem.controllers.JLogSearchController" />
 </beans>
         
