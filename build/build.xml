@@ -11,12 +11,18 @@
 
     <target name="clean">
         <delete dir="${jar.home}" verbose="true"/>
+        <delete dir="${basedir}\buildServerResources" verbose="false"/>
     </target>
 
-    <target name="jar" depends="clean">
+    <target name="package.buildServerResources">
+        <copyfile
+            src="${basedir}\src\coriander\haarlem\views\simpleView.jsp"
+            dest="${basedir}\buildServerResources\simpleView.jsp" />
+    </target>
+
+    <target name="jar" depends="clean,package.buildServerResources">
         <mkdir dir="${jar.home}"/>
-        <echo message="${basedir}\src\coriander\haarlem\views\simpleView.jsp" />
-                   
+
         <jar
             destfile="${jar.home}\${jar.name}"
             basedir="${build.home}\production\${app.name}"
@@ -24,9 +30,11 @@
             <metainf dir="${basedir}\build">
                 <include name="build-server-plugin-coriander-haarlem.xml" />
             </metainf>
-            <metainf dir="${basedir}\src\coriander\haarlem\views">
-                <include name="simpleView.jsp" />
-            </metainf>
+
+            <fileset dir="${basedir}">
+                <filename name="buildServerResources\simpleView.jsp" />
+            </fileset>
+
             <manifest>
                 <attribute name="Author" value="Various"/>
                 <attribute name="Version" value="${app.version}"/>
