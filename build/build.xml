@@ -17,7 +17,12 @@
     <target name="package.buildServerResources">
         <copyfile
             src="${basedir}\src\coriander\haarlem\views\simpleView.jsp"
-            dest="${basedir}\buildServerResources\simpleView.jsp" />
+            dest="${basedir}\buildServerResources\simpleView.jsp"
+        />
+        <copyfile
+            src="${basedir}\lib\scala-library.jar"
+            dest="${basedir}\buildServerResources\scala-library.jar" 
+        />
     </target>
 
     <target name="jar" depends="clean,package.buildServerResources">
@@ -29,6 +34,7 @@
         >
             <metainf dir="${basedir}\build">
                 <include name="build-server-plugin-coriander-haarlem.xml" />
+                <include name="teamcity-plugin.xml" />
             </metainf>
 
             <fileset dir="${basedir}">
@@ -51,7 +57,7 @@
         <antcall target="local.teamcity.restart" />
     </target>
 
-    <target name="local.teamcity.restart">
+    <target name="local.teamcity.restart" description="Restarting teamcity">
         <exec executable="cmd">
             <arg value="/c"/>
             <arg value="build\restart-teamcity.bat ${jar.home}"/>
