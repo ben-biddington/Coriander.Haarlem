@@ -45,7 +45,7 @@
     <target name="local.deploy" depends="jar">
         <exec executable="cmd">
             <arg value="/c"/>
-            <arg value="local.deploy.bat ${jar.home}\${jar.name}"/>
+            <arg value="build\local.deploy.bat ${jar.home}\${jar.name}"/>
             <arg value="-p"/>
         </exec>
         <antcall target="local.teamcity.restart" />
@@ -54,7 +54,7 @@
     <target name="local.teamcity.restart">
         <exec executable="cmd">
             <arg value="/c"/>
-            <arg value="restart-teamcity.bat ${jar.home}"/>
+            <arg value="build\restart-teamcity.bat ${jar.home}"/>
             <arg value="-p"/>
         </exec>
     </target>
