@@ -34,7 +34,6 @@
         >
             <metainf dir="${basedir}\build">
                 <include name="build-server-plugin-coriander-haarlem.xml" />
-                <include name="teamcity-plugin.xml" />
             </metainf>
 
             <fileset dir="${basedir}">
