@@ -3,6 +3,7 @@
 
 <beans default-autowire="constructor">
      <bean id="DilbertController" class="coriander.haarlem.controllers.DilbertController" init-method="register" />
+     <bean id="BeanListController" class="coriander.haarlem.controllers.BeanListController" init-method="register" />
      <bean id="dilbertTab" class="coriander.haarlem.tabs.DilbertTab" init-method="register">
       <property name="placeId" value="ALL_PAGES_HEADER "/>
       <property name="pluginName" value="dilbertTab"/>
