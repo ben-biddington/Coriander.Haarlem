@@ -53,7 +53,7 @@
         </jar>
     </target>
 
-    <target name="local.deploy" depends="jar,clean">
+    <target name="local.package.and.deploy" depends="jar,clean">
         <exec executable="cmd">
             <arg value="/c"/>
             <arg value="build\local.deploy.bat ${jar.home}\${jar.name}"/>
