@@ -8,21 +8,12 @@ class DilbertController extends BaseController {
 	override protected def doHandle(
 		httpServletRequest : HttpServletRequest ,
 		httpServletResponse : HttpServletResponse
-	) : ModelAndView  = {
+	) : ModelAndView = {
 
 		httpServletResponse.setContentType("text/html")
-		httpServletResponse.getWriter().write(
-			"<html>" +
-				"<head></head>" +
-				"<body>" +
-				"	<img src=\"" + getLatestDilbert + "\" />" +
-				"</body>" +
-			"</html>"
-		);
 
 		// TODO: The following fails because the jsp file cannot be located
-		// new ModelAndView("simpleView.jsp", null)
-		null
+		new ModelAndView("plugins/coriander-haarlem/default.jsp")
 	}
 
 	private def getLatestDilbert = {

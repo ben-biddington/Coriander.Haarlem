@@ -5,9 +5,8 @@ set web_root="C:\Teamcity\webapps\ROOT\WEB-INF\lib"
 set plugin_root="C:\TeamCity\webapps\ROOT\WEB-INF\plugins"
 set plugin_root_1="C:\TeamCity\webapps\ROOT\plugins"
 
-REM echo Copying jar: %1 to %web_root%
-REM Teamcity 4.x, shouldn't have to do this
-REM copy /Y "%1" %web_root%
+echo Copying jar: %1 to %web_root%
+copy /Y "%1" %web_root%
 
 REM echo Copying jar: %1 to %plugin_root%
 REM This should be enough

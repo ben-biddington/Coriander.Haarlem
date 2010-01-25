@@ -11,17 +11,21 @@
 
     <target name="clean">
         <delete dir="${jar.home}" verbose="true"/>
-        <delete dir="${basedir}\buildServerResources" verbose="false"/>
+        <delete dir="${basedir}\buildServerResources" verbose="true"/>
     </target>
 
     <target name="package.buildServerResources">
         <copyfile
-            src="${basedir}\src\coriander\haarlem\views\simpleView.jsp"
-            dest="${basedir}\buildServerResources\simpleView.jsp"
+            src="${basedir}\src\coriander\haarlem\views\include-internal.jsp"
+            dest="${basedir}\buildServerResources\include-internal.jsp"
         />
         <copyfile
-            src="${basedir}\lib\scala-library.jar"
-            dest="${basedir}\buildServerResources\scala-library.jar" 
+            src="${basedir}\src\coriander\haarlem\views\default.jsp"
+            dest="${basedir}\buildServerResources\default.jsp"
+        />
+        <copyfile
+            src="${basedir}\src\coriander\haarlem\views\dilbert.jsp"
+            dest="${basedir}\buildServerResources\dilbert.jsp"
         />
     </target>
 
@@ -37,7 +41,9 @@
             </metainf>
 
             <fileset dir="${basedir}">
-                <filename name="buildServerResources\simpleView.jsp" />
+                <include name="buildServerResources\include-internal.jsp" />
+                <include name="buildServerResources\default.jsp" />
+                <include name="buildServerResources\dilbert.jsp" />
             </fileset>
 
             <manifest>
@@ -47,13 +53,21 @@
         </jar>
     </target>
 
-    <target name="local.deploy" depends="jar">
+    <target name="local.deploy" depends="jar,clean">
         <exec executable="cmd">
             <arg value="/c"/>
             <arg value="build\local.deploy.bat ${jar.home}\${jar.name}"/>
             <arg value="-p"/>
         </exec>
         <antcall target="local.teamcity.restart" />
+    </target>
+
+     <target name="local.clean" depends="">
+        <exec executable="cmd">
+            <arg value="/c"/>
+            <arg value="build\local.clean.bat ${jar.home}\${jar.name}"/>
+            <arg value="-p"/>
+        </exec>
     </target>
 
     <target name="local.teamcity.restart" description="Restarting teamcity">
