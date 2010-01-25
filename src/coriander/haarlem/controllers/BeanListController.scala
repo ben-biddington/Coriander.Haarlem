@@ -4,6 +4,7 @@ import jetbrains.buildServer.controllers.BaseController
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import org.springframework.web.servlet.ModelAndView
 import java.io.{PrintWriter}
+import jetbrains.buildServer.web.openapi.WebControllerManager
 
 class BeanListController extends BaseController {
 	override protected def doHandle(
@@ -40,12 +41,18 @@ class BeanListController extends BaseController {
 
 	private def printInterfaces(c : java.lang.Object, out : PrintWriter) {
     	val interfaces = c.getClass.getInterfaces
+
 		if (false == interfaces.isEmpty) {
 			out.write("<ul>")
-			interfaces.foreach(interface => out.write("<li>" + interface + "</li>"));
+			interfaces.foreach(interface => out.write("<li>[" + c.getClass.toString + "]" + interface + "</li>"));
 			out.write("</ul>")
 		}
 	}
 	
-	def register() {}
+	def register() {
+		val mgr : WebControllerManager = getApplicationContext.
+			getBean("webControllerManager", classOf[WebControllerManager])
+
+		mgr.registerController("/beans.html", this)
+	}
 }

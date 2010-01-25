@@ -3,6 +3,7 @@ package coriander.haarlem.controllers
 import jetbrains.buildServer.controllers.BaseController
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import org.springframework.web.servlet.ModelAndView
+import jetbrains.buildServer.web.openapi.WebControllerManager
 
 class DilbertController extends BaseController {
 	override protected def doHandle(
@@ -14,10 +15,9 @@ class DilbertController extends BaseController {
 	}
 
 	def register() {
-		// TODO: Register route here
-		// see: http://www.jetbrains.net/confluence/display/TCD5/Web+UI+Extensions#WebUIExtensions-DevelopPageExtention
-		println("Registering DilbertController")
+		val mgr : WebControllerManager = getApplicationContext.
+			getBean("webControllerManager", classOf[WebControllerManager])
 
-		logger.info("Registering DilbertController")
+		mgr.registerController("/dilbert.html", this)
 	}
 }
