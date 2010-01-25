@@ -2,7 +2,11 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans default-autowire="constructor">
-     <bean id="DilbertController" class="coriander.haarlem.controllers.DilbertController" />
-     <bean id="DilbertTab" class="coriander.haarlem.controllers.DilbertController" />
+     <bean id="DilbertController" class="coriander.haarlem.controllers.DilbertController" init-method="register" />
+     <bean id="dilbertTab" class="coriander.haarlem.tabs.DilbertTab" init-method="register">
+      <property name="placeId" value="ALL_PAGES_HEADER "/>
+      <property name="pluginName" value="dilbertTab"/>
+      <property name="includeUrl" value="/dilbert.html"/>
+    </bean>
 </beans>
         
