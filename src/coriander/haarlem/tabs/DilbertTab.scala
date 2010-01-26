@@ -3,6 +3,7 @@ package coriander.haarlem.tabs
 import javax.servlet.http.HttpServletRequest
 import org.springframework.context.{ApplicationContext, ApplicationContextAware}
 import jetbrains.buildServer.web.openapi._
+import java.util.Date
 
 class DilbertTab
 	extends CustomTab
@@ -36,7 +37,10 @@ class DilbertTab
 		true
 	}
 
-	def isVisible : Boolean = true
+	def isVisible : Boolean = {
+		true
+	}
+
 	def getCssPaths : java.util.List[String] = new java.util.ArrayList[String]()
 	def getJsPaths : java.util.List[String] = new java.util.ArrayList[String]()
 

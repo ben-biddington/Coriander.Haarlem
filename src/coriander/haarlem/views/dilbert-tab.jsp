@@ -1,1 +1,1 @@
-<a href="/dilbert.html">Today's Dilbert</a>
+<a href="/dilbert.html" title="See today's Dilbert comic">Today's Dilbert</a>
