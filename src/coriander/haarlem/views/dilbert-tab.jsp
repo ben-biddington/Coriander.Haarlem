@@ -1,0 +1,1 @@
+<a href="/dilbert.html">Today's Dilbert</a>

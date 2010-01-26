@@ -2,7 +2,7 @@ package coriander.haarlem.tabs
 
 import javax.servlet.http.HttpServletRequest
 import org.springframework.context.{ApplicationContext, ApplicationContextAware}
-import jetbrains.buildServer.web.openapi.{PlaceId, PagePlaces, PageExtension, CustomTab}
+import jetbrains.buildServer.web.openapi._
 
 class DilbertTab
 	extends CustomTab
@@ -10,18 +10,20 @@ class DilbertTab
 	with ApplicationContextAware {
 
 	def register() {
-		// TODO: Find anj instance of PagePlaces
-		//val bean = applicationContext.getBean("pagePlaces").asInstanceOf[PagePlaces];
+		val mgr = applicationContext.
+			getBean("webControllerManager", classOf[WebControllerManager])
+
+		mgr.getPlaceById(PlaceId.ALL_PAGES_FOOTER).addExtension(this)
 	}
 
 	def setApplicationContext(applicationContext : ApplicationContext) {
 		this.applicationContext = applicationContext
 	}
 	
-	def getTabId 		= "coriander.haarlem.dilbert"
+	def getTabId 		= "coriander.haarlem.dilbert.tab"
 	def getTabTitle 	= "Dilbert"
-	def getIncludeUrl 	= "DilbertController"
-	def getPluginName 	= "dilbert tab"
+	def getIncludeUrl 	= "dilbert-tab.jsp"
+	def getPluginName 	= "coriander-haarlem"
 
 	def fillModel(
 		stringObjectMap : java.util.Map[java.lang.String,java.lang.Object],

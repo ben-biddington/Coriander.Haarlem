@@ -28,6 +28,10 @@
             src="${basedir}\src\coriander\haarlem\views\dilbert.jsp"
             dest="${basedir}\buildServerResources\dilbert.jsp"
         />
+        <copyfile
+            src="${basedir}\src\coriander\haarlem\views\dilbert-tab.jsp"
+            dest="${basedir}\buildServerResources\dilbert-tab.jsp"
+        />
     </target>
 
     <target name="jar" depends="clean,package.buildServerResources">
@@ -45,6 +49,7 @@
                 <include name="buildServerResources\include-internal.jsp" />
                 <include name="buildServerResources\default.jsp" />
                 <include name="buildServerResources\dilbert.jsp" />
+                <include name="buildServerResources\dilbert-tab.jsp" />
             </fileset>
 
             <manifest>

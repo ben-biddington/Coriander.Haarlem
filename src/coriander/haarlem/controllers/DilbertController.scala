@@ -15,7 +15,7 @@ class DilbertController extends BaseController {
 	}
 
 	def register() {
-		val mgr : WebControllerManager = getApplicationContext.
+		val mgr = getApplicationContext.
 			getBean("webControllerManager", classOf[WebControllerManager])
 
 		mgr.registerController("/dilbert.html", this)
