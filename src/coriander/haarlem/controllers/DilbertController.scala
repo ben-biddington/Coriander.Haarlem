@@ -11,6 +11,7 @@ class DilbertController extends BaseController {
 		httpServletResponse : HttpServletResponse
 	) : ModelAndView = {
 		// TODO: Still crap, shouldn't need to resolve view paths myself
+		// Try WebUtil
 		new ModelAndView("plugins/coriander-haarlem/default.jsp")
 	}
 

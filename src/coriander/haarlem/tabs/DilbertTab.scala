@@ -3,7 +3,6 @@ package coriander.haarlem.tabs
 import javax.servlet.http.HttpServletRequest
 import org.springframework.context.{ApplicationContext, ApplicationContextAware}
 import jetbrains.buildServer.web.openapi._
-import java.util.Date
 
 class DilbertTab
 	extends CustomTab
