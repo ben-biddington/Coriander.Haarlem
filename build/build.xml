@@ -5,6 +5,7 @@
     <property name="app.path" value="\${app.name}"/>
     <property name="app.version" value="0.0.1"/>
     <property name="src.home" value="${basedir}\src"/>
+    <property name="lib.home" value="${basedir}\lib"/>
     <property name="build.home" value="${basedir}\out"/>
     <property name="jar.home" value="${build.home}\jar"/>
     <property name="jar.name" value="${plugin.name}-${app.version}.jar"/>
@@ -59,10 +60,16 @@
             <arg value="build\local.deploy.bat ${jar.home}\${jar.name}"/>
             <arg value="-p"/>
         </exec>
+        <exec executable="cmd">
+            <arg value="/c"/>
+            <arg value="build\local.deploy.bat ${lib.home}\scala-library.jar"/>
+            <arg value="-p"/>
+        </exec>
+        
         <antcall target="local.teamcity.restart" />
     </target>
 
-     <target name="local.clean" depends="">
+     <target name="local.clean">
         <exec executable="cmd">
             <arg value="/c"/>
             <arg value="build\local.clean.bat ${jar.home}\${jar.name}"/>
