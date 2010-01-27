@@ -20,6 +20,9 @@
 
   <jsp:attribute name="body_include">
     <%@ include file="input.jsp" %>
-    <p>Results: ${result}</p>
+    <p>Results: </p>
+    <p>
+    ${results.result}
+    </p>
   </jsp:attribute>
 </bs:page>

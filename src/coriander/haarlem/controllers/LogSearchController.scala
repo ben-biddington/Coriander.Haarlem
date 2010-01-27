@@ -25,9 +25,13 @@ class LogSearchController(buildServer : SBuildServer)
 		val artifactsDir = buildServer.getArtifactsDirectory 
 
 		if (query.contains("q")) {
-			val result = search(query.get("q").first.value)
-			
-			new ModelAndView("plugins/coriander-haarlem/search/result.jsp")
+			val results = search(query.get("q").first.value)
+
+			new ModelAndView(
+				"plugins/coriander-haarlem/search/result.jsp",
+				"results",
+				results
+			)
 		}  else {
 			new ModelAndView("plugins/coriander-haarlem/search/default.jsp")
 		}
@@ -68,4 +72,7 @@ class LogSearchController(buildServer : SBuildServer)
 	private def pluginDir = "plugins\\coriander-haarlem"
 }
 
-class SearchResults(val query : String, val result : String)
+class SearchResults(val query : String, val result : String) {
+	def getResult = result
+	def getQuery = query
+}
