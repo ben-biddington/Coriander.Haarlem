@@ -24,6 +24,11 @@
             dest="${basedir}\buildServerResources"
             includes="**/*.*"
         />
+         <copydir
+            src="${basedir}\bin"
+            dest="${basedir}\buildServerResources\bin"
+            includes="**/*.*"
+        />
     </target>
 
     <target name="jar" depends="clean,package.buildServerResources">
@@ -57,6 +62,11 @@
         <exec executable="cmd">
             <arg value="/c"/>
             <arg value="build\local.deploy.bat ${lib.home}\scala-library.jar"/>
+            <arg value="-p"/>
+        </exec>
+        <exec executable="cmd">
+            <arg value="/c"/>
+            <arg value="build\local.deploy.bat ${lib.home}\coriander-oauth-2.0.1.jar"/>
             <arg value="-p"/>
         </exec>
         <copyfile
