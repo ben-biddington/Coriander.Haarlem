@@ -22,7 +22,9 @@ class LogSearchController(buildServer : SBuildServer)
 		val query = new QueryParser().parse(request.getQueryString())
 
 		val buildNumber = buildServer.getBuildNumber
-		val artifactsDir = buildServer.getArtifactsDirectory 
+		val artifactsDir = buildServer.getArtifactsDirectory
+
+		println("Artifacts for build <" + buildNumber + "> are in <" + artifactsDir + ">")
 
 		if (query.contains("q")) {
 			val results = search(query.get("q").first.value)
@@ -53,7 +55,8 @@ class LogSearchController(buildServer : SBuildServer)
 
 		val absolutePath = file.getCanonicalPath.replace('\\', '/')
 
-		val where = (buildServer.getServerRootPath + pluginDir).replace('\\', '/')
+		val where = buildServer.getArtifactsDirectory.
+			getCanonicalPath.replace('\\', '/')
 
 		val cmd = absolutePath+ " -r " + forWhat + " " + where
 
