@@ -3,7 +3,7 @@
 <%@include file="../include-internal.jsp"%>
 
 <c:set var="loadingWarningDisabled" value="true" scope="request"/>
-<c:set var="title" value="Today's Dilbert" scope="request"/>
+<c:set var="title" value="Build log search" scope="request"/>
 <jsp:useBean id="currentUser" type="jetbrains.buildServer.users.SUser" scope="request"/>
 
 <bs:page>

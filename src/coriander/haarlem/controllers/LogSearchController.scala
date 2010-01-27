@@ -43,14 +43,15 @@ class LogSearchController(buildServer : SBuildServer)
 	private def search(forWhat : String) = {
 		val file = new File(
 			buildServer.getServerRootPath + 
-			"\\plugins\\coriander-haarlem\\bin\\grep.exe"
+			pluginDir +
+			"\\bin\\grep.exe"
 		)
 
-		val absolutePath = file.getCanonicalPath
+		val absolutePath = file.getCanonicalPath.replace('\\', '/')
 
-		val where = buildServer.getServerRootPath + "plugins\\coriander-haarlem\\"
+		val where = buildServer.getServerRootPath + pluginDir
 
-		val cmd = """ """ + absolutePath + """ """ + forWhat + """ """ + where + """"""
+		val cmd = absolutePath+ " -r " + forWhat + " " + where
 
 		println("GREP: " + cmd)
 
@@ -60,6 +61,11 @@ class LogSearchController(buildServer : SBuildServer)
 
 		new SearchResults(forWhat, result)
 	}
+
+	// @spav5: name of PluginDescriptor bean is
+	//     plugin-descriptor-<plugin name>,
+	// but it can be changed in the future
+	private def pluginDir = "plugins\\coriander-haarlem"
 }
 
 class SearchResults(val query : String, val result : String)
