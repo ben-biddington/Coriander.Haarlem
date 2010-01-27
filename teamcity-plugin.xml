@@ -3,7 +3,7 @@
                  xsi:noNamespaceSchemaLocation="urn:shemas-jetbrains-com:teamcity-plugin-v1-xml">
   <!-- This file needs to go next to the "server" folder, not inside the jar-->
   <info>
-    <name>Coriander Haarlem</name>
+    <name>coriander-haarlem</name>
     <display-name>Coriander Haarlem</display-name>
     <version>0.0.1</version>
   </info>

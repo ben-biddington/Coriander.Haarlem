@@ -19,21 +19,10 @@
     </target>
 
     <target name="package.buildServerResources">
-        <copyfile
-            src="${basedir}\src\coriander\haarlem\views\include-internal.jsp"
-            dest="${basedir}\buildServerResources\include-internal.jsp"
-        />
-        <copyfile
-            src="${basedir}\src\coriander\haarlem\views\default.jsp"
-            dest="${basedir}\buildServerResources\default.jsp"
-        />
-        <copyfile
-            src="${basedir}\src\coriander\haarlem\views\dilbert.jsp"
-            dest="${basedir}\buildServerResources\dilbert.jsp"
-        />
-        <copyfile
-            src="${basedir}\src\coriander\haarlem\views\dilbert-tab.jsp"
-            dest="${basedir}\buildServerResources\dilbert-tab.jsp"
+        <copydir
+            src="${basedir}\src\coriander\haarlem\views"
+            dest="${basedir}\buildServerResources"
+            includes="**/*.*"
         />
     </target>
 
@@ -49,10 +38,7 @@
             </metainf>
 
             <fileset dir="${basedir}">
-                <include name="buildServerResources\include-internal.jsp" />
-                <include name="buildServerResources\default.jsp" />
-                <include name="buildServerResources\dilbert.jsp" />
-                <include name="buildServerResources\dilbert-tab.jsp" />
+                <include name="buildServerResources/**/*.*"/>
             </fileset>
 
             <manifest>
