@@ -5,9 +5,9 @@ import org.springframework.web.servlet.ModelAndView
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import jetbrains.buildServer.serverSide.SBuildServer
 import org.coriander.{QueryParser}
-import jetbrains.buildServer.web.openapi.WebControllerManager
 import coriander.haarlem.Grep
 import java.io.File
+import jetbrains.buildServer.web.openapi.{PluginDescriptor, WebControllerManager}
 
 class LogSearchController(buildServer : SBuildServer)
 	extends BaseController(buildServer) {
@@ -53,7 +53,7 @@ class LogSearchController(buildServer : SBuildServer)
 
 		val absolutePath = file.getCanonicalPath.replace('\\', '/')
 
-		val where = buildServer.getServerRootPath + pluginDir
+		val where = (buildServer.getServerRootPath + pluginDir).replace('\\', '/')
 
 		val cmd = absolutePath+ " -r " + forWhat + " " + where
 
@@ -69,7 +69,24 @@ class LogSearchController(buildServer : SBuildServer)
 	// @spav5: name of PluginDescriptor bean is
 	//     plugin-descriptor-<plugin name>,
 	// but it can be changed in the future
-	private def pluginDir = "plugins\\coriander-haarlem"
+	private def pluginDir = {
+		val bean : PluginDescriptor = getApplicationContext.getBean(
+			"plugin-descriptor-" + "coriander-haarlem",
+			classOf[PluginDescriptor]
+		)
+
+		var result = bean.getPluginResourcesPath.replace('/', '\\')
+
+		if (result.endsWith("\\")) {
+			result = result.substring(0, result.length - 1)
+		}
+
+		if (result.startsWith("\\")) {
+			result = result.substring(1)
+		}
+
+		result
+	}
 }
 
 class SearchResults(val query : String, val result : String) {
