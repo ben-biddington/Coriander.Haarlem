@@ -4,18 +4,20 @@ import javax.servlet.http.HttpServletRequest
 import org.springframework.context.{ApplicationContext, ApplicationContextAware}
 import jetbrains.buildServer.web.openapi._
 
-class DilbertTab
+class LogSearchTab
 	extends CustomTab
 	with PageExtension
 	with ApplicationContextAware {
 
 	def register() {
-		val mgr = applicationContext.
+		val mgr : WebControllerManager = applicationContext.
 			getBean("webControllerManager", classOf[WebControllerManager])
 
+		println("Place <" + placeId + ">")
+
 		val place = new PlaceId(placeId)
-		
-		println("Adding dilbert to <" + place.toString + ">")
+
+		println("Adding to <" + place.toString + ">")
 
 		mgr.getPlaceById(PlaceId.BUILD_RESULTS_TAB).addExtension(this)
 	}
@@ -23,10 +25,10 @@ class DilbertTab
 	def setApplicationContext(applicationContext : ApplicationContext) {
 		this.applicationContext = applicationContext
 	}
-	
-	def getTabId 		= "coriander.haarlem.dilbert.tab"
-	def getTabTitle 	= "Dilbert"
-	def getIncludeUrl 	= "dilbert.jsp"
+
+	def getTabId 		= "coriander.haarlem.log.search.tab"
+	def getTabTitle 	= "Log Search"
+	def getIncludeUrl 	= "search/input.jsp"
 	def getPluginName 	= "coriander-haarlem"
 
 	def fillModel(
@@ -41,7 +43,6 @@ class DilbertTab
 	}
 
 	def isVisible : Boolean = {
-		// TODO: Build was successful, otherwise a failblog entry.
 		true
 	}
 

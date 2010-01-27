@@ -7,6 +7,7 @@ import org.hamcrest.core.IsNot._
 import org.hamcrest.core.IsEqual._
 import java.io.{InputStreamReader, BufferedReader}
 import coriander.haarlem.{Grep, using}
+import jetbrains.buildServer.web.openapi.PlaceId
 
 class GrepTests {
     @Test
