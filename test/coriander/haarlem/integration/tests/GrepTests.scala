@@ -5,38 +5,23 @@ import org.junit.Assert._
 import org.hamcrest.core.Is._
 import org.hamcrest.core.IsNot._
 import org.hamcrest.core.IsEqual._
-import coriander.haarlem.using
 import java.io.{InputStreamReader, BufferedReader}
+import coriander.haarlem.{Grep, using}
 
 class GrepTests {
     @Test
 	def grep_can_be_run_as_a_standalone_executable { 
-    	val command = "bin/grep.exe -rL GrepTests.scala ."
+    	val command = "bin/grep.exe -Hr CHUBBY test/res/*.txt"
 
-		var grep : Process = Runtime.getRuntime().exec(command)
+		val result = new Grep().run(command).trim
+		val expected = "test/res/example-to-grep-for.txt:CHUBBY_RAIN"
+		
+		println(result)
 
-		val input = new BufferedReader(
-			new InputStreamReader(grep.getInputStream())
+		assertThat(
+			"Expected single result to be returned",
+			result, is(equalTo(expected))
 		)
-
-		var actualResultCount = 0;
-
-		using (input) {
-			var line : String = ""
-
-			var done = false
-
-			while (false == done) {
-				line = input.readLine()
-				done = line == null
-
-				if (false == done) {
-					actualResultCount +=1
-				}
-		  	}
-		}
-
-		assertTrue(actualResultCount > 1)
     }
 
 	// TEST: I can pipe the results from grep into the stdin of another process, like tail
