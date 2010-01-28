@@ -7,7 +7,7 @@ import jetbrains.buildServer.serverSide.{SBuildServer}
 import java.lang.Long._
 
 import jetbrains.buildServer.messages.Status
-import org.coriander.{QueryParser}
+import coriander.haarlem.http.query.Query
 
 class DilbertTab(buildServer : SBuildServer)
 	extends CustomTab
@@ -42,11 +42,11 @@ class DilbertTab(buildServer : SBuildServer)
 	}
 
 	override def isAvailable(request : HttpServletRequest) : Boolean = {
-		val query = new QueryParser().parse(request.getQueryString())
+		val query = new Query(request.getQueryString)
 
 		if (query.contains(QUERY_BUILD_ID)) {
 			return buildSuccessful(parseLong(
-				query.get(QUERY_BUILD_ID).first.value
+				query.value(QUERY_BUILD_ID)
 			))
 		}
 

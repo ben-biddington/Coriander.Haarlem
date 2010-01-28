@@ -4,10 +4,10 @@ import jetbrains.buildServer.controllers.BaseController
 import org.springframework.web.servlet.ModelAndView
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import jetbrains.buildServer.serverSide.SBuildServer
-import org.coriander.{QueryParser}
 import coriander.haarlem.Grep
 import java.io.File
 import jetbrains.buildServer.web.openapi.{PluginDescriptor, WebControllerManager}
+import coriander.haarlem.http.query.Query
 
 class LogSearchController(buildServer : SBuildServer, pluginDescriptor : PluginDescriptor)
 	extends BaseController(buildServer)
@@ -21,7 +21,7 @@ class LogSearchController(buildServer : SBuildServer, pluginDescriptor : PluginD
 	) : ModelAndView = {
 		require(buildServer != null, "Not much can be done without a build server.")
 
-		val query = new QueryParser().parse(request.getQueryString())
+		val query = Query(request.getQueryString)
 
 		val buildNumber = buildServer.getBuildNumber
 		val artifactsDir = buildServer.getArtifactsDirectory
@@ -29,7 +29,7 @@ class LogSearchController(buildServer : SBuildServer, pluginDescriptor : PluginD
 		println("Artifacts for build <" + buildNumber + "> are in <" + artifactsDir + ">")
 
 		if (query.contains("q")) {
-			val results = search(query.get("q").first.value)
+			val results = search(query.value("q"))
 
 			new ModelAndView(
 				"plugins/coriander-haarlem/search/result.jsp",
