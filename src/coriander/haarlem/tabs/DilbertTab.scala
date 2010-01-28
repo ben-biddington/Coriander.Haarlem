@@ -8,7 +8,7 @@ import java.lang.Long._
 
 import jetbrains.buildServer.messages.Status
 import coriander.haarlem.http.query.Query
-import coriander.haarlem.controllers.DilbertFinder
+import coriander.haarlem.rss.DilbertRssFeed
 
 class DilbertTab(buildServer : SBuildServer)
 	extends CustomTab
@@ -39,7 +39,7 @@ class DilbertTab(buildServer : SBuildServer)
 		model : java.util.Map[java.lang.String,java.lang.Object],
 		httpServletRequest : HttpServletRequest
 	) {
-		model.put("url", new DilbertFinder().find)
+		model.put("url", new DilbertRssFeed().find)
 	}
 
 	override def isAvailable(request : HttpServletRequest) : Boolean = {

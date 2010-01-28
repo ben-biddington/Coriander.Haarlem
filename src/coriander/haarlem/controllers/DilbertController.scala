@@ -4,6 +4,7 @@ import jetbrains.buildServer.controllers.BaseController
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import org.springframework.web.servlet.ModelAndView
 import jetbrains.buildServer.web.openapi.{PluginDescriptor, WebControllerManager}
+import coriander.haarlem.rss.{DilbertRssFeed}
 
 class DilbertController(pluginDescriptor : PluginDescriptor) extends BaseController {
 	
@@ -28,7 +29,7 @@ class DilbertController(pluginDescriptor : PluginDescriptor) extends BaseControl
 	}
 
 	private def getLatestDilbert = {
-		new DilbertFinder().find
+		new DilbertRssFeed().find
 	}
 }
 
