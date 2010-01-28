@@ -3,12 +3,17 @@ package coriander.haarlem.tabs
 import javax.servlet.http.HttpServletRequest
 import org.springframework.context.{ApplicationContext, ApplicationContextAware}
 import jetbrains.buildServer.web.openapi._
+import jetbrains.buildServer.serverSide.{SBuildServer}
+import java.lang.Long._
 
-class DilbertTab
+import jetbrains.buildServer.messages.Status
+import org.coriander.{QueryParser}
+
+class DilbertTab(buildServer : SBuildServer)
 	extends CustomTab
 	with PageExtension
-	with ApplicationContextAware {
-
+	with ApplicationContextAware
+{
 	def register() {
 		val mgr = applicationContext.
 			getBean("webControllerManager", classOf[WebControllerManager])
@@ -36,14 +41,19 @@ class DilbertTab
 
 	}
 
-	override def isAvailable(httpServletRequest : HttpServletRequest) = {
-		true
+	override def isAvailable(request : HttpServletRequest) : Boolean = {
+		val query = new QueryParser().parse(request.getQueryString())
+
+		if (query.contains(QUERY_BUILD_ID)) {
+			return buildSuccessful(parseLong(
+				query.get(QUERY_BUILD_ID).first.value
+			))
+		}
+
+		return false
 	}
 
-	def isVisible : Boolean = {
-		// TODO: Build was successful, otherwise a failblog entry.
-		true
-	}
+	def isVisible : Boolean = true
 
 	def getCssPaths : java.util.List[String] = new java.util.ArrayList[String]()
 	def getJsPaths : java.util.List[String] = new java.util.ArrayList[String]()
@@ -52,6 +62,12 @@ class DilbertTab
 	def setPluginName(pluginName: String) { }
 	def setIncludeUrl(includeUrl: String) { }
 
+	private def buildSuccessful(buildId : Long) = {
+		// TODO: Find the current build being viewed (query string)
+		buildServer.findBuildInstanceById(buildId).getBuildStatus == Status.NORMAL
+	}
+
 	private var applicationContext : ApplicationContext = null
 	private var placeId : String = ""
+	private val QUERY_BUILD_ID = "buildId"
 }
