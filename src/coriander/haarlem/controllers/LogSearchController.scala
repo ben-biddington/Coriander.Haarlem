@@ -9,10 +9,12 @@ import coriander.haarlem.Grep
 import java.io.File
 import jetbrains.buildServer.web.openapi.{PluginDescriptor, WebControllerManager}
 
-class LogSearchController(buildServer : SBuildServer)
-	extends BaseController(buildServer) {
+class LogSearchController(buildServer : SBuildServer, pluginDescriptor : PluginDescriptor)
+	extends BaseController(buildServer)
+{
+	def this(buildServer : SBuildServer) = this(buildServer, null)
 	def this() = this(null)
-	
+
 	def doHandle(
 		request : HttpServletRequest,
 		response : HttpServletResponse
@@ -73,12 +75,7 @@ class LogSearchController(buildServer : SBuildServer)
 	//     plugin-descriptor-<plugin name>,
 	// but it can be changed in the future
 	private def pluginDir = {
-		val bean : PluginDescriptor = getApplicationContext.getBean(
-			"plugin-descriptor-" + "coriander-haarlem",
-			classOf[PluginDescriptor]
-		)
-
-		var result = bean.getPluginResourcesPath.replace('/', '\\')
+		var result = pluginDescriptor.getPluginResourcesPath.replace('/', '\\')
 
 		if (result.endsWith("\\")) {
 			result = result.substring(0, result.length - 1)
