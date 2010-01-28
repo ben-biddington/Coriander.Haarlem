@@ -1,3 +1,3 @@
 <div>
-    <img src="${model.url}" />
+    <img src="${url}" />
 </div>

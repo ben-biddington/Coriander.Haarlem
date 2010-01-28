@@ -13,11 +13,9 @@ class DilbertController(pluginDescriptor : PluginDescriptor) extends BaseControl
 	) : ModelAndView = {
 		val latestDil = getLatestDilbert
 
-		println("Latest Dilbert: " + latestDil)
-
 		new ModelAndView(
 			pluginDescriptor.getPluginResourcesPath + "/default.jsp",
-			"model",
+			"",
 			new DilbertModel(latestDil)
 		)
 	}
