@@ -4,7 +4,8 @@ import org.apache.commons.httpclient.NameValuePair
 import collection.mutable.ListBuffer
 
 class QueryParser {
-	def parse(queryString : String) : List[NameValuePair]  = parse(DEFAULT_DELIMITER)
+	def parse(queryString : String) : List[NameValuePair] =
+		parse(queryString, DEFAULT_DELIMITER)
 	
 	def parse(queryString : String, delimiter : String) : List[NameValuePair] = {
         var buffer = new ListBuffer[NameValuePair]()

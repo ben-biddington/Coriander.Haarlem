@@ -8,7 +8,7 @@ class Query(queryString : String) {
 	}
 
 	def value(name : String) = {
-		namesAndValues.find(_.getName == "q").get.getName
+		namesAndValues.find(_.getName == name).get.getValue
 	}
 }
 
