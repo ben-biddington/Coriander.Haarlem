@@ -3,7 +3,7 @@ package coriander.haarlem.rss
 class DilbertRssFeed {
 	def find = {
 		new RssFeed(
-			"http://feeds.feedburner.com/failblog?format=xml",
+			"http://feeds.dilbert.com/DilbertDailyStrip?format=xml",
 			new DilbertRssAdapter
 		).find
 	}
