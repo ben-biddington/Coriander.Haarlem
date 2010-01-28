@@ -5,9 +5,9 @@ import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import org.springframework.web.servlet.ModelAndView
 import jetbrains.buildServer.web.openapi.{PluginDescriptor, WebControllerManager}
 import coriander.haarlem.rss.{DilbertRssFeed}
+import coriander.haarlem.models.DilbertModel
 
-class DilbertController(pluginDescriptor : PluginDescriptor) extends BaseController {
-	
+class DilbertController(pluginDescriptor : PluginDescriptor) extends BaseController {	
 	override protected def doHandle(
 		httpServletRequest : HttpServletRequest,
 		httpServletResponse : HttpServletResponse
@@ -31,8 +31,4 @@ class DilbertController(pluginDescriptor : PluginDescriptor) extends BaseControl
 	private def getLatestDilbert = {
 		new DilbertRssFeed().find
 	}
-}
-
-class DilbertModel(url : String) {
-	def getUrl = url	
 }

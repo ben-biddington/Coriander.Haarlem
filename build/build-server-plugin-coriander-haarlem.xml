@@ -5,9 +5,9 @@
     <bean id="dilbertController" class="coriander.haarlem.controllers.DilbertController" init-method="register"/>
     <bean id="beanListController" class="coriander.haarlem.controllers.BeanListController" init-method="register"/>
     <bean id="logSearchController" class="coriander.haarlem.controllers.LogSearchController" init-method="register"/>
-    <bean id="dilbertTab" class="coriander.haarlem.tabs.DilbertTab" init-method="register">
+    <bean id="carrotTab" class="coriander.haarlem.tabs.CarrotTab" init-method="register">
         <property name="placeId" value="#ALL_PAGES_FOOTER"/>
-        <property name="pluginName" value="dilbertTab"/>
+        <property name="pluginName" value="carrotTab"/>
         <property name="includeUrl" value="/dilbert.html"/>
     </bean>
     <bean id="logSearchTab" class="coriander.haarlem.tabs.LogSearchTab" init-method="register">

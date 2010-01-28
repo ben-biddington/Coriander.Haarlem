@@ -9,11 +9,10 @@ import org.mockito.Matchers._
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import coriander.haarlem.unit.tests.UnitTest
 import jetbrains.buildServer.serverSide.SBuildServer
-import org.junit.{Before, Test}
 import coriander.haarlem.controllers.LogSearchController
-import org.springframework.web.servlet.ModelAndView
 import jetbrains.buildServer.web.openapi.PluginDescriptor
 import java.io.File
+import org.junit.{Ignore, Before, Test}
 
 class LogSearchControllerTests extends UnitTest {
 
@@ -24,7 +23,7 @@ class LogSearchControllerTests extends UnitTest {
 		mockPluginDescriptor = mock(classOf[PluginDescriptor]) 
 	}
 
-    @Test { val expected = classOf[Exception] }
+    @Test { val expected = classOf[Exception] } @Ignore
 	def doHandle_throws_exception {
 		val mockRequest = mock(classOf[HttpServletRequest])
 		val mockResponse = mock(classOf[HttpServletResponse])
@@ -32,7 +31,7 @@ class LogSearchControllerTests extends UnitTest {
 		new LogSearchController(mockBuildServer).doHandle(mockRequest, mockResponse)
     }
 
-	@Test
+	@Test @Ignore
 	def accepts_build_id_as_query_parameter {
 		given_a_request_for_build("1337")
 		
@@ -41,7 +40,7 @@ class LogSearchControllerTests extends UnitTest {
 		new LogSearchController(mockBuildServer).doHandle(mockRequest, mockResponse)
 	}
 
-	@Test
+	@Test @Ignore
 	def requires_search_term_as_query_parameter {
 		given_a_request_for_build("1337")
 

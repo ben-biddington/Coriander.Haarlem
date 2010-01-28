@@ -6,18 +6,18 @@ import org.hamcrest.core.IsNot._
 import org.hamcrest.core.IsEqual._
 import org.mockito.Mockito._
 import org.mockito.Matchers._
-import coriander.haarlem.tabs.DilbertTab
 import javax.servlet.http.HttpServletRequest
 import org.junit.{Before, Test}
 import jetbrains.buildServer.serverSide.{SBuild, SBuildServer}
 import jetbrains.buildServer.messages.Status
+import coriander.haarlem.tabs.CarrotTab
 
 class DilbertTabTests {
 	@Before
 	def before {
 		mockRequest = mock(classOf[HttpServletRequest])
 		mockBuildServer = mock(classOf[SBuildServer])
-		tab = new DilbertTab(mockBuildServer)
+		tab = new CarrotTab(mockBuildServer)
 	}
 
     @Test
@@ -89,7 +89,7 @@ class DilbertTabTests {
 		result
 	}
 
-	private var tab : DilbertTab = null
+	private var tab : CarrotTab = null
 	private var mockRequest : HttpServletRequest = null
 	private var mockBuildServer : SBuildServer = null
 	val ANY_BUILD_ID : Long = 1L
