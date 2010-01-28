@@ -3,22 +3,37 @@ package coriander.haarlem.controllers
 import jetbrains.buildServer.controllers.BaseController
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import org.springframework.web.servlet.ModelAndView
-import jetbrains.buildServer.web.openapi.WebControllerManager
+import jetbrains.buildServer.web.openapi.{PluginDescriptor, WebControllerManager}
 
-class DilbertController extends BaseController {
+class DilbertController(pluginDescriptor : PluginDescriptor) extends BaseController {
+	
 	override protected def doHandle(
 		httpServletRequest : HttpServletRequest,
 		httpServletResponse : HttpServletResponse
 	) : ModelAndView = {
-		// TODO: Still crap, shouldn't need to resolve view paths myself
-		// Try WebUtil
-		new ModelAndView("plugins/coriander-haarlem/default.jsp")
+		val latestDil = getLatestDilbert
+
+		println("Latest Dilbert: " + latestDil)
+
+		new ModelAndView(
+			pluginDescriptor.getPluginResourcesPath + "/default.jsp",
+			"model",
+			new DilbertModel(latestDil)
+		)
 	}
 
 	def register() {
 		val mgr = getApplicationContext.
 			getBean("webControllerManager", classOf[WebControllerManager])
-
+		
 		mgr.registerController("/dilbert.html", this)
 	}
+
+	private def getLatestDilbert = {
+		new DilbertFinder().find
+	}
+}
+
+class DilbertModel(url : String) {
+	def getUrl = url	
 }
