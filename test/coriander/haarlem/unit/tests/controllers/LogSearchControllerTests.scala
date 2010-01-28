@@ -11,6 +11,9 @@ import coriander.haarlem.unit.tests.UnitTest
 import jetbrains.buildServer.serverSide.SBuildServer
 import org.junit.{Before, Test}
 import coriander.haarlem.controllers.LogSearchController
+import org.springframework.web.servlet.ModelAndView
+import jetbrains.buildServer.web.openapi.PluginDescriptor
+import java.io.File
 
 class LogSearchControllerTests extends UnitTest {
 
@@ -18,6 +21,7 @@ class LogSearchControllerTests extends UnitTest {
 	def before {
 		mockBuildServer = mock(classOf[SBuildServer])
 		mockRequest = null
+		mockPluginDescriptor = mock(classOf[PluginDescriptor]) 
 	}
 
     @Test { val expected = classOf[Exception] }
@@ -43,19 +47,23 @@ class LogSearchControllerTests extends UnitTest {
 
 		val mockResponse = mock(classOf[HttpServletResponse])
 
-		new LogSearchController(mockBuildServer).doHandle(mockRequest, mockResponse)
-	}
-
-	@Test
-	def given_the_build_exists_then_responds_with_200_OK {
-		given_a_request_for_build("1337")
-		given_build_exists_with_id("1337")
+		when(mockPluginDescriptor.getPluginResourcesPath).
+			thenReturn("")
 		
-		val mockResponse = mock(classOf[HttpServletResponse])
+		when(mockBuildServer.getArtifactsDirectory).
+			thenReturn(new File("/"))
 
-		new LogSearchController(mockBuildServer).doHandle(mockRequest, mockResponse)
+		when(mockBuildServer.getServerRootPath).thenReturn("")
 
-		verify(mockResponse, times(1)).setStatus(200)
+		val result = new LogSearchController(mockBuildServer, mockPluginDescriptor).
+			doHandle(mockRequest, mockResponse);
+
+		val expectedViewName = "xxx"
+
+		val actualViewName = result.getViewName()
+
+		assertThat(actualViewName, is(equalTo(expectedViewName)))
+	
 	}
 
 	private def given_build_exists_with_id(expected : String) {
@@ -65,9 +73,10 @@ class LogSearchControllerTests extends UnitTest {
 	private def given_a_request_for_build(buildId : String) {
 		mockRequest = mock(classOf[HttpServletRequest])
 		when(mockRequest.getQueryString).
-		thenReturn("build=" + buildId.toString + "&q=")
+		thenReturn("buildId=" + buildId.toString + "&q=")
 	}
 
 	var mockBuildServer : SBuildServer = null
 	var mockRequest : HttpServletRequest = null
+	var mockPluginDescriptor : PluginDescriptor = null
 }
