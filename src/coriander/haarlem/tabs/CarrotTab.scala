@@ -19,10 +19,6 @@ class CarrotTab(buildServer : SBuildServer)
 		val mgr = applicationContext.
 			getBean("webControllerManager", classOf[WebControllerManager])
 
-		val place = new PlaceId(placeId)
-		
-		println("Adding dilbert to <" + place.toString + ">")
-
 		mgr.getPlaceById(PlaceId.BUILD_RESULTS_TAB).addExtension(this)
 	}
 
@@ -30,8 +26,8 @@ class CarrotTab(buildServer : SBuildServer)
 		this.applicationContext = applicationContext
 	}
 	
-	def getTabId 		= "coriander.haarlem.dilbert.tab"
-	def getTabTitle 	= "Dilbert"
+	def getTabId 		= "coriander.haarlem.carrot.tab"
+	def getTabTitle 	= "Carrot"
 	def getIncludeUrl 	= "dilbert.jsp"
 	def getPluginName 	= "coriander-haarlem"
 
@@ -39,7 +35,8 @@ class CarrotTab(buildServer : SBuildServer)
 		model : java.util.Map[java.lang.String,java.lang.Object],
 		httpServletRequest : HttpServletRequest
 	) {
-		model.put("url", new DilbertRssFeed().find)
+		val dill = new DilbertRssFeed().find
+		model.put("url", dill)
 	}
 
 	override def isAvailable(request : HttpServletRequest) : Boolean = {
