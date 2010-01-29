@@ -9,8 +9,5 @@ class FailblogRssAdapter {
 		val firstItem = (feedXml\"channel"\"item").first
 
 		(firstItem \ "content").last.attribute("url").get.text
-
-
-		//(firstItem\"media:content").first.attribute("url").get.text
 	}
 }

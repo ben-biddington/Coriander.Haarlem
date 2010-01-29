@@ -8,9 +8,9 @@ import java.lang.Long._
 
 import jetbrains.buildServer.messages.Status
 import coriander.haarlem.http.query.Query
-import coriander.haarlem.rss.DilbertRssFeed
+import coriander.haarlem.rss.{FailblogRssFeed, DilbertRssFeed}
 
-class CarrotTab(buildServer : SBuildServer)
+class StickTab(buildServer : SBuildServer)
 	extends CustomTab
 	with PageExtension
 	with ApplicationContextAware
@@ -25,9 +25,9 @@ class CarrotTab(buildServer : SBuildServer)
 	def setApplicationContext(applicationContext : ApplicationContext) {
 		this.applicationContext = applicationContext
 	}
-	
-	def getTabId 		= "coriander.haarlem.carrot.tab"
-	def getTabTitle 	= "Carrot"
+
+	def getTabId 		= "coriander.haarlem.stick.tab"
+	def getTabTitle 	= "Stick"
 	def getIncludeUrl 	= "dilbert.jsp"
 	def getPluginName 	= "coriander-haarlem"
 
@@ -35,8 +35,8 @@ class CarrotTab(buildServer : SBuildServer)
 		model : java.util.Map[java.lang.String,java.lang.Object],
 		httpServletRequest : HttpServletRequest
 	) {
-		val dill = new DilbertRssFeed().find
-		model.put("url", dill)
+		val fail = new FailblogRssFeed().find
+		model.put("url", fail)
 	}
 
 	override def isAvailable(request : HttpServletRequest) : Boolean = {
@@ -52,17 +52,18 @@ class CarrotTab(buildServer : SBuildServer)
 	}
 
 	def isVisible : Boolean = true
+
 	def getCssPaths = new java.util.ArrayList[String]()
 	def getJsPaths = new java.util.ArrayList[String]()
 	def setPlaceId(placeId : String) = this.placeId = placeId
-	def setPluginName(pluginName: String) { }
-	def setIncludeUrl(includeUrl: String) { }
+	def setPluginName(pluginName: String) {}
+	def setIncludeUrl(includeUrl: String) {}
 
 	private def buildSuccessful(buildId : Long) = {
-		buildServer.findBuildInstanceById(buildId).getBuildStatus == Status.NORMAL
+		buildServer.findBuildInstanceById(buildId).getBuildStatus != Status.NORMAL
 	}
 
 	private var applicationContext : ApplicationContext = null
-	private var placeId 		= ""
-	private val QUERY_BUILD_ID 	= "buildId"
+	private var placeId : String = ""
+	private val QUERY_BUILD_ID = "buildId"
 }
