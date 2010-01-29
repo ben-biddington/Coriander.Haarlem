@@ -4,11 +4,7 @@ import org.junit.Assert._
 import org.hamcrest.core.Is._
 import org.hamcrest.core.IsNot._
 import org.hamcrest.core.IsEqual._
-import org.mockito.Mockito._
-import org.mockito.Matchers._
-import javax.servlet.http.HttpServletRequest
 import org.junit.{Before, Test}
-import jetbrains.buildServer.serverSide.{SBuild, SBuildServer}
 import jetbrains.buildServer.messages.Status
 import coriander.haarlem.tabs.CarrotTab
 import coriander.haarlem.unit.tests.TabUnitTest

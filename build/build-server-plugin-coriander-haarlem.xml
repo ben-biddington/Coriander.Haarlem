@@ -10,6 +10,11 @@
         <property name="pluginName" value="carrotTab"/>
         <property name="includeUrl" value="/dilbert.html"/>
     </bean>
+    <bean id="stickTab" class="coriander.haarlem.tabs.StickTab" init-method="register">
+        <property name="placeId" value="#ALL_PAGES_FOOTER"/>
+        <property name="pluginName" value="stickTab"/>
+        <property name="includeUrl" value="/dilbert.html"/>
+    </bean>
     <bean id="logSearchTab" class="coriander.haarlem.tabs.LogSearchTab" init-method="register">
         <property name="placeId" value="#BUILD_RESULTS_TAB"/>
         <property name="pluginName" value="logSearchTab"/>
