@@ -11,7 +11,7 @@ class DilbertAdapterTests {
     @Test
 	def get_first_works {
 		val expectedUrl = "http://dilbert.com/dyn/str_strip/000000000/00000000/0000000/000000/80000/0000/200/80274/80274.strip.print.gif"
-		val expectedTitle = "Comic for January 28, 2010"
+		val expectedTitle = "Dilbert -- Comic for January 28, 2010"
 
 		val actual = new DilbertRssAdapter().first(xml.toString)
 

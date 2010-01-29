@@ -15,6 +15,6 @@ class DilbertRssAdapter extends RssFeedAdapter {
 		val title = (firstItem\"title").first.text
 		val url = pattern.findFirstIn(escaped).get
 
-		new RssFeedItem(title, url)
+		new RssFeedItem("Dilbert -- " + title, url)
 	}
 }
