@@ -36,7 +36,8 @@ class CarrotTab(buildServer : SBuildServer)
 		httpServletRequest : HttpServletRequest
 	) {
 		val dill = new DilbertRssFeed().find
-		model.put("url", dill)
+		model.put("rssItemTitle", dill.title)
+		model.put("rssItemUrl", dill.url)
 	}
 
 	override def isAvailable(request : HttpServletRequest) : Boolean = {

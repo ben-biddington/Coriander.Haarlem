@@ -4,9 +4,9 @@ import coriander.haarlem.http.SimpleInternet
 import java.net.URI
 
 class RssFeed(url : String, adapter : RssFeedAdapter) {
-	def find() : String =  {
+	def find() : RssFeedItem =  {
 		val response = new SimpleInternet().get(new URI(url)).text
 		
-		adapter.getFirst(response)
+		adapter.first(response)
 	}
 }

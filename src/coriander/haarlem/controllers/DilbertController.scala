@@ -12,12 +12,12 @@ class DilbertController(pluginDescriptor : PluginDescriptor) extends BaseControl
 		httpServletRequest : HttpServletRequest,
 		httpServletResponse : HttpServletResponse
 	) : ModelAndView = {
-		val latestDil = getLatestDilbert
+		val rssFeedItem = getLatestDilbert
 
 		new ModelAndView(
 			pluginDescriptor.getPluginResourcesPath + "/default.jsp",
 			"",
-			new DilbertModel(latestDil)
+			rssFeedItem
 		)
 	}
 

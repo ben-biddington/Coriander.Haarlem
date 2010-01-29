@@ -1,3 +1,4 @@
+<h2>${rssItemTitle}</h2>
 <div>
-    <img src="${url}" />
+    <img src="${rssItemUrl}" />
 </div>

@@ -27,7 +27,12 @@ class StickTab(buildServer : SBuildServer)
 	}
 
 	def getTabId 		= "coriander.haarlem.stick.tab"
-	def getTabTitle 	= "<img width=\"16\" height=\"16\" src=\"/plugins/coriander-haarlem/fail.gif\" alt=\"Stick\" style=\"margin-bottom:3px\" /> "
+	def getTabTitle 	=
+		"<img width=\"16\" height=\"16\" " +
+		"src=\"/plugins/coriander-haarlem/fail.gif\" " +
+		"alt=\"Stick\" " +
+		"style=\"margin-bottom:3px\" /> "
+	
 	def getIncludeUrl 	= "dilbert.jsp"
 	def getPluginName 	= "coriander-haarlem"
 
@@ -36,7 +41,8 @@ class StickTab(buildServer : SBuildServer)
 		httpServletRequest : HttpServletRequest
 	) {
 		val fail = new FailblogRssFeed().find
-		model.put("url", fail)
+		model.put("rssItemTitle", fail.title)
+		model.put("rssItemUrl", fail.url)
 	}
 
 	override def isAvailable(request : HttpServletRequest) : Boolean = {

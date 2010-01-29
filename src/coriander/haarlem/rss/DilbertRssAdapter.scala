@@ -3,7 +3,7 @@ package coriander.haarlem.rss
 import xml.XML
 
 class DilbertRssAdapter extends RssFeedAdapter {
-	def getFirst(text : String) : String = {
+	def first(text : String) : RssFeedItem = {
 		val feedXml = XML.loadString(text)
 
 		val firstItem = (feedXml\"channel"\"item").first
@@ -12,6 +12,9 @@ class DilbertRssAdapter extends RssFeedAdapter {
 
 		val pattern = "http://[^\"]+".r
 
-		pattern.findFirstIn(escaped).get
+		val title = (firstItem\"title").first.text
+		val url = pattern.findFirstIn(escaped).get
+
+		new RssFeedItem(title, url)
 	}
 }

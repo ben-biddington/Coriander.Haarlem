@@ -10,10 +10,13 @@ import coriander.haarlem.rss.DilbertRssAdapter
 class DilbertAdapterTests {
     @Test
 	def get_first_works {
-		val expected = "http://dilbert.com/dyn/str_strip/000000000/00000000/0000000/000000/80000/0000/200/80274/80274.strip.print.gif"
-		val actual = new DilbertRssAdapter().getFirst(xml.toString)
+		val expectedUrl = "http://dilbert.com/dyn/str_strip/000000000/00000000/0000000/000000/80000/0000/200/80274/80274.strip.print.gif"
+		val expectedTitle = "Comic for January 28, 2010"
 
-		assertThat(actual, is(equalTo(expected)))
+		val actual = new DilbertRssAdapter().first(xml.toString)
+
+		assertThat(actual.url, is(equalTo(expectedUrl)))
+		assertThat(actual.title, is(equalTo(expectedTitle)))
     }
 
 	val xml =

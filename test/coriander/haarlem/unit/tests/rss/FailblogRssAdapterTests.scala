@@ -10,10 +10,12 @@ import coriander.haarlem.rss.FailblogRssAdapter
 class FailblogRssAdapterTests {
     @Test
 	def get_first_works { 
-		val expected = "http://failblog.files.wordpress.com/2010/01/epic-fail-lego-instruction-fail.jpg"
-		val actual = new FailblogRssAdapter().getFirst(xml.toString)
+		val expectedUrl = "http://failblog.files.wordpress.com/2010/01/epic-fail-lego-instruction-fail.jpg"
+		val expectedTitle = "Lego Instruction Fail"
+		val actual = new FailblogRssAdapter().first(xml.toString)
 
-		assertThat(actual, is(equalTo(expected)))
+		assertThat(actual.url, is(equalTo(expectedUrl)))
+		assertThat(actual.title, is(equalTo(expectedTitle)))
     }
 
 	val xml =
