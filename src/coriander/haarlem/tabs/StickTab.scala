@@ -27,7 +27,7 @@ class StickTab(buildServer : SBuildServer)
 	}
 
 	def getTabId 		= "coriander.haarlem.stick.tab"
-	def getTabTitle 	= "Stick"
+	def getTabTitle 	= "<img width=\"16\" height=\"16\" src=\"/plugins/coriander-haarlem/fail.gif\" alt=\"Stick\" style=\"margin-bottom:3px\" /> "
 	def getIncludeUrl 	= "dilbert.jsp"
 	def getPluginName 	= "coriander-haarlem"
 
