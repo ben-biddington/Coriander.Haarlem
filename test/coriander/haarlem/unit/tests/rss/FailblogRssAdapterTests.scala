@@ -6,16 +6,21 @@ import org.hamcrest.core.Is._
 import org.hamcrest.core.IsNot._
 import org.hamcrest.core.IsEqual._
 import coriander.haarlem.rss.FailblogRssAdapter
+import java.util.Calendar
+import coriander.haarlem.unit.tests.UnitTest
 
-class FailblogRssAdapterTests {
+class FailblogRssAdapterTests extends UnitTest {
     @Test
 	def get_first_works { 
 		val expectedUrl = "http://failblog.files.wordpress.com/2010/01/epic-fail-lego-instruction-fail.jpg"
 		val expectedTitle = "Lego Instruction Fail"
 		val actual = new FailblogRssAdapter().first(xml.toString)
-
+		val expectedDate = toDateAndTimeGmt(2010, Calendar.JANUARY, 28, 15, 0, 43)
+		
+		//Thu, 28 Jan 2010 15:00:43 +0000
 		assertThat(actual.url, is(equalTo(expectedUrl)))
 		assertThat(actual.title, is(equalTo(expectedTitle)))
+		assertThat(actual.date, is(equalTo(expectedDate)))
     }
 
 	val xml =

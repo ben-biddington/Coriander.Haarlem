@@ -6,17 +6,21 @@ import org.hamcrest.core.Is._
 import org.hamcrest.core.IsNot._
 import org.hamcrest.core.IsEqual._
 import coriander.haarlem.rss.DilbertRssAdapter
+import coriander.haarlem.unit.tests.UnitTest
+import java.util.Calendar
 
-class DilbertAdapterTests {
+class DilbertAdapterTests extends UnitTest {
     @Test
 	def get_first_works {
 		val expectedUrl = "http://dilbert.com/dyn/str_strip/000000000/00000000/0000000/000000/80000/0000/200/80274/80274.strip.print.gif"
 		val expectedTitle = "Dilbert -- Comic for January 28, 2010"
-
+		val expectedDateGmt = toDateAndTimeGmt(2010, Calendar.JANUARY, 28, 8, 0, 0)
+		
 		val actual = new DilbertRssAdapter().first(xml.toString)
 
 		assertThat(actual.url, is(equalTo(expectedUrl)))
 		assertThat(actual.title, is(equalTo(expectedTitle)))
+		assertThat(actual.date, is(equalTo(expectedDateGmt)))
     }
 
 	val xml =

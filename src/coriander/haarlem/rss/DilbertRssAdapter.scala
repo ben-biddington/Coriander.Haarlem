@@ -1,6 +1,7 @@
 package coriander.haarlem.rss
 
 import xml.XML
+import java.text.{ParsePosition, SimpleDateFormat}
 
 class DilbertRssAdapter extends RssFeedAdapter {
 	def first(text : String) : RssFeedItem = {
@@ -14,7 +15,14 @@ class DilbertRssAdapter extends RssFeedAdapter {
 
 		val title = (firstItem\"title").first.text
 		val url = pattern.findFirstIn(escaped).get
-
-		new RssFeedItem("Dilbert -- " + title, url)
+		val date = parseDate((feedXml\"channel"\"pubDate").first.text)
+		new RssFeedItem("Dilbert -- " + title, url, date)
 	}
+
+	private def parseDate(dateText : String) = {
+		println(dateText)
+		dateFormat parse(dateText, new ParsePosition(0))
+	}
+
+	private lazy val dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z")
 }

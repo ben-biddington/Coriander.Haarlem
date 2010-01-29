@@ -2,3 +2,4 @@
 <div>
     <img src="${rssItemUrl}" />
 </div>
+<p>${rssItemDate}</p>
