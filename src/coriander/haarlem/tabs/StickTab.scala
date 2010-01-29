@@ -8,7 +8,7 @@ import java.lang.Long._
 
 import jetbrains.buildServer.messages.Status
 import coriander.haarlem.http.query.Query
-import coriander.haarlem.rss.{FailblogRssFeed, DilbertRssFeed}
+import coriander.haarlem.rss.FailblogRssFeed
 
 class StickTab(buildServer : SBuildServer)
 	extends CustomTab

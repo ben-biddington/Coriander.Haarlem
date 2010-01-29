@@ -2,12 +2,12 @@ package coriander.haarlem.rss
 
 import xml.XML
 
-class FailblogRssAdapter {
+class FailblogRssAdapter extends RssFeedAdapter {
 	def getFirst(text : String) : String = {
 		val feedXml = XML.loadString(text)
 
 		val firstItem = (feedXml\"channel"\"item").first
 
-		(firstItem \ "content").last.attribute("url").get.text
+		(firstItem\"content").last.attribute("url").get.text
 	}
 }
