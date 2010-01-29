@@ -11,12 +11,11 @@ import org.junit.{Before, Test}
 import jetbrains.buildServer.serverSide.{SBuild, SBuildServer}
 import jetbrains.buildServer.messages.Status
 import coriander.haarlem.tabs.CarrotTab
+import coriander.haarlem.unit.tests.TabUnitTest
 
-class DilbertTabTests {
+class DilbertTabTests extends TabUnitTest {
 	@Before
 	def before {
-		mockRequest = mock(classOf[HttpServletRequest])
-		mockBuildServer = mock(classOf[SBuildServer])
 		tab = new CarrotTab(mockBuildServer)
 	}
 
@@ -65,32 +64,5 @@ class DilbertTabTests {
 		)
     }
 
-	private def given_any_build_with_status(status : Status) {
-		given_query_string("buildId=" + ANY_BUILD_ID.toString)
-		given_build_has_status(ANY_BUILD_ID, status)
-	}
-
-	private def given_query_string(queryString : String) {
-		when(mockRequest.getQueryString).
-		thenReturn(queryString)
-	}
-
-	private def given_build_has_status(buildId : Long, status : Status) {
-		val aFailedBuild = aFakeBuildWithStatus(status)
-
-		when(mockBuildServer.findBuildInstanceById(buildId)).
-		thenReturn(aFailedBuild)
-	}
-
-	private def aFakeBuildWithStatus(status : Status) : SBuild = {
-		val result : SBuild = mock(classOf[SBuild])
-		when(result.getBuildStatus).thenReturn(status)
-
-		result
-	}
-
 	private var tab : CarrotTab = null
-	private var mockRequest : HttpServletRequest = null
-	private var mockBuildServer : SBuildServer = null
-	val ANY_BUILD_ID : Long = 1L
 }
