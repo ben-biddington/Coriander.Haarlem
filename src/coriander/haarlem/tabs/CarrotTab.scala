@@ -37,7 +37,7 @@ class CarrotTab(buildServer : SBuildServer)
 	) {
 		val dill = new DilbertRssFeed().find
 		model.put("rssItemTitle", dill.title)
-		model.put("rssItemUrl", dill.url)
+		model.put("rssItemUrl", dill.media.url)
 		model.put("rssItemDate", dill.date)
 	}
 

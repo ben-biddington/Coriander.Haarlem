@@ -42,7 +42,7 @@ class StickTab(buildServer : SBuildServer)
 	) {
 		val fail = new FailblogRssFeed().find
 		model.put("rssItemTitle", fail.title)
-		model.put("rssItemUrl", fail.url)
+		model.put("rssItemUrl", fail.media.url)
 		model.put("rssItemDate", fail.date)
 	}
 

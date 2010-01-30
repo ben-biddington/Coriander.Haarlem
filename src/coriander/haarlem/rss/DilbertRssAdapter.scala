@@ -16,7 +16,8 @@ class DilbertRssAdapter extends RssFeedAdapter {
 		val title = (firstItem\"title").first.text
 		val url = pattern.findFirstIn(escaped).get
 		val date = parseDate((feedXml\"channel"\"pubDate").first.text)
-		new RssFeedItem("Dilbert -- " + title, url, date)
+		
+		new RssFeedItem("Dilbert -- " + title, RssFeedItemMedia(url), date)
 	}
 
 	private def parseDate(dateText : String) = {

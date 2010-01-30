@@ -18,7 +18,7 @@ class DilbertAdapterTests extends UnitTest {
 		
 		val actual = new DilbertRssAdapter().first(xml.toString)
 
-		assertThat(actual.url, is(equalTo(expectedUrl)))
+		assertThat(actual.media.url, is(equalTo(expectedUrl)))
 		assertThat(actual.title, is(equalTo(expectedTitle)))
 		assertThat(actual.date, is(equalTo(expectedDateGmt)))
     }
