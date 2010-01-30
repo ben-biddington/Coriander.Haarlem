@@ -27,8 +27,10 @@ class CarrotTab(buildServer : SBuildServer)
 	}
 	
 	def getTabId 		= "coriander.haarlem.carrot.tab"
-	def getTabTitle 	= "<img width=\"16\" height=\"16\" src=\"/plugins/coriander-haarlem/dilbert.gif\" alt=\"Carrot\" style=\"margin-bottom:3px\"/>"
-	def getIncludeUrl 	= "dilbert.jsp"
+	def getTabTitle 	=
+		"<img width=\"16\" height=\"16\" " +
+		"src=\"/plugins/coriander-haarlem/tabs/dilbert/dilbert.gif\" alt=\"Carrot\" style=\"margin-bottom:3px\"/>"
+	def getIncludeUrl 	= "/plugins/coriander-haarlem/tabs/dilbert/dilbert.jsp"
 	def getPluginName 	= "coriander-haarlem"
 
 	def fillModel(
