@@ -21,11 +21,11 @@ class FailblogRssAdapterTests extends UnitTest {
 		assertThat(actual.media.url, is(equalTo(expectedUrl)))
 		assertThat(actual.title, is(equalTo(expectedTitle)))
 		assertThat(actual.date, is(equalTo(expectedDate)))
-    }
+	}
 
 	@Test
 	def given_the_current_fail_is_a_video_then_it_is_returned {
-		val expectedUrl = "http://failblog.files.wordpress.com/2010/01/epic-fail-lego-instruction-fail.jpg"
+		val expectedHtml = "<div class='snap_preview'><br />"
 		val expectedTitle = "Friday Rewind: Child Molester Fail"
 		val expectedDate = toDateAndTimeGmt(2010, Calendar.JANUARY, 29, 22, 0, 38)
 
@@ -33,7 +33,11 @@ class FailblogRssAdapterTests extends UnitTest {
 
 		assertThat(actual.title, is(equalTo(expectedTitle)))
 		assertThat(actual.date, is(equalTo(expectedDate)))
-		assertThat(actual.media.html, is(equalTo(expectedUrl)))
+		assertTrue("Media URL should be null", null == actual.media.url)
+		assertTrue(
+			"Expected that trimmed media HTML should start with <" + expectedHtml + ">, " +
+			"but it is <" + actual.media.html + ">",
+			actual.media.html.trim().startsWith(expectedHtml))
 	}
 
 	val xmlWhereFailIsVideo =
@@ -105,7 +109,8 @@ class FailblogRssAdapterTests extends UnitTest {
 							<img src="http://feeds.feedburner.com/~ff/failblog?i=aC3f-D93V_c:Hyf8C-zM6X4:gIN9vFwOqvQ" border="0"></img>
 						</a>
 					</div>
-					<img src="http://feeds.feedburner.com/~r/failblog/~4/aC3f-D93V_c" height="1" width="1"/>]]>
+					<img src="http://feeds.feedburner.com/~r/failblog/~4/aC3f-D93V_c" height="1" width="1"/>
+					]]>
 				</content:encoded>
 				<wfw:commentRss>http://failblog.org/2010/01/29/friday-rewind-child-molester-fail-2/feed/</wfw:commentRss>
 				<slash:comments>15</slash:comments>
