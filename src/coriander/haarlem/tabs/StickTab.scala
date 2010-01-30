@@ -40,6 +40,7 @@ class StickTab(buildServer : SBuildServer)
 		model : java.util.Map[java.lang.String,java.lang.Object],
 		httpServletRequest : HttpServletRequest
 	) {
+		// TODO: Consider whether failblog is appropriate...
 		val fail = new FailblogRssFeed().find
 		model.put("rssItemTitle", fail.title)
 
