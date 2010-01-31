@@ -7,7 +7,5 @@ set where=%2
 
 grep %flags% "%for_what%" "%where%" | sort | head -n %count%
 
-grep %flags% "%for_what%" "%where%" | sort | head -n %count%
-
 REM USAGE: grep what where
 REM EXAMPLE: grep CHUBBY C:\Documents\.BuildServer\system\artifacts\Plinkton
