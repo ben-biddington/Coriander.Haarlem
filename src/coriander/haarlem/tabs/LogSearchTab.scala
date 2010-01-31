@@ -65,12 +65,12 @@ class LogSearchTab(buildServer : SBuildServer, pluginDescriptor : PluginDescript
 		val file = new File(
 			buildServer.getServerRootPath +
 			pluginDir +
-			"\\bin\\grep.exe"
+			"\\bin\\search.bat"
 		)
 
 		val absolutePath = file.getCanonicalPath.replace('\\', '/')
 
-		val cmd = absolutePath+ " -r " + forWhat + " " + where.replace('\\', '/')
+		val cmd = absolutePath+ " " + forWhat + " " + where.replace('\\', '/')
 
 		var result = new Grep().run(cmd)
 

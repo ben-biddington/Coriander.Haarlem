@@ -7,7 +7,7 @@ class Grep {
 		var grep = Runtime.getRuntime().exec(command)
 
 		val input = new BufferedReader(
-			new InputStreamReader(grep.getInputStream())
+			new InputStreamReader(grep.getInputStream)
 		)
 
 		this readAll input
@@ -23,6 +23,9 @@ class Grep {
 
 			while (false == done) {
 				line = input.readLine()
+
+				println("LINE:" + line)
+
 				done = line == null
 
 				if (line != null) {
