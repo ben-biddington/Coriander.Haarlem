@@ -4,10 +4,11 @@ import javax.servlet.http.HttpServletRequest
 import org.springframework.context.{ApplicationContext, ApplicationContextAware}
 import jetbrains.buildServer.web.openapi._
 import coriander.haarlem.http.query.Query
-import jetbrains.buildServer.serverSide.SBuildServer
 import java.io.File
+import java.lang.Long._
 import coriander.haarlem.Grep
 import coriander.haarlem.controllers.SearchResults
+import jetbrains.buildServer.serverSide.{SBuild, SBuildServer}
 
 class LogSearchTab(buildServer : SBuildServer, pluginDescriptor : PluginDescriptor)
 	extends CustomTab
@@ -34,28 +35,33 @@ class LogSearchTab(buildServer : SBuildServer, pluginDescriptor : PluginDescript
 	) {
 		val query = Query(request.getQueryString)
 
-		val artifactsDir = buildServer.getArtifactsDirectory
-		val buildNumber = buildServer.getBuildNumber
-		val buildId = query.value("buildId")
+		val theBuild = buildServer.findBuildInstanceById(
+			parseLong(query.value("buildId"))
+		)
 
+		val artifactsDir = theBuild.getArtifactsDirectory.getCanonicalPath
+		val buildNumber = buildServer.getBuildNumber
+
+		val buildId 	= query.value("buildId")
 		val tab 		= query.value("tab")
 		val buildTypeId = query.value("buildTypeId")
 		
-		model.put("buildId"		, buildId)
-		model.put("buildNumber"	, buildNumber)
-		model.put("buildTypeId"	, buildTypeId)
-		model.put("tab"			, tab)
-		
+		model.put("buildId"				, buildId)
+		model.put("buildNumber"			, buildNumber)
+		model.put("buildTypeId"			, buildTypeId)
+		model.put("tab"					, tab)
+		model.put("artifactsDirectory" 	, artifactsDir)
+
 		if (query.contains("q")) {
 			val keywords = query.value("q")
-			val results = search(keywords)
+			val results = search(keywords, artifactsDir)
 			
 			model.put("q", keywords)
 			model.put("results", results.result)
 		}
 	}
 
-	private def search(forWhat : String) = {
+	private def search(forWhat : String, where : String) = {
 		val file = new File(
 			buildServer.getServerRootPath +
 			pluginDir +
@@ -64,16 +70,9 @@ class LogSearchTab(buildServer : SBuildServer, pluginDescriptor : PluginDescript
 
 		val absolutePath = file.getCanonicalPath.replace('\\', '/')
 
-		val where = buildServer.getArtifactsDirectory.
-			getCanonicalPath.replace('\\', '/')
-
-		val cmd = absolutePath+ " -r " + forWhat + " " + where
-
-		println("GREP: " + cmd)
+		val cmd = absolutePath+ " -r " + forWhat + " " + where.replace('\\', '/')
 
 		var result = new Grep().run(cmd)
-
-		println("result: " + result)
 
 		new SearchResults(forWhat, result)
 	}
