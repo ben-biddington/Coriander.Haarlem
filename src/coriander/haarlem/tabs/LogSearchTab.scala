@@ -11,6 +11,7 @@ import coriander.haarlem.controllers.SearchResults
 import jetbrains.buildServer.serverSide.{SBuild, SBuildServer}
 import collection.mutable.ListBuffer
 import jetbrains.buildServer.serverSide.buildLog.{LogMessage, BuildLog}
+import coriander.haarlem.core.BuildLogSearch
 
 class LogSearchTab(buildServer : SBuildServer, pluginDescriptor : PluginDescriptor)
 	extends CustomTab
@@ -56,16 +57,24 @@ class LogSearchTab(buildServer : SBuildServer, pluginDescriptor : PluginDescript
 		model.put("artifactsDirectory" 	, artifactsDir)
 		model.put("buildName" 			, theBuild.getBuildDescription)
 
-		// TODO: Grep the build log, too. Actually, I think he wants to search all historical builds
-
-		if (query.contains("q")) {
+		if (query.contains("q") && query.value("q") != null && query.value("q").trim != "") {
 			val keywords = query.value("q")
 			val results = search(keywords, artifactsDir)
 			
 			model.put("q"			, keywords)
 			model.put("results"		, results.result)
-			//model.put("buildLog" 	, search(buildLog, keywords))
+			model.put("buildLog" 	, logSearch(keywords, buildLog))
 		}
+	}
+
+	private def logSearch(forWhat : String, where : BuildLog) : String = {
+		val results = new BuildLogSearch(where).searchFor(forWhat)
+
+		var buffer = new StringBuffer()
+
+		results.foreach(result => buffer.append(result + "\r\n"))
+
+		buffer toString
 	}
 
 	private def search(forWhat : String, where : String) = {

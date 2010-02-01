@@ -12,7 +12,7 @@ class BuildLogSearch(buildLog : BuildLog)  {
 		val iterator = getIterator
 
 		var current : LogMessage = null
-		
+
 		while (iterator.hasNext) {
 			current = iterator.next
 
