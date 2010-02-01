@@ -9,8 +9,7 @@ class BuildLogSearch(buildLog : BuildLog)  {
 
 		val regex = pattern.r
 
-		val iterator : java.util.Iterator[LogMessage] = buildLog.
-				getMessagesIterator.asInstanceOf[java.util.Iterator[LogMessage]]
+		val iterator = getIterator
 
 		var current : LogMessage = null
 		
@@ -24,4 +23,7 @@ class BuildLogSearch(buildLog : BuildLog)  {
 
 		result toList
 	}
+
+	private def getIterator = buildLog.getMessagesIterator.
+		asInstanceOf[java.util.Iterator[LogMessage]]
 }

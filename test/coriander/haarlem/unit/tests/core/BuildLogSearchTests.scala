@@ -51,6 +51,28 @@ class BuildLogSearchTests extends UnitTest {
 		assertThat(actual.size, is(equalTo(1)))
     }
 
+	@Test
+	def multiple_matching_lines_are_returned {
+		given_log_messages("CHUBBY RAIN", "BOOTS", "APPLE", "CHUBBY BAT")
+
+		val search = new BuildLogSearch(mockBuildLog)
+
+		val actual = search.searchFor("CHUBB");
+
+		assertThat(actual.size, is(equalTo(2)))
+    }
+
+	@Test
+	def match_is_case_sensitive {
+		given_log_messages("CHUBBY RAIN")
+
+		val search = new BuildLogSearch(mockBuildLog)
+
+		val actual = search.searchFor("chubby");
+
+		assertThat(actual.size, is(equalTo(0)))
+    }
+
 	private def given_log_messages(messages : String*) {
 		var buffer = new ArrayList[LogMessage]
 
