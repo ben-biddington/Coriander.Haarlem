@@ -2,12 +2,13 @@ package coriander.haarlem.core
 
 import collection.mutable.ListBuffer
 import jetbrains.buildServer.serverSide.buildLog.{LogMessage, BuildLog}
+import java.util.regex.Pattern
 
 class BuildLogSearch(buildLog : BuildLog)  {
 	def searchFor(pattern : String) : List[LogMessage] = {
 		var result = new ListBuffer[LogMessage]
 
-		val regex = pattern.r
+		val regex = Pattern.quote(pattern).r
 
 		val iterator = getIterator
 

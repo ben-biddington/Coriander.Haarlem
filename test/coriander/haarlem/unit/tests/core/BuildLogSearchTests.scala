@@ -73,6 +73,17 @@ class BuildLogSearchTests extends UnitTest {
 		assertThat(actual.size, is(equalTo(0)))
     }
 
+	@Test
+	def searching_for_regex_special_chars_is_okay {
+		given_log_messages("C:\\Documents\\xxx")
+
+		val search = new BuildLogSearch(mockBuildLog)
+
+		val actual = search.searchFor("\\xxx");
+
+		assertThat(actual.size, is(equalTo(1)))
+    }
+	
 	private def given_log_messages(messages : String*) {
 		var buffer = new ArrayList[LogMessage]
 

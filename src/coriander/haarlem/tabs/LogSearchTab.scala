@@ -69,7 +69,7 @@ class LogSearchTab(buildServer : SBuildServer, pluginDescriptor : PluginDescript
 		}
 	}
 
-	private def logSearch(forWhat : String, where : BuildLog) : String = {
+	private def logSearch(forWhat : String, where : BuildLog) = {
 		val results = new BuildLogSearch(where).searchFor(forWhat)
 
 		var buffer = new StringBuffer()
