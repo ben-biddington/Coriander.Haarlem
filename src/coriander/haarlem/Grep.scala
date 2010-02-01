@@ -24,8 +24,6 @@ class Grep {
 			while (false == done) {
 				line = input.readLine()
 
-				println("LINE:" + line)
-
 				done = line == null
 
 				if (line != null) {
