@@ -18,9 +18,7 @@ class LogSearchTab(buildServer : SBuildServer, pluginDescriptor : PluginDescript
 	with PageExtension
 	with ApplicationContextAware
 {
-	def this() {
-		this(null, null);
-	}
+	def this() = this(null, null)
 	
 	def register() {
 		val mgr = context.getBean("webControllerManager", classOf[WebControllerManager])
@@ -57,9 +55,13 @@ class LogSearchTab(buildServer : SBuildServer, pluginDescriptor : PluginDescript
 		model.put("artifactsDirectory" 	, artifactsDir)
 		model.put("buildName" 			, theBuild.getBuildDescription)
 
-		if (query.contains("q") && query.value("q") != null && query.value("q").trim != "") {
+		val shouldBotherSearching = query.contains("q") &&
+			query.value("q") != null &&
+			query.value("q").trim != ""
+
+		if (shouldBotherSearching) {
 			val keywords = query.value("q")
-			val results = search(keywords, artifactsDir)
+			val results = artifactSearch(keywords, artifactsDir)
 			
 			model.put("q"			, keywords)
 			model.put("results"		, results.result)
@@ -72,12 +74,12 @@ class LogSearchTab(buildServer : SBuildServer, pluginDescriptor : PluginDescript
 
 		var buffer = new StringBuffer()
 
-		results.foreach(result => buffer.append(result + "\r\n"))
+		results.foreach((result : LogMessage) => buffer.append(result.getText + "\r\n"))
 
 		buffer toString
 	}
 
-	private def search(forWhat : String, where : String) = {
+	private def artifactSearch(forWhat : String, where : String) = {
 		val file = new File(
 			buildServer.getServerRootPath +
 			pluginDir +
