@@ -46,7 +46,7 @@ class LogSearchTab(buildServer : SBuildServer, pluginDescriptor : PluginDescript
 		val buildId 	= query.value("buildId")
 		val tab 		= query.value("tab")
 		val buildTypeId = query.value("buildTypeId")
-		val useRegex 	= query.contains("regex") && query.value("regex") != null && query.value("regex") == "1"  
+		val useRegex 	= query.value("regex") != null && query.value("regex") == "1"  
 		val buildLog 	= theBuild.getBuildLog
 
 		model.put("buildId"				, buildId)
