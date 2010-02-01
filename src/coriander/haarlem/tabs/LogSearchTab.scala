@@ -46,6 +46,7 @@ class LogSearchTab(buildServer : SBuildServer, pluginDescriptor : PluginDescript
 		val buildId 	= query.value("buildId")
 		val tab 		= query.value("tab")
 		val buildTypeId = query.value("buildTypeId")
+		val useRegex 	= query.contains("regex") && query.value("regex") != null && query.value("regex") == "1"  
 		val buildLog 	= theBuild.getBuildLog
 
 		model.put("buildId"				, buildId)
@@ -65,12 +66,18 @@ class LogSearchTab(buildServer : SBuildServer, pluginDescriptor : PluginDescript
 			
 			model.put("q"			, keywords)
 			model.put("results"		, results.result)
-			model.put("buildLog" 	, logSearch(keywords, buildLog))
+
+			// TODO: FLAG ARGUMENT === BAD
+			model.put("buildLog" 	, logSearch(keywords, buildLog, useRegex))
 		}
 	}
 
-	private def logSearch(forWhat : String, where : BuildLog) = {
-		val results = new BuildLogSearch(where).searchFor(forWhat)
+	private def logSearch(forWhat : String, where : BuildLog, useRegex : Boolean) = {
+		val searcher = new BuildLogSearch(where)
+		
+		val results =
+			if (useRegex) searcher.searchForRegex(forWhat) 
+			else searcher.searchForPattern(forWhat)
 
 		var buffer = new StringBuffer()
 

@@ -11,7 +11,7 @@ import coriander.haarlem.core.BuildLogSearch
 import jetbrains.buildServer.serverSide.buildLog.{BuildLog, LogMessage}
 import java.util.{Date, ArrayList}
 import jetbrains.buildServer.messages.Status
-import org.junit.{Before, Test}
+import org.junit.{Ignore, Before, Test}
 
 class BuildLogSearchTests extends UnitTest {
 	@Before
@@ -24,7 +24,7 @@ class BuildLogSearchTests extends UnitTest {
 
 		val search = new BuildLogSearch(mockBuildLog)
 
-		val actual = search.searchFor("anything");
+		val actual = search.searchForPattern("anything");
 
 		assertThat(actual.size, is(equalTo(0)))
     }
@@ -35,7 +35,7 @@ class BuildLogSearchTests extends UnitTest {
 		
 		val search = new BuildLogSearch(mockBuildLog)
 
-		val actual = search.searchFor("CHUBB");
+		val actual = search.searchForPattern("CHUBB");
 
 		assertThat(actual.size, is(equalTo(1)))
     }
@@ -46,7 +46,7 @@ class BuildLogSearchTests extends UnitTest {
 
 		val search = new BuildLogSearch(mockBuildLog)
 
-		val actual = search.searchFor("CHUBB");
+		val actual = search.searchForPattern("CHUBB");
 
 		assertThat(actual.size, is(equalTo(1)))
     }
@@ -57,7 +57,7 @@ class BuildLogSearchTests extends UnitTest {
 
 		val search = new BuildLogSearch(mockBuildLog)
 
-		val actual = search.searchFor("CHUBB");
+		val actual = search.searchForPattern("CHUBB");
 
 		assertThat(actual.size, is(equalTo(2)))
     }
@@ -68,7 +68,7 @@ class BuildLogSearchTests extends UnitTest {
 
 		val search = new BuildLogSearch(mockBuildLog)
 
-		val actual = search.searchFor("chubby");
+		val actual = search.searchForPattern("chubby");
 
 		assertThat(actual.size, is(equalTo(0)))
     }
@@ -79,7 +79,18 @@ class BuildLogSearchTests extends UnitTest {
 
 		val search = new BuildLogSearch(mockBuildLog)
 
-		val actual = search.searchFor("\\xxx");
+		val actual = search.searchForPattern("\\xxx");
+
+		assertThat(actual.size, is(equalTo(1)))
+    }
+
+	@Test
+	def searching_for_regex_pattern_works {
+		given_log_messages("C:\\Documents\\1234567890")
+
+		val search = new BuildLogSearch(mockBuildLog)
+
+		val actual = search.searchForRegex("[0-9]+");
 
 		assertThat(actual.size, is(equalTo(1)))
     }
