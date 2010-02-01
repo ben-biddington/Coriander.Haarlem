@@ -17,7 +17,7 @@ class BuildLogSearch(buildLog : BuildLog)  {
 		while (iterator.hasNext) {
 			current = iterator.next
 
-			if (false == regex.unapplySeq(current.getText).isEmpty) {
+			if (false == regex.findFirstIn(current.getText).isEmpty) {
 				result.append(current)
 			}
 		}

@@ -9,8 +9,7 @@ import org.mockito.Matchers._
 import coriander.haarlem.unit.tests.UnitTest
 import coriander.haarlem.core.BuildLogSearch
 import jetbrains.buildServer.serverSide.buildLog.{BuildLog, LogMessage}
-import collection.mutable.ListBuffer
-import java.util.{Date, Calendar, ArrayList}
+import java.util.{Date, ArrayList}
 import jetbrains.buildServer.messages.Status
 import org.junit.{Before, Test}
 
@@ -18,10 +17,6 @@ class BuildLogSearchTests extends UnitTest {
 	@Before
 	def before {
 		given_log_messages()
-
-		mockBuildLog = mock(classOf[BuildLog])
-
-		when(mockBuildLog.getMessagesIterator).thenReturn(logMessages)
 	}
 
     @Test
@@ -34,12 +29,38 @@ class BuildLogSearchTests extends UnitTest {
 		assertThat(actual.size, is(equalTo(0)))
     }
 
+	@Test
+	def Searching_one_log_file_returns_match {
+		given_log_messages("CHUBBY RAIN")
+		
+		val search = new BuildLogSearch(mockBuildLog)
+
+		val actual = search.searchFor("CHUBB");
+
+		assertThat(actual.size, is(equalTo(1)))
+    }
+
+	@Test
+	def non_matching_lines_are_ignored {
+		given_log_messages("CHUBBY RAIN", "BOOTS", "APPLE")
+
+		val search = new BuildLogSearch(mockBuildLog)
+
+		val actual = search.searchFor("CHUBB");
+
+		assertThat(actual.size, is(equalTo(1)))
+    }
+
 	private def given_log_messages(messages : String*) {
 		var buffer = new ArrayList[LogMessage]
 
 		messages.foreach(msg => buffer.add(newLogMessage(msg)))
 
 		logMessages = buffer.iterator
+
+		mockBuildLog = mock(classOf[BuildLog])
+
+		when(mockBuildLog.getMessagesIterator).thenReturn(logMessages)
 	}
 
 	private def newLogMessage(message : String) ={
