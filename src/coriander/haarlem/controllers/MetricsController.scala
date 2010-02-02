@@ -31,7 +31,16 @@ class MetricsController(
 
 			buildServer.find
 
-			// Now get the artifacts directory, and search for dashboard.xml
+			// TODO: Now get the artifacts directory, and search for dashboard.xml
+			// for each of the projects, getBuildTypes returns all of the build
+			// configurations (SBuildType).
+			// SBuildType.getLastChangesSuccessfullyFinished() returns the last
+			// successful build (SFinishedBuild), and this has getArtifactsDirectory(), which
+			// gives base directory for artifacts.
+			// We can search on disk there for the dashboards, since we know what folders
+			// to look for, something like:
+			//
+			// \.BuildServer\system\artifacts\Plinkton\Code Metrics\12
 
 			result = new MetricsModel(user, allProjects)
 		}
