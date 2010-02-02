@@ -3,7 +3,7 @@
     <body>
         <c:out value="${results.error}" escapeXml="false" />
         <c:out value="${results.user.email} (${results.user.email})" escapeXml="true" />
-
+            
         <table class="plain" style="margin-left:0;width:100%" border="1">
             <c:forEach items="${results.projects}" var="project">
                 <tr>

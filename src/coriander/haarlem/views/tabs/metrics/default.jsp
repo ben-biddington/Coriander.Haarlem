@@ -1,7 +1,29 @@
 <%@include file="../../include-internal.jsp"%>
 <jsp:useBean id="currentUser" type="jetbrains.buildServer.users.SUser" scope="request"/>
+<div id="coriander.haarlem.tabs.metrics.results"></div>
 
-<table cellspacing="0" class="userSettingsTable">
-    <tr><td class="t" colspan="2">All dashboards</td></tr>
-    <tr><td>${currentUser.id}</td><td>${currentUser.email}</td></tr>
-</table>
+<script language="javascript">
+    function showStatus(message) {
+        $("coriander.haarlem.tabs.metrics.results").update(message)
+    }
+
+    function fill() {
+        var currentUserId = "${currentUser.id}";
+        var url = "/metrics.html?user=" + currentUserId;
+
+        showStatus("Starting...");
+
+        var req = new Ajax.Request(url, {
+            method: 'get',
+            onSuccess: function(transport) {
+                var response = transport.responseText || "<none>";
+
+                showStatus(response);
+            }
+        });
+    }
+
+    document.observe("dom:loaded", function() {
+        fill();
+    });
+</script>
