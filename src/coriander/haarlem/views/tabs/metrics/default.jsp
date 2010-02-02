@@ -11,7 +11,7 @@
         var currentUserId = "${currentUser.id}";
         var url = "/metrics.html?user=" + currentUserId;
 
-        showStatus("Starting...");
+        showStatus("<img src=\"../../img/ajax-loader.gif\" />");
 
         var req = new Ajax.Request(url, {
             method: 'get',
