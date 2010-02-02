@@ -9,6 +9,7 @@ import jetbrains.buildServer.web.openapi.{PluginDescriptor, WebControllerManager
 import jetbrains.buildServer.users.SUser
 import jetbrains.buildServer.serverSide.{SProject, SBuildServer}
 import java.util.ArrayList
+import collection.mutable.ListBuffer
 
 class MetricsController(
 	buildServer : SBuildServer,
@@ -39,6 +40,8 @@ class MetricsController(
 			// to look for, something like:
 			//
 			// \.BuildServer\system\artifacts\Plinkton\Code Metrics\12
+			//
+			// Once we have the artifacts, we can apply xsl transform and supply that to view. 
 
 			result = new MetricsModel(user, allProjects)
 		}
@@ -55,6 +58,14 @@ class MetricsController(
 			getBean("webControllerManager", classOf[WebControllerManager])
 
 		mgr.registerController("/metrics.html", this)
+	}
+
+	private def findAllProjectsWithDashboards(user : SUser) {
+		val result : ListBuffer[SProject] = new ListBuffer[SProject]
+		
+		val allProjects = getAllProjects(user)
+
+		result.toList
 	}
 
 	private def getAllProjects(user : SUser) = {
