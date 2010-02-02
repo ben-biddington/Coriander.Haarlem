@@ -12,6 +12,7 @@ import jetbrains.buildServer.serverSide.{SBuild, SBuildServer}
 import collection.mutable.ListBuffer
 import jetbrains.buildServer.serverSide.buildLog.{LogMessage, BuildLog}
 import coriander.haarlem.core.BuildLogSearch
+import java.util.ArrayList
 
 class LogSearchTab(buildServer : SBuildServer, pluginDescriptor : PluginDescriptor)
 	extends CustomTab
@@ -68,22 +69,32 @@ class LogSearchTab(buildServer : SBuildServer, pluginDescriptor : PluginDescript
 			model.put("results"		, results.result)
 
 			// TODO: FLAG ARGUMENT === BAD
-			model.put("buildLog" 	, logSearch(keywords, buildLog, useRegex))
+			model.put("buildLogResults" 	, logSearch(keywords, buildLog, useRegex))
 		}
 	}
 
-	private def logSearch(forWhat : String, where : BuildLog, useRegex : Boolean) = {
+	private def logSearch(
+		forWhat : String,
+		where : BuildLog,
+		useRegex : Boolean
+	) : ArrayList[LogMessage] = {
 		val searcher = new BuildLogSearch(where)
 		
 		val results =
 			if (useRegex) searcher.searchForRegex(forWhat) 
 			else searcher.searchForPattern(forWhat)
 
-		var buffer = new StringBuffer()
+		var arrayList = new ArrayList[LogMessage]
 
-		results.foreach((result : LogMessage) => buffer.append(result.getText + "\r\n"))
+		results.foreach(log => arrayList.add(log))
 
-		buffer toString
+		arrayList
+		
+//		var buffer = new StringBuffer()
+//
+//		results.foreach((result : LogMessage) => buffer.append(result.getText + "\r\n"))
+//
+//		buffer toString
 	}
 
 	private def artifactSearch(forWhat : String, where : String) = {
