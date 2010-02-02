@@ -29,8 +29,6 @@ class MetricsController(
 			val user : SUser = buildServer.getUserModel.findUserById(parseLong(userId))
 			val allProjects = getAllProjects(user)
 
-			buildServer.find
-
 			// TODO: Now get the artifacts directory, and search for dashboard.xml
 			// for each of the projects, getBuildTypes returns all of the build
 			// configurations (SBuildType).
