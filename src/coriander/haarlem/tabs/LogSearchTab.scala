@@ -68,8 +68,11 @@ class LogSearchTab(buildServer : SBuildServer, pluginDescriptor : PluginDescript
 			model.put("q"			, keywords)
 			model.put("results"		, results.result)
 
+			val logSearchResults = logSearch(keywords, buildLog, useRegex)
+
 			// TODO: FLAG ARGUMENT === BAD
-			model.put("buildLogResults" 	, logSearch(keywords, buildLog, useRegex))
+			model.put("buildLogResults", logSearchResults)
+			model.put("resultCount", logSearchResults.size.toString)
 		}
 	}
 
