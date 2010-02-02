@@ -29,7 +29,7 @@ class MetricsController(
 			val user : SUser = buildServer.getUserModel.findUserById(parseLong(userId))
 			val allProjects = getAllProjects(user)
 
-			println("All projects:" + allProjects.size.toString)
+			buildServer.find
 
 			// Now get the artifacts directory, and search for dashboard.xml
 
