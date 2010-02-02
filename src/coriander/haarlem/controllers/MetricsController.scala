@@ -5,9 +5,10 @@ import jetbrains.buildServer.controllers.BaseController
 import org.springframework.web.servlet.ModelAndView
 import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 import coriander.haarlem.http.query.Query
-import jetbrains.buildServer.serverSide.SBuildServer
 import jetbrains.buildServer.web.openapi.{PluginDescriptor, WebControllerManager}
 import jetbrains.buildServer.users.SUser
+import jetbrains.buildServer.serverSide.{SProject, SBuildServer}
+import java.util.ArrayList
 
 class MetricsController(
 	buildServer : SBuildServer,
@@ -26,8 +27,13 @@ class MetricsController(
 
 		if (userId != null) {
 			val user : SUser = buildServer.getUserModel.findUserById(parseLong(userId))
-			
-			result = new MetricsModel(user)
+			val allProjects = getAllProjects(user)
+
+			println("All projects:" + allProjects.size.toString)
+
+			// Now get the artifacts directory, and search for dashboard.xml
+
+			result = new MetricsModel(user, allProjects)
 		}
 
 		new ModelAndView(
@@ -43,11 +49,39 @@ class MetricsController(
 
 		mgr.registerController("/metrics.html", this)
 	}
+
+	private def getAllProjects(user : SUser) = {
+		// TODO: Spring it
+		val projectManager = buildServer.getProjectManager
+
+		val result = new ArrayList[SProject]()
+
+		val projectIdIterator = user.getAllProjects.iterator
+
+		var currentId : String = null
+
+		while (projectIdIterator.hasNext) {
+			currentId = projectIdIterator.next
+
+			val project = projectManager.findProjectById(currentId)
+
+			if (project != null) {
+				result.add(project)
+			}
+		}
+
+		result
+	}
 }
 
-class MetricsModel(val user : SUser, val error : String) {
+class MetricsModel(val user : SUser, projects : java.util.List[SProject]) {
 	def this(user : SUser) { this(user, null) }
 
-	def getError = error
 	def getUser = user
+	def getProjects = projects
+
+	def getError = error
+	def setError(err : String) = this.error = err
+	
+	private var error : String = null
 }

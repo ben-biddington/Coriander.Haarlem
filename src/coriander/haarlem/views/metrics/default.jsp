@@ -1,25 +1,29 @@
-<%@ page import="java.util.Collection" %>
-<%@page import="jetbrains.buildServer.serverSide.tracker.EventSubscription" %>
 <%@include file="../include-internal.jsp"%>
+<html>
+    <body>
+        <c:out value="${results.error}" escapeXml="false" />
+        <c:out value="${results.user.email} (${results.user.email})" escapeXml="true" />
 
-<c:set var="loadingWarningDisabled" value="true" scope="request"/>
-<c:set var="title" value="All of your metrics" scope="request"/>
-<jsp:useBean id="currentUser" type="jetbrains.buildServer.users.SUser" scope="request"/>
+        <table class="plain" style="margin-left:0;width:100%">
+            <c:forEach items="${results.projects}" var="project">
+                <tr>
+                    <td align="left">
+                        Artifacts
+                    </td>
+                    <td align="left">
+                        <c:out value="${project.artifactsDirectory}" escapeXml="true" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left">
+                        Name
+                    </td>
+                    <td align="left">
+                        <c:out value="${project.extendedName}" escapeXml="true" />
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+    </body>
+</html>
 
-<bs:page>
-  <jsp:attribute name="head_include">
-    <bs:linkCSS>
-      /css/progress.css
-      /css/filePopup.css
-      /css/overviewTable.css
-      /css/myChanges.css
-      /css/viewModification.css
-      /css/testDetailsDialog.css
-    </bs:linkCSS>
-  </jsp:attribute>
-
-  <jsp:attribute name="body_include">
-    <c:out value="${results.error}" escapeXml="false" />  
-    <c:out value="${results.user.email}" escapeXml="false" />  
-  </jsp:attribute>
-</bs:page>
