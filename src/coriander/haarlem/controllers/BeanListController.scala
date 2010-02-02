@@ -13,7 +13,7 @@ class BeanListController extends BaseController {
 	) : ModelAndView = {
 		response.setContentType("text/html")
 
-		response.getWriter.write("<html><head></head><body>")
+		response.getWriter.write("<html><head></head><body><p>All beans:</p>")
 
 		printBeans(response.getWriter)
 

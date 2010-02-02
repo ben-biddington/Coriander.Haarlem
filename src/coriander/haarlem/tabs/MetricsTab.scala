@@ -28,7 +28,7 @@ class MetricsTab(buildServer : SBuildServer)
 
 	def fillModel(
 		model : java.util.Map[java.lang.String,java.lang.Object],
-		httpServletRequest : HttpServletRequest
+		request : HttpServletRequest
 	) {
 		
 	}

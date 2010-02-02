@@ -20,6 +20,7 @@
         <property name="pluginName" value="logSearchTab"/>
         <property name="includeUrl" value="/log-search.html"/>
     </bean>
+    <bean id="metricsController" class="coriander.haarlem.controllers.MetricsController" init-method="register"/>
     <bean id="metricsTab" class="coriander.haarlem.tabs.MetricsTab" init-method="register" />
 </beans>
         
