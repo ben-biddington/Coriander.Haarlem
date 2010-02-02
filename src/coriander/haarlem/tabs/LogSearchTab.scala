@@ -8,8 +8,7 @@ import java.io.File
 import java.lang.Long._
 import coriander.haarlem.Grep
 import coriander.haarlem.controllers.SearchResults
-import jetbrains.buildServer.serverSide.{SBuild, SBuildServer}
-import collection.mutable.ListBuffer
+import jetbrains.buildServer.serverSide.{SBuildServer}
 import jetbrains.buildServer.serverSide.buildLog.{LogMessage, BuildLog}
 import coriander.haarlem.core.BuildLogSearch
 import java.util.ArrayList
@@ -92,12 +91,6 @@ class LogSearchTab(buildServer : SBuildServer, pluginDescriptor : PluginDescript
 		results.foreach(log => arrayList.add(log))
 
 		arrayList
-		
-//		var buffer = new StringBuffer()
-//
-//		results.foreach((result : LogMessage) => buffer.append(result.getText + "\r\n"))
-//
-//		buffer toString
 	}
 
 	private def artifactSearch(forWhat : String, where : String) = {
