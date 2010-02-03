@@ -11,6 +11,10 @@ import java.util.ArrayList
 import collection.mutable.ListBuffer
 import jetbrains.buildServer.serverSide._
 import coriander.haarlem.core.Convert
+import javax.xml.transform.stream.{StreamResult, StreamSource}
+import javax.xml.transform.{Transformer, TransformerFactory}
+import javax.xml.transform.dom.DOMResult
+import java.io.{StringWriter, File}
 
 class MetricsController(
 	buildServer : SBuildServer,
@@ -55,9 +59,21 @@ class MetricsController(
 
 	private def run(user: SUser) = {
 		val allBuildsWithDashboards = findAllBuildsWithDashboards(user)
-	
-		val result = new MetricsModel(user, Convert.toJavaList(allBuildsWithDashboards))
 
+		var temp = new ListBuffer[DashboardInfo]
+		val dashboardRenderer = new Dashboard()
+		val xsl = new File(
+			buildServer.getServerRootPath +
+			pluginDescriptor.getPluginResourcesPath +
+			"/metrics/dashboard.xsl"
+		)
+
+		allBuildsWithDashboards.foreach(build => {
+			temp += new DashboardInfo(build, dashboardRenderer.run(build, xsl))
+		})
+		
+		val result = new MetricsModel(user, Convert.toJavaList(temp.toList))
+		
 		new ModelAndView(
 			pluginDescriptor.getPluginResourcesPath + "/metrics/default.jsp",
 			"results",
@@ -82,7 +98,6 @@ class MetricsController(
 
 			builds.foreach(build => {
 				if (hasDashboard(build)) {
-					println("Searching build: " + build.toString)
 					result += build
 				}
 			})
@@ -132,8 +147,8 @@ class MetricsController(
 }
 
 class MetricsModel(
-	val user : SUser,
-	builds : java.util.List[SBuildType]
+	user : SUser,
+	builds : java.util.List[DashboardInfo]
 ) {
 	def this(user : SUser) { this(user, null) }
 
@@ -144,4 +159,52 @@ class MetricsModel(
 	def setError(err : String) = this.error = err
 	
 	private var error : String = null
+}
+
+class DashboardInfo(build : SBuildType, html : String) {
+	def getBuild = build
+	def getHtml = html
+}
+
+class Dashboard {
+	def run(build : SBuildType, xsl : File) : String = {
+		val dir = build.getLastChangesSuccessfullyFinished.getArtifactsDirectory.getCanonicalPath
+		val xml = new File(dir + "\\dashboard\\dashboard.xml")
+
+		if (false == xml.exists)
+			throw new Exception("Not found: " + xml.getCanonicalPath)
+
+		return apply(xml, xsl)
+	}
+
+	private def apply(xml : File, xslt : File) : String = {
+        require(xml.exists, "File not found <" + xml.getCanonicalPath + ">")
+        require(xslt.exists, "File not found <" + xslt.getCanonicalPath + ">")
+
+		val xmlSource = new StreamSource(xml);
+        val xsltSource = new StreamSource(xslt);
+
+        val transFact = TransformerFactory.newInstance();
+        val trans : Transformer = transFact.newTransformer(xsltSource);
+
+		if (null == trans)
+			throw new Exception("No Transformer available")
+
+		val domResult : DOMResult = new DOMResult
+
+		var stringWriter : StringWriter = null;
+		
+		try {
+			stringWriter = new StringWriter
+
+        	trans.transform(xmlSource, new StreamResult(stringWriter));
+
+			return stringWriter.toString
+
+		}  finally {
+			if (stringWriter != null) {
+				stringWriter.close
+			}
+		}
+	}
 }

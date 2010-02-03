@@ -6,15 +6,18 @@
             
         <p>Builds with dashboards:</p>
         
-        <c:forEach items="${results.builds}" var="build">
-            <strong><c:out value="${build.extendedName}" escapeXml="true" /></strong>
+        <c:forEach items="${results.builds}" var="dashboardInfo">
+            <strong><c:out value="${dashboardInfo.build.extendedName}" escapeXml="true" /></strong>
             <p>
                 Last successful:
-                <c:out value="${build.lastChangesSuccessfullyFinished}" escapeXml="true" />
+                <c:out value="${dashboardInfo.build.lastChangesSuccessfullyFinished}" escapeXml="true" />
             </p>
             <p>
-                Artifacts: <c:out value="${build.lastChangesSuccessfullyFinished.artifactsDirectory}" />
+                Artifacts: <c:out value="${dashboardInfo.build.lastChangesSuccessfullyFinished.artifactsDirectory}" />
             </p>
+            <div>
+                ${dashboardInfo.html}                
+            </div>
         </c:forEach>
     </body>
 </html>
