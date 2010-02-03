@@ -7,9 +7,10 @@ import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 import coriander.haarlem.http.query.Query
 import jetbrains.buildServer.web.openapi.{PluginDescriptor, WebControllerManager}
 import jetbrains.buildServer.users.SUser
-import jetbrains.buildServer.serverSide.{SProject, SBuildServer}
 import java.util.ArrayList
 import collection.mutable.ListBuffer
+import jetbrains.buildServer.serverSide._
+import coriander.haarlem.core.Convert
 
 class MetricsController(
 	buildServer : SBuildServer,
@@ -28,22 +29,9 @@ class MetricsController(
 
 		if (userId != null) {
 			val user : SUser = buildServer.getUserModel.findUserById(parseLong(userId))
-			val allProjects = getAllProjects(user)
+			val allBuildsWithDashboards = findAllBuildsWithDashboards(user) 
 
-			// TODO: Now get the artifacts directory, and search for dashboard.xml
-			// for each of the projects, getBuildTypes returns all of the build
-			// configurations (SBuildType).
-			// SBuildType.getLastChangesSuccessfullyFinished() returns the last
-			// successful build (SFinishedBuild), and this has getArtifactsDirectory(), which
-			// gives base directory for artifacts.
-			// We can search on disk there for the dashboards, since we know what folders
-			// to look for, something like:
-			//
-			// \.BuildServer\system\artifacts\Plinkton\Code Metrics\12
-			//
-			// Once we have the artifacts, we can apply xsl transform and supply that to view. 
-
-			result = new MetricsModel(user, allProjects)
+			result = new MetricsModel(user, Convert.toJavaList(allBuildsWithDashboards))
 		}
 
 		new ModelAndView(
@@ -60,12 +48,44 @@ class MetricsController(
 		mgr.registerController("/metrics.html", this)
 	}
 
-	private def findAllProjectsWithDashboards(user : SUser) {
-		val result : ListBuffer[SProject] = new ListBuffer[SProject]
+	private def findAllBuildsWithDashboards(user : SUser) : List[SBuildType] = {
+		val result = new ListBuffer[SBuildType]()
 		
-		val allProjects = getAllProjects(user)
+		val projects = Convert.toScalaList(getAllProjects(user))
 
-		result.toList
+		println("Searching: " + projects.size + " projects")
+
+		projects.foreach(project => {
+			val builds = Convert.toScalaList(project.getBuildTypes)
+
+			println("Searching: " + builds.size + " builds")
+
+			builds.foreach(build => {
+				if (hasDashboard(build)) {
+					println("Searching build: " + build.toString)
+					result += build
+				}
+			})
+		})
+
+		result toList
+	}
+
+	private def hasDashboard(buildType : SBuildType) : Boolean = {
+		val dashboardFolderName = "dashboard"
+
+		val lastSuccessful = buildType.getLastChangesSuccessfullyFinished
+
+		if (null == lastSuccessful)
+			return false
+
+		val rootDir = lastSuccessful.getArtifactsDirectory.getCanonicalFile
+
+		println("Searching: " + rootDir)
+
+		return if (rootDir.list != null)
+			rootDir.list.contains(dashboardFolderName)
+		else false
 	}
 
 	private def getAllProjects(user : SUser) = {
@@ -92,11 +112,14 @@ class MetricsController(
 	}
 }
 
-class MetricsModel(val user : SUser, projects : java.util.List[SProject]) {
+class MetricsModel(
+	val user : SUser,
+	builds : java.util.List[SBuildType]
+) {
 	def this(user : SUser) { this(user, null) }
 
 	def getUser = user
-	def getProjects = projects
+	def getBuilds = builds
 
 	def getError = error
 	def setError(err : String) = this.error = err
