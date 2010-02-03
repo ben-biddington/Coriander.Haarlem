@@ -27,23 +27,42 @@ class MetricsController(
 
 		var result : MetricsModel = null
 
+		var user : SUser = null
+
 		if (userId != null) {
-			val user : SUser = buildServer.getUserModel.findUserById(parseLong(userId))
-			val allBuildsWithDashboards = findAllBuildsWithDashboards(user) 
+			user = buildServer.getUserModel.findUserById(parseLong(userId))
 
-			result = new MetricsModel(user, Convert.toJavaList(allBuildsWithDashboards))
-
-			return new ModelAndView(
-				pluginDescriptor.getPluginResourcesPath + "/metrics/default.jsp",
-				"results",
-				result
-			)
+			if (user != null) {
+				return run(user)
+			}
 		}
 
-		response.setStatus(400)
-		response.getWriter.write("Missing the &lt;user&gt; parameter.")
+		response.setContentType("text/html")
+
+		if (null == userId) {
+			response.setStatus(400)
+			response.getWriter.write("Missing the &lt;user&gt; parameter.")
+		}  else if (null == user) {
+			response.setStatus(404)
+			response.getWriter.write(
+				"Not found. " +
+				"The user with id &lt;" + userId + "&gt; could not be found."
+			)			
+		}
 
 		null
+	}
+
+	private def run(user: SUser) = {
+		val allBuildsWithDashboards = findAllBuildsWithDashboards(user)
+	
+		val result = new MetricsModel(user, Convert.toJavaList(allBuildsWithDashboards))
+
+		new ModelAndView(
+			pluginDescriptor.getPluginResourcesPath + "/metrics/default.jsp",
+			"results",
+			result
+		)
 	}
 
 	def register() {
