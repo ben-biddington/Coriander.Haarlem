@@ -32,13 +32,18 @@ class MetricsController(
 			val allBuildsWithDashboards = findAllBuildsWithDashboards(user) 
 
 			result = new MetricsModel(user, Convert.toJavaList(allBuildsWithDashboards))
+
+			return new ModelAndView(
+				pluginDescriptor.getPluginResourcesPath + "/metrics/default.jsp",
+				"results",
+				result
+			)
 		}
 
-		new ModelAndView(
-			pluginDescriptor.getPluginResourcesPath + "/metrics/default.jsp",
-			"results",
-			result
-		)
+		response.setStatus(400)
+		response.getWriter.write("Missing the &lt;user&gt; parameter.")
+
+		null
 	}
 
 	def register() {
@@ -53,12 +58,8 @@ class MetricsController(
 		
 		val projects = Convert.toScalaList(getAllProjects(user))
 
-		println("Searching: " + projects.size + " projects")
-
 		projects.foreach(project => {
 			val builds = Convert.toScalaList(project.getBuildTypes)
-
-			println("Searching: " + builds.size + " builds")
 
 			builds.foreach(build => {
 				if (hasDashboard(build)) {
@@ -81,13 +82,12 @@ class MetricsController(
 
 		val rootDir = lastSuccessful.getArtifactsDirectory.getCanonicalFile
 
-		println("Searching: " + rootDir)
-
 		return if (rootDir.list != null)
 			rootDir.list.contains(dashboardFolderName)
 		else false
 	}
 
+	// TODO: Make sure they're projects I am following
 	private def getAllProjects(user : SUser) = {
 		// TODO: Spring it
 		val projectManager = buildServer.getProjectManager
