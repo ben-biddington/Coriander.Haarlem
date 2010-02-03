@@ -12,9 +12,7 @@
                 Last successful:
                 <c:out value="${dashboardInfo.build.lastChangesSuccessfullyFinished}" escapeXml="true" />
             </p>
-            <p>
-                Artifacts: <c:out value="${dashboardInfo.build.lastChangesSuccessfullyFinished.artifactsDirectory}" />
-            </p>
+                <!-- Artifacts: <c:out value="${dashboardInfo.build.lastChangesSuccessfullyFinished.artifactsDirectory}" /> -->
             <div>
                 ${dashboardInfo.html}                
             </div>

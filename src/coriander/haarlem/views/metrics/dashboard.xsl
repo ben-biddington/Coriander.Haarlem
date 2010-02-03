@@ -97,7 +97,6 @@
     </xsl:template>
 
     <xsl:template name="outputMetricChange">
-
         <table>
             <tr>
                 <td style="vertical-align:top;">
