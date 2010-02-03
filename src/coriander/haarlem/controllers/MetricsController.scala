@@ -69,7 +69,10 @@ class MetricsController(
 		)
 
 		allBuildsWithDashboards.foreach(build => {
-			temp += new DashboardInfo(build, dashboardRenderer.run(build, xsl))
+			temp += new DashboardInfo(	
+				build,
+				dashboardRenderer.run(build, xsl)
+			)
 		})
 		
 		val result = new MetricsModel(user, Convert.toJavaList(temp.toList))
@@ -93,7 +96,7 @@ class MetricsController(
 		
 		val projects = Convert.toScalaList(getAllProjects(user))
 
-		projects.foreach(project => {
+		projects.foreach((project : SProject) => {
 			val builds = Convert.toScalaList(project.getBuildTypes)
 
 			builds.foreach(build => {

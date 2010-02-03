@@ -10,19 +10,17 @@
     <xsl:variable name="imgPath">/plugins/coriander-haarlem/metrics/img</xsl:variable>
 
     <xsl:template match="/">
-        <div>
-            <xsl:apply-templates select="/comparison/metrics"/>
-            <!-- <div class="assemblyList">
-                <h2>Assemblies</h2>
-                <xsl:call-template name="outputAssemblies"/>
-            </div>
-            -->
-            <!--
-            <h1>Historical trends for <xsl:value-of select="$project"/></h1>
-            <div class="charts">
-                <xsl:call-template name="outputCharts"/>
-            </div>
-            -->
+        <!--<xsl:apply-templates select="/comparison/metrics"/>-->
+        <!-- <div class="assemblyList">
+            <h2>Assemblies</h2>
+            <xsl:call-template name="outputAssemblies"/>
+        </div>
+        -->
+        <!--
+        <h1>Historical trends for <xsl:value-of select="$project"/></h1>
+        -->
+        <div class="charts">
+            <xsl:call-template name="outputCharts"/>
         </div>
     </xsl:template>
 

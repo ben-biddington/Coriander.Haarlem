@@ -5,6 +5,9 @@
         text-align:center;background-color:#008209;padding:2px;width:200px
     }
     div#coriander.haarlem.tabs.metrics.status img { vertical-align:middle }
+
+    div.charts { clear: both; }
+    div.chart { float: left; margin-right: 5px; }
 </style>
 
 <div id="coriander.haarlem.tabs.metrics.status"></div>
