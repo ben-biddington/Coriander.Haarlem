@@ -1,16 +1,23 @@
 <%@include file="../../include-internal.jsp"%>
 <jsp:useBean id="currentUser" type="jetbrains.buildServer.users.SUser" scope="request"/>
 <style type="text/css">
-    div#coriander.haarlem.tabs.metrics.status {
-        text-align:center;background-color:#008209;padding:2px;width:200px
+    div.status {
+        text-align:left;
+        background-color:#FFF;
+        padding:2px;
+        margin-bottom:1px;
+        border-width: 1px 0px 1px 0px;
+        border-color: #FEFEFE;	
+        width:100%;
     }
-    div#coriander.haarlem.tabs.metrics.status img { vertical-align:middle }
+    
+    div.status img { vertical-align:middle }
 
     div.charts { clear: both; }
     div.chart { float: left; margin-right: 5px; }
 </style>
 
-<div id="coriander.haarlem.tabs.metrics.status"></div>
+<div id="coriander.haarlem.tabs.metrics.status" class="status"></div>
 <div id="coriander.haarlem.tabs.metrics.results"></div>
 
 <script language="javascript">
