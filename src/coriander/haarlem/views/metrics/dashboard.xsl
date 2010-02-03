@@ -125,7 +125,7 @@
 
                     <xsl:if test="key('change',@name)/@direction = 'NoChange'">
                         <div style="position:absolute; margin-left: 70px; margin-top: 40px;">
-                            <img src="{$imgPath}/NoChange.png"/>
+                            <img src="{$imgPath}/nochange.png"/>
                         </div>
                         <div style="position:absolute; width:70px; height: 96px; padding-top: 35px; text-align:center;  margin-left: 66px; margin-top: 30px;">
                             0%
