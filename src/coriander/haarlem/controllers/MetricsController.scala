@@ -1,20 +1,18 @@
 package coriander.haarlem.controllers
 
 import java.lang.Long._
-import jetbrains.buildServer.controllers.BaseController
-import org.springframework.web.servlet.ModelAndView
+import java.io.File
+import java.util.ArrayList
 import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
-import coriander.haarlem.http.query.Query
+import org.springframework.web.servlet.ModelAndView
+import collection.mutable.ListBuffer
+import jetbrains.buildServer.controllers.BaseController
 import jetbrains.buildServer.web.openapi.{PluginDescriptor, WebControllerManager}
 import jetbrains.buildServer.users.SUser
-import java.util.ArrayList
-import collection.mutable.ListBuffer
 import jetbrains.buildServer.serverSide._
-import coriander.haarlem.core.Convert
-import javax.xml.transform.stream.{StreamResult, StreamSource}
-import javax.xml.transform.{Transformer, TransformerFactory}
-import javax.xml.transform.dom.DOMResult
-import java.io.{StringWriter, File}
+import coriander.haarlem.http.query.Query
+import coriander.haarlem.core.{Dashboard, Convert}
+import coriander.haarlem.models.{DashboardInfo, MetricsModel}
 
 class MetricsController(
 	buildServer : SBuildServer,
@@ -149,65 +147,3 @@ class MetricsController(
 	}
 }
 
-class MetricsModel(
-	user : SUser,
-	builds : java.util.List[DashboardInfo]
-) {
-	def this(user : SUser) { this(user, null) }
-
-	def getUser = user
-	def getBuilds = builds
-
-	def getError = error
-	def setError(err : String) = this.error = err
-	
-	private var error : String = null
-}
-
-class DashboardInfo(build : SBuildType, html : String) {
-	def getBuild = build
-	def getHtml = html
-}
-
-class Dashboard {
-	def run(build : SBuildType, xsl : File) : String = {
-		val dir = build.getLastChangesSuccessfullyFinished.getArtifactsDirectory.getCanonicalPath
-		val xml = new File(dir + "\\dashboard\\dashboard.xml")
-
-		if (false == xml.exists)
-			throw new Exception("Not found: " + xml.getCanonicalPath)
-
-		return apply(xml, xsl)
-	}
-
-	private def apply(xml : File, xslt : File) : String = {
-        require(xml.exists, "File not found <" + xml.getCanonicalPath + ">")
-        require(xslt.exists, "File not found <" + xslt.getCanonicalPath + ">")
-
-		val xmlSource = new StreamSource(xml);
-        val xsltSource = new StreamSource(xslt);
-
-        val transFact = TransformerFactory.newInstance();
-        val trans : Transformer = transFact.newTransformer(xsltSource);
-
-		if (null == trans)
-			throw new Exception("No Transformer available")
-
-		val domResult : DOMResult = new DOMResult
-
-		var stringWriter : StringWriter = null;
-		
-		try {
-			stringWriter = new StringWriter
-
-        	trans.transform(xmlSource, new StreamResult(stringWriter));
-
-			return stringWriter.toString
-
-		}  finally {
-			if (stringWriter != null) {
-				stringWriter.close
-			}
-		}
-	}
-}

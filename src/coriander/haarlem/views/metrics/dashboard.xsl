@@ -7,10 +7,10 @@
 
     <xsl:key name="change" match="/comparison/assemblies/solution/change" use="@name"/>
     <xsl:variable name="project" select="/comparison/assemblies/solution/@name"/>
-    <xsl:variable name="imgPath">/plugins/coriander-haarlem/metrics/img</xsl:variable>
+    <xsl:variable name="imgPath">/plugins/coriander-haarlem/metrics/img/small</xsl:variable>
 
     <xsl:template match="/">
-        <!--<xsl:apply-templates select="/comparison/metrics"/>-->
+        <xsl:apply-templates select="/comparison/metrics"/>
         <!-- <div class="assemblyList">
             <h2>Assemblies</h2>
             <xsl:call-template name="outputAssemblies"/>
@@ -19,9 +19,9 @@
         <!--
         <h1>Historical trends for <xsl:value-of select="$project"/></h1>
         -->
-        <div class="charts">
-            <xsl:call-template name="outputCharts"/>
-        </div>
+        <!--<div class="charts">-->
+            <!--<xsl:call-template name="outputCharts"/>-->
+        <!--</div>-->
     </xsl:template>
 
     <xsl:template name="outputCharts">
@@ -95,7 +95,7 @@
     </xsl:template>
 
     <xsl:template name="outputMetricChange">
-        <table>
+        <table class="metric">
             <tr>
                 <td style="vertical-align:top;">
                     <xsl:if test="key('change',@name)/@rank = 'red'">
@@ -111,52 +111,50 @@
                         <img src="{$imgPath}/star.png"/>
                     </xsl:if>
                 </td>
-                <td style="vertical-align:top; padding-left:10px">
-                    <h2 style="position:absolute; width: 165px">
+                <td>
+                    <h4 class="metric-title">
                         <xsl:element name="a">
                             <xsl:attribute name="href">
                                 <xsl:value-of select="@link"/>
                             </xsl:attribute>
                             <xsl:value-of select="@name"/>
                         </xsl:element>
-                    </h2>
+                    </h4>
+                    <div class="metric-body">
+                        <xsl:if test="key('change',@name)/@direction = 'NoChange'">
+                            <div class="metric-icon">
+                                <img src="{$imgPath}/nochange.png"/>
+                            </div>
+                            <div class="metric-percent">
+                                0%
+                            </div>
+                        </xsl:if>
 
-                    <xsl:if test="key('change',@name)/@direction = 'NoChange'">
-                        <div style="position:absolute; margin-left: 70px; margin-top: 40px;">
-                            <img src="{$imgPath}/nochange.png"/>
-                        </div>
-                        <div style="position:absolute; width:70px; height: 96px; padding-top: 35px; text-align:center;  margin-left: 66px; margin-top: 30px;">
-                            0%
-                        </div>
-                    </xsl:if>
+                        <xsl:if test="key('change',@name)/@direction = 'Better'">
+                            <div class="metric-icon">
+                                <img src="{$imgPath}/better.png"/>
+                            </div>
+                            <div class="metric-percent">
+                                <xsl:value-of select="key('change',@name)/@percent"/>%
+                            </div>
+                        </xsl:if>
 
-                    <xsl:if test="key('change',@name)/@direction = 'Better'">
-                        <div style="position:absolute; margin-left: 66px; margin-top: 40px;">
-                            <img src="{$imgPath}/better.png"/>
-                        </div>
-                        <div style="position:absolute; width:70px; height: 96px; padding-top: 35px; text-align:center;  margin-left: 68px; margin-top: 40px;">
-                            <xsl:value-of select="key('change',@name)/@percent"/>%
-                        </div>
-                    </xsl:if>
+                        <xsl:if test="key('change',@name)/@direction = 'Worse'">
+                            <div class="metric-icon">
+                                <img src="{$imgPath}/worse.png"/>
+                            </div>
+                            <div class="metric-percent">
+                                <xsl:value-of select="key('change',@name)/@percent"/>%
+                            </div>
+                        </xsl:if>
 
-                    <xsl:if test="key('change',@name)/@direction = 'Worse'">
-                        <div style="position:absolute; margin-left: 66px; margin-top: 52px;">
-                            <img src="{$imgPath}/worse.png"/>
-                        </div>
-                        <div style="position:absolute; width:70px; height: 96px; padding-top: 35px; text-align:center;  margin-left: 67px; margin-top: 26px;">
-                            <xsl:value-of select="key('change',@name)/@percent"/>%
-                        </div>
-                    </xsl:if>
-
-                    <div style="position:absolute; width:60px; height: 50px; padding-top: 35px; text-align:center; margin-top: 30px;">
-                        <span class="metricvalue">
+                        <div class="metric-some-other-number">
                             <xsl:value-of select="key('change',@name)/@after"/>
-                        </span>
+                        </div>
                     </div>
-
-                    <div style="margin-top:115px">
-                        <xsl:call-template name="outputMetricRanks"/>
-                    </div>
+                    <!--<div style="margin-top:115px">-->
+                        <!--<xsl:call-template name="outputMetricRanks"/>-->
+                    <!--</div>-->
                 </td>
             </tr>
         </table>
