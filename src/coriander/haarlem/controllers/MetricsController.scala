@@ -2,7 +2,6 @@ package coriander.haarlem.controllers
 
 import java.lang.Long._
 import java.io.File
-import java.util.ArrayList
 import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.springframework.web.servlet.ModelAndView
 import collection.mutable.ListBuffer
@@ -13,9 +12,11 @@ import jetbrains.buildServer.serverSide._
 import coriander.haarlem.http.query.Query
 import coriander.haarlem.core.{Dashboard, Convert}
 import coriander.haarlem.models.{DashboardInfo, MetricsModel}
+import java.util.{ArrayList}
 
 class MetricsController(
 	buildServer : SBuildServer,
+	projectManager : ProjectManager,
 	pluginDescriptor : PluginDescriptor
 ) extends BaseController {
 	override protected def doHandle(
@@ -124,9 +125,6 @@ class MetricsController(
 
 	// TODO: Make sure they're projects I am following
 	private def getAllProjects(user : SUser) = {
-		// TODO: Spring it
-		val projectManager = buildServer.getProjectManager
-
 		val result = new ArrayList[SProject]()
 
 		val projectIdIterator = user.getAllProjects.iterator
