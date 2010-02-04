@@ -19,7 +19,7 @@
             </h2>
         </div>
         <div class="tableCaption">
-            <a href="javascript:toggleVisible(this, 'dashboard-${dashboardInfo.build.buildTypeId}')">
+            <a href="javascript:toggleVisibleAndChangeImage(this, 'dashboard-${dashboardInfo.build.buildTypeId}')">
                 <img src="/img/minus.gif" style="margin-right:10px;" border="0" />
             </a>
             <a class="buildTypeName" href="javascript:void(0);">

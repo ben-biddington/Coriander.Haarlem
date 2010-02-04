@@ -25,7 +25,7 @@
     div.metric-some-other-number { float:left; padding:2px; }
     table.metric td { vertical-align:top; }
 
-    div.build, div.projectHeader { width:100% }
+    div.build, div.projectHeader, div.tableCaption { width:100% }
 </style>
 <div id="coriander.haarlem.tabs.metrics.status" class="status"></div>
 <div id="coriander.haarlem.tabs.metrics.results"></div>
@@ -49,6 +49,7 @@
     }
 
     function showStatus(message) {
+        $("coriander.haarlem.tabs.metrics.status").show()
         $("coriander.haarlem.tabs.metrics.status").update(message)
     }
 
@@ -70,16 +71,30 @@
                 $("coriander.haarlem.tabs.metrics.results").update(result.responseText || "<none>");
             },
             onFailure: function(result) {
-                showStatus("Failed: "+ result.responseText || "<none>");                
+                showStatus("Failed: " + result.responseText || "<none>");                
             }
         });
     }
 
-    function toggleVisible(sender, id) {
-        // Requires prototype js
+    // HACK: See dashboard.xsl which calls these
+    function toggleVisibleAndChangeImage(sender, id) {
+        var theElementToToggle = $(id);
+        
+        var isVisible = $(id).visible();
+        
+        var _to      = isVisible ? 0 : 1
+        var _from    = isVisible ? 1 : 0
+
+        if (false == isVisible) {
+            $(id).show();
+            //$(sender).firstDescendant().setAttribute("src", "/img/minus.gif")
+        } else {
+            //$(sender).firstDescendant().setAttribute("src", "/img/plus.gif")
+        }
+        
         new Effect.Fade(
             id,
-            { duration: 1.0, from: 1, to: 0 }
+            { duration: 1.0, from: _from, to: _to }
         );
     }
 </script>
