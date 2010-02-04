@@ -18,8 +18,15 @@
             <span class="projectDescription">(${dashboardInfo.build.project.description})</span>
             </h2>
         </div>
-        <div class="tableCaption"><a class="buildTypeName" href="javascript:void(0);"><c:out value="${dashboardInfo.build.extendedName}" escapeXml="true" /></a></div>
-        <div style="padding:10px 5px 5px 15px">
+        <div class="tableCaption">
+            <a href="javascript:toggleVisible(this, 'dashboard-${dashboardInfo.build.buildTypeId}')">
+                <img src="/img/minus.gif" style="margin-right:10px;" border="0" />
+            </a>
+            <a class="buildTypeName" href="javascript:void(0);">
+                <c:out value="${dashboardInfo.build.extendedName}" escapeXml="true" />
+            </a>
+        </div>
+        <div style="padding:10px 5px 5px 15px" id="dashboard-${dashboardInfo.build.buildTypeId}">
             ${dashboardInfo.html}
         </div>
     </div>

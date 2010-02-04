@@ -24,6 +24,8 @@
     div.metric-percent { float:left; padding:2px; }
     div.metric-some-other-number { float:left; padding:2px; }
     table.metric td { vertical-align:top; }
+
+    div.build, div.projectHeader { width:100% }
 </style>
 <div id="coriander.haarlem.tabs.metrics.status" class="status"></div>
 <div id="coriander.haarlem.tabs.metrics.results"></div>
@@ -71,5 +73,13 @@
                 showStatus("Failed: "+ result.responseText || "<none>");                
             }
         });
+    }
+
+    function toggleVisible(sender, id) {
+        // Requires prototype js
+        new Effect.Fade(
+            id,
+            { duration: 1.0, from: 1, to: 0 }
+        );
     }
 </script>
