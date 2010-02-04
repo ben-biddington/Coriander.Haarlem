@@ -77,24 +77,25 @@
     }
 
     // HACK: See dashboard.xsl which calls these
-    function toggleVisibleAndChangeImage(sender, id) {
+    function toggleVisibleAndChangeImage(imageId, id) {
         var theElementToToggle = $(id);
-        
-        var isVisible = $(id).visible();
+        var theImage = $(imageId);
+
+        var isVisible = theElementToToggle.visible();
         
         var _to      = isVisible ? 0 : 1
         var _from    = isVisible ? 1 : 0
 
         if (false == isVisible) {
-            $(id).show();
-            //$(sender).firstDescendant().setAttribute("src", "/img/minus.gif")
+            theElementToToggle.show();
+            theImage.setAttribute("src", "/img/minus.gif")
         } else {
-            //$(sender).firstDescendant().setAttribute("src", "/img/plus.gif")
+            theImage.setAttribute("src", "/img/plus.gif")
         }
         
         new Effect.Fade(
             id,
-            { duration: 1.0, from: _from, to: _to }
+            { duration: 0.5, from: _from, to: _to }
         );
     }
 </script>
