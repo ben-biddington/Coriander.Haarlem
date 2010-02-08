@@ -1,7 +1,6 @@
 @echo off
 set plugin_name=coriander-haarlem
 
-REM: TeamCity v5.x
 set plugin_root="C:\Documents\.BuildServer\plugins"
 
 mkdir "%plugin_root%\coriander-haarlem\server"

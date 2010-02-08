@@ -32,7 +32,7 @@
             includes="**/*.*"
         />
         <copyfile
-            src="${basedir}\\teamcity-plugin.xml"
+            src="${basedir}\teamcity-plugin.xml"
             dest="${basedir}\buildServerResources"
         />
     </target>
@@ -70,11 +70,6 @@
             <arg value="build\local.deploy.bat ${lib.home}\scala-library.jar"/>
             <arg value="-p"/>
         </exec>
-        <exec executable="cmd">
-            <arg value="/c"/>
-            <arg value="build\local.deploy.bat ${lib.home}\coriander-oauth-2.0.1.jar"/>
-            <arg value="-p"/>
-        </exec>
         <copyfile
             src="${basedir}\teamcity-plugin.xml"
             dest="${plugin.directory}\coriander-haarlem\teamcity-plugin.xml"
@@ -100,9 +95,14 @@
     </target>
 
     <target name="zip">
+        <mkdir dir="${build.home}\temp"/>
+        <mkdir dir="${build.home}\temp\server"/>
+        <copy file="${jar.home}\${jar.name}" todir="${build.home}\temp\server" />
+        <copy file="${lib.home}\scala-library.jar" todir="${build.home}\temp\server" />
+        <copy file="${basedir}\teamcity-plugin.xml" todir="${build.home}\temp" />
+
         <zip destfile="${build.home}\${plugin.name}.zip">
-            <fileset dir="${basedir}\buildServerResources" />
-            <fileset dir="${basedir}" includes="*-plugin.xml" />
+            <fileset dir="${build.home}\temp\" />
         </zip>
     </target>
 </project>
