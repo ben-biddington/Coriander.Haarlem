@@ -1,7 +1,8 @@
 @echo off
 set plugin_name=coriander-haarlem
 
-set plugin_root="C:\TeamCity\webapps\ROOT\WEB-INF\plugins"
+REM: TeamCity v5.x
+set plugin_root="C:\Documents\.BuildServer\plugins"
 
 mkdir "%plugin_root%\coriander-haarlem\server"
 echo Copying "%1" to "%plugin_root%\%plugin_name%\server"

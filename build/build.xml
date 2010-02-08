@@ -2,6 +2,7 @@
 <project name="jarify" basedir="..\">
     <property name="app.name" value="Coriander.Haarlem"/>
     <property name="plugin.name" value="coriander-haarlem-simple-plugin"/>
+    <property name="plugin.directory" value="C:\Documents\.BuildServer\plugins"/>
     <property name="app.path" value="\${app.name}"/>
     <property name="app.version" value="0.0.1"/>
     <property name="src.home" value="${basedir}\src"/>
@@ -71,7 +72,7 @@
         </exec>
         <copyfile
             src="${basedir}\teamcity-plugin.xml"
-            dest="C:\TeamCity\webapps\ROOT\WEB-INF\plugins\coriander-haarlem\teamcity-plugin.xml"
+            dest="${plugin.directory}\coriander-haarlem\teamcity-plugin.xml"
         />
         
         <antcall target="local.teamcity.restart" />
@@ -91,5 +92,11 @@
             <arg value="build\restart-teamcity.bat ${jar.home}"/>
             <arg value="-p"/>
         </exec>
+    </target>
+
+    <target name="zip">
+        <zip destfile="${jar.name}.zip" basedir="${basedir}\buildServerResources">
+            <includesfile name="${jar.home}\${jar.name}" />
+        </zip>
     </target>
 </project>
