@@ -14,7 +14,7 @@ class MetricsTab(buildServer : SBuildServer)
 		val mgr = applicationContext.
 			getBean("webControllerManager", classOf[WebControllerManager])
 
-		mgr.getPlaceById(PlaceId.MY_TOOLS_TABS).addExtension(this)
+		mgr.getPlaceById(PlaceId.MY_TOOLS_SECTION).addExtension(this)
 	}
 
 	def setApplicationContext(applicationContext : ApplicationContext) {

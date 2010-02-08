@@ -10,10 +10,14 @@
     <property name="lib.home" value="${basedir}\lib"/>
     <property name="build.home" value="${basedir}\out"/>
     <property name="jar.home" value="${build.home}\jar"/>
+    <property name="zip.home" value="${build.home}\zip"/>
     <property name="jar.name" value="${plugin.name}-${app.version}.jar"/>
+    <property name="zip.path" value="${zip.home}\${plugin.name}.zip"/>
 
     <target name="clean">
         <delete dir="${jar.home}" verbose="true" failonerror="true"/>
+        <delete dir="${zip.home}" verbose="true" failonerror="true"/>
+        
         <delete dir="${basedir}\buildServerResources"
             verbose="true" 
             failonerror="true"
@@ -62,26 +66,17 @@
     <target name="local.package.and.deploy" depends="jar,clean">
         <exec executable="cmd">
             <arg value="/c"/>
-            <arg value="build\local.deploy.bat ${jar.home}\${jar.name}"/>
             <arg value="-p"/>
+            <arg value="build\local.deploy.bat ${zip.path}"/>
         </exec>
-        <exec executable="cmd">
-            <arg value="/c"/>
-            <arg value="build\local.deploy.bat ${lib.home}\scala-library.jar"/>
-            <arg value="-p"/>
-        </exec>
-        <copyfile
-            src="${basedir}\teamcity-plugin.xml"
-            dest="${plugin.directory}\coriander-haarlem\teamcity-plugin.xml"
-        />
-        
+
         <antcall target="local.teamcity.restart" />
     </target>
 
      <target name="local.clean">
         <exec executable="cmd">
             <arg value="/c"/>
-            <arg value="build\local.clean.bat ${jar.home}\${jar.name}"/>
+            <arg value="build\local.clean.bat ${zip.path}"/>
             <arg value="-p"/>
         </exec>
     </target>
@@ -89,20 +84,21 @@
     <target name="local.teamcity.restart" description="Restarting teamcity">
         <exec executable="cmd">
             <arg value="/c"/>
-            <arg value="build\restart-teamcity.bat ${jar.home}"/>
+            <arg value="build\restart-teamcity.bat"/>
             <arg value="-p"/>
         </exec>
     </target>
 
     <target name="zip">
-        <mkdir dir="${build.home}\temp"/>
-        <mkdir dir="${build.home}\temp\server"/>
-        <copy file="${jar.home}\${jar.name}" todir="${build.home}\temp\server" />
-        <copy file="${lib.home}\scala-library.jar" todir="${build.home}\temp\server" />
-        <copy file="${basedir}\teamcity-plugin.xml" todir="${build.home}\temp" />
+        <mkdir dir="${zip.home}\temp"/>
+        <mkdir dir="${zip.home}\temp\server"/>
 
-        <zip destfile="${build.home}\${plugin.name}.zip">
-            <fileset dir="${build.home}\temp\" />
+        <copy file="${jar.home}\${jar.name}" todir="${zip.home}\temp\server" />
+        <copy file="${lib.home}\scala-library.jar" todir="${zip.home}\temp\server" />
+        <copy file="${basedir}\teamcity-plugin.xml" todir="${zip.home}\temp" />
+
+        <zip destfile="${zip.path}">
+            <fileset dir="${zip.home}\temp\" />
         </zip>
     </target>
 </project>
