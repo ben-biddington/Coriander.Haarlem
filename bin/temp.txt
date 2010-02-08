@@ -1,6 +1,0 @@
-C:/Documents/.BuildServer/system/artifacts/Plinkton/Build/8/chubby_rain.txt:CHUBBY
-C:/Documents/.BuildServer/system/artifacts/Plinkton/Build/8/chubby_rain.txt:CHUBBY
-C:/Documents/.BuildServer/system/artifacts/Plinkton/Build/8/chubby_rain.txt:CHUBBY
-C:/Documents/.BuildServer/system/artifacts/Plinkton/Build/8/chubby_rain.txt:CHUBBY
-C:/Documents/.BuildServer/system/artifacts/Plinkton/Build/8/chubby_rain.txt:CHUBBY
-C:/Documents/.BuildServer/system/artifacts/Plinkton/Build/8/chubby_rain.txt:CHUBBY

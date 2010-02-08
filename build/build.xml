@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <project name="jarify" basedir="..\">
     <property name="app.name" value="Coriander.Haarlem"/>
-    <property name="plugin.name" value="coriander-haarlem-simple-plugin"/>
+    <property name="plugin.name" value="coriander-haarlem"/>
+    <property name="plugin.dirname" value="coriander-haarlem"/>
     <property name="plugin.directory" value="C:\Documents\.BuildServer\plugins"/>
     <property name="app.path" value="\${app.name}"/>
     <property name="app.version" value="0.0.1"/>
@@ -22,13 +23,17 @@
     <target name="package.buildServerResources">
         <copydir
             src="${basedir}\src\coriander\haarlem\views"
-            dest="${basedir}\buildServerResources"
+            dest="${basedir}\buildServerResources\server"
             includes="**/*.*"
         />
-         <copydir
+        <copydir
             src="${basedir}\bin"
-            dest="${basedir}\buildServerResources\bin"
+            dest="${basedir}\buildServerResources\server\bin"
             includes="**/*.*"
+        />
+        <copyfile
+            src="${basedir}\\teamcity-plugin.xml"
+            dest="${basedir}\buildServerResources"
         />
     </target>
 
@@ -95,8 +100,9 @@
     </target>
 
     <target name="zip">
-        <zip destfile="${jar.name}.zip" basedir="${basedir}\buildServerResources">
-            <includesfile name="${jar.home}\${jar.name}" />
+        <zip destfile="${build.home}\${plugin.name}.zip">
+            <fileset dir="${basedir}\buildServerResources" />
+            <fileset dir="${basedir}" includes="*-plugin.xml" />
         </zip>
     </target>
 </project>
