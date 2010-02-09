@@ -24,7 +24,7 @@
 </c:forEach>
 
 <c:if test="${results.dashboardCount == 0}">
-    There are no dashboards available for your account, ensure you are <a href="/profile.html?tab=userNotifications">watching at least one metrics build</a>.   
+    <img src="/img/help.gif" width="10" height="10" style="vertical-align:middle;margin-bottom: 4px;" /> There are no dashboards available for your account, ensure you are <a href="/profile.html?tab=userNotifications">watching at least one metrics build</a>.   
 </c:if>
 
 

@@ -10,10 +10,14 @@
         border: 1px solid #CECECE;
         border-left-width: 0;
         border-right-width: 0;
+        border:0;
         width:100%;
+        background: #FFF url(/img/underline.gif);
+        background-repeat: no-repeat;
+        background-position-y: bottom, top;
     }
     
-    div.status img { vertical-align:middle; margin-bottom:1px; }
+    div.status img { vertical-align:middle; margin-bottom:3px; }
 
     div.charts { clear: both; }
     div.chart, div.metric { float: left; margin-right: 5px; }
