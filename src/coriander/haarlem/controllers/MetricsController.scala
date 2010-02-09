@@ -37,8 +37,6 @@ class MetricsController(
 
 		val userId = query.value("user")
 
-		var result : MetricsModel = null
-
 		var user : SUser = null
 
 		if (userId != null) {

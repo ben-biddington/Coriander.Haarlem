@@ -66,7 +66,7 @@
 
         currentUser = "${currentUser.id}";
         
-        window.setTimeout(fill, 2500);
+        window.setTimeout(fill, 500);
     });
 
     function showLoading(message) {
@@ -84,7 +84,7 @@
     function hideStatus() {
         new Effect.Opacity(
             'coriander.haarlem.tabs.metrics.status',
-            { duration: 2.0, from: 1, to: 0 }
+            { duration: 1.0, from: 1, to: 0 }
         );
     }
 
