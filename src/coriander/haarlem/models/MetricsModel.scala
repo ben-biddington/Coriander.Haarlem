@@ -14,5 +14,13 @@ class MetricsModel(
 	def getError = error
 	def setError(err : String) = this.error = err
 
+	def getInfo = info
+	def setInfo(info : String) = this.info = info
+
+	def getWatchedBuildCount = error
+	def setWatchedBuildCount(count : Int) = this.watchedBuildCount = count
+
 	private var error : String = null
+	private var info : String = null
+	private var watchedBuildCount = 0
 }

@@ -1,5 +1,6 @@
 <%@include file="../include-internal.jsp"%>
 <c:out value="${results.error}" escapeXml="false" />
+<c:out value="${results.info}" escapeXml="false" />
 
 <c:forEach items="${results.dashboards}" var="dashboardInfo">
     <div class="build" style="float:left;margin-bottom:10px;">

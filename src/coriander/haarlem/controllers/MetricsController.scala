@@ -13,7 +13,7 @@ import coriander.haarlem.http.query.Query
 import coriander.haarlem.core.{Dashboard, Convert}
 import coriander.haarlem.models.{DashboardInfo, MetricsModel}
 import java.util.{ArrayList}
-import jetbrains.buildServer.notification.{WatchedBuilds, NotificationRule, NotificationRulesManager}
+import jetbrains.buildServer.notification.{NotificationRule, NotificationRulesManager}
 
 class MetricsController(
 	buildServer : SBuildServer,
@@ -79,7 +79,10 @@ class MetricsController(
 		val result = new MetricsModel(user, Convert.toJavaList(temp.toList))
 
 		if (allBuildsWithDashboards.size == 0) {
-			result.setError("There are no builds with dashboards.")
+			result.setInfo(
+				"There are no builds with dashboards. " +
+				"Make sure you're watching at least one metrics build."
+			)
 		}
 
 		new ModelAndView(
@@ -97,24 +100,43 @@ class MetricsController(
 	}
 
 	private def findAllBuildsWithDashboards(user : SUser) : List[SBuildType] = {
-		val result = new ListBuffer[SBuildType]()
-		
-		val allProjects = Convert.toScalaList(getAllProjects(user))
-
 		val watchedBuilds = getWatchedBuilds(user.getId)
 
-		allProjects.foreach((project : SProject) => {
-			val builds = Convert.toScalaList(project.getBuildTypes).
-				filter(build => watchedBuilds.contains(build.getBuildTypeId))
+		allBuilds(watchedBuilds)
+	}
+	
+	private def getWatchedBuilds(userId : Long) : List[String] = {
+		val result = new ListBuffer[String]
+		val rules = allRules(userId)
 
-			builds.foreach(build => {
-				if (hasDashboard(build)) {
-					result += build
+		Convert.toScalaList(rules).foreach((rule : NotificationRule) => {
+			val temp = rule.getWatchedBuilds.getBuildTypeIds;
+			temp.toArray.foreach(buildTypeID => {
+				if (false == result.contains(buildTypeID.toString)) {
+					result.append(buildTypeID.toString)
 				}
 			})
 		})
 
 		result toList
+	}
+
+	private def allRules(userId : Long) = {
+		// TODO: Get for all notifiers
+		var rules = notificationRulesManager.
+			getAllUserNotificationRules(userId, NOTIFIER_TYPE_EMAIL)
+
+		rules.addAll(notificationRulesManager.
+			getAllUserNotificationRules(userId, NOTIFIER_TYPE_WINDOWS_TRAY)
+		)
+
+		rules
+	}
+
+	private def allBuilds(buildIds : List[String]) : List[SBuildType] = {
+		buildIds.map(buildId => {
+			projectManager.findBuildTypeById(buildId)
+		})
 	}
 
 	private def hasDashboard(buildType : SBuildType) : Boolean = {
@@ -132,42 +154,7 @@ class MetricsController(
 		else false
 	}
 
-	private def getWatchedBuilds(userId : Long) : List[String] = {
-		val result = new ListBuffer[String]
-
-		val temp = Convert.toScalaList(
-			notificationRulesManager.getAllUserNotificationRules(userId, NOTIFIER_TYPE_EMAIL)
-		)
-
-		temp.foreach((rule : NotificationRule) => {
-			val temp = rule.getWatchedBuilds.getBuildTypeIds;
-			temp.toArray.foreach(buildTypeID => result.append(buildTypeID.toString))
-		})
-
-		result toList
-	}
-
-	// TODO: Make sure they're projects I am following
-	private def getAllProjects(user : SUser) = {
-		val result = new ArrayList[SProject]()
-
-		val projectIdIterator = user.getAllProjects.iterator
-
-		var currentId : String = null
-
-		while (projectIdIterator.hasNext) {
-			currentId = projectIdIterator.next
-
-			val project = projectManager.findProjectById(currentId)
-
-			if (project != null) {
-				result.add(project)
-			}
-		}
-
-		result
-	}
-
 	private val NOTIFIER_TYPE_EMAIL = "email"
+	private val NOTIFIER_TYPE_WINDOWS_TRAY = "WindowsTray"
 }
 
