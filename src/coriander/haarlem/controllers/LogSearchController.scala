@@ -26,8 +26,6 @@ class LogSearchController(buildServer : SBuildServer, pluginDescriptor : PluginD
 		val buildNumber = buildServer.getBuildNumber
 		val artifactsDir = buildServer.getArtifactsDirectory
 
-		println("Artifacts for build <" + buildNumber + "> are in <" + artifactsDir + ">")
-
 		if (query.contains("q")) {
 			val results = search(query.value("q"))
 

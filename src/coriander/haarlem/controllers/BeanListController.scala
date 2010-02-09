@@ -25,8 +25,6 @@ class BeanListController(
 
 		val viewPath = pluginDescriptor.getPluginResourcesPath + "server/beans/default.jsp"
 
-		println("View path: " + viewPath)
-
 		val result = new BeanListModel(Convert.toJavaList(allBeans))
 
 		new ModelAndView(

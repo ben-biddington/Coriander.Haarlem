@@ -12,7 +12,7 @@
         <!--<property name="includeUrl" value="/log-search.html"/>-->
     <!--</bean>-->
     <bean id="metricsController" class="coriander.haarlem.controllers.MetricsController" init-method="register">
-        <property name="cacheSeconds" value="30"/>
+        <property name="cacheSeconds" value="180"/>
     </bean>
     <bean id="metricsTab" class="coriander.haarlem.tabs.MetricsTab" init-method="register" />
 </beans>

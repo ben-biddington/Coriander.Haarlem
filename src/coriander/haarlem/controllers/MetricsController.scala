@@ -70,6 +70,7 @@ class MetricsController(
 
 		var temp = new ListBuffer[DashboardInfo]
 		val dashboardRenderer = new Dashboard()
+		
 		val xsl = new File(
 			buildServer.getServerRootPath +
 			pluginDescriptor.getPluginResourcesPath +
