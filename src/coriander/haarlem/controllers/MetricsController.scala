@@ -12,14 +12,14 @@ import jetbrains.buildServer.serverSide._
 import coriander.haarlem.http.query.Query
 import coriander.haarlem.core.{Dashboard, Convert}
 import coriander.haarlem.models.{DashboardInfo, MetricsModel}
-import java.util.{ArrayList}
-import jetbrains.buildServer.notification.{NotificationRule, NotificationRulesManager}
+import jetbrains.buildServer.notification.{Notificator, NotificatorRegistry, NotificationRule, NotificationRulesManager}
 
 class MetricsController(
 	buildServer : SBuildServer,
 	projectManager : ProjectManager,
 	pluginDescriptor : PluginDescriptor,
-	notificationRulesManager : NotificationRulesManager
+	notificationRulesManager : NotificationRulesManager,
+	notificatorRegistry : NotificatorRegistry
 ) extends BaseController {
 	override protected def doHandle(
 		request : HttpServletRequest,
@@ -100,9 +100,7 @@ class MetricsController(
 	}
 
 	private def findAllBuildsWithDashboards(user : SUser) : List[SBuildType] = {
-		val watchedBuilds = getWatchedBuilds(user.getId)
-
-		allBuilds(watchedBuilds)
+		allBuilds(getWatchedBuilds(user.getId))
 	}
 	
 	private def getWatchedBuilds(userId : Long) : List[String] = {
@@ -122,13 +120,18 @@ class MetricsController(
 	}
 
 	private def allRules(userId : Long) = {
-		// TODO: Get for all notifiers
-		var rules = notificationRulesManager.
-			getAllUserNotificationRules(userId, NOTIFIER_TYPE_EMAIL)
+		val allNotificators = Convert.toScalaList(notificatorRegistry.getNotificators.iterator)
 
-		rules.addAll(notificationRulesManager.
-			getAllUserNotificationRules(userId, NOTIFIER_TYPE_WINDOWS_TRAY)
-		)
+		var rules = new java.util.ArrayList[NotificationRule]()
+
+		allNotificators.foreach((notificator : Notificator) => {
+			rules.addAll(
+				notificationRulesManager.getAllUserNotificationRules(
+					userId,
+					notificator.getNotificatorType
+				)
+			)
+		})
 
 		rules
 	}
@@ -153,8 +156,5 @@ class MetricsController(
 			rootDir.list.contains(dashboardFolderName)
 		else false
 	}
-
-	private val NOTIFIER_TYPE_EMAIL = "email"
-	private val NOTIFIER_TYPE_WINDOWS_TRAY = "WindowsTray"
 }
 

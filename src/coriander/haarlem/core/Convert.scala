@@ -5,9 +5,11 @@ import java.util.ArrayList
 
 object Convert {
 	def toScalaList[T](javaList : java.util.List[T]) : List[T] = {
-		var result = new ListBuffer[T]()
+		toScalaList(javaList.iterator)
+	}
 
-		val iterator = javaList.iterator
+	def toScalaList[T](iterator : java.util.Iterator[T]) : List[T] = {
+		var result = new ListBuffer[T]()
 
 		while (iterator.hasNext) {
 			result += iterator.next
