@@ -23,4 +23,8 @@
     </div>
 </c:forEach>
 
+<c:if test="${results.dashboardCount == 0}">
+    There are no dashboards available for your account, ensure you are <a href="/profile.html?tab=userNotifications">watching at least one metrics build</a>.   
+</c:if>
+
 

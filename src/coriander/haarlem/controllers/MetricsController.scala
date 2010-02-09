@@ -21,6 +21,13 @@ class MetricsController(
 	notificationRulesManager : NotificationRulesManager,
 	notificatorRegistry : NotificatorRegistry
 ) extends BaseController {
+	def register() {
+		val mgr = getApplicationContext.
+			getBean("webControllerManager", classOf[WebControllerManager])
+
+		mgr.registerController("/metrics.html", this)
+	}
+	
 	override protected def doHandle(
 		request : HttpServletRequest,
 		response : HttpServletResponse
@@ -78,13 +85,6 @@ class MetricsController(
 		
 		val result = new MetricsModel(user, Convert.toJavaList(temp.toList))
 
-		if (allBuildsWithDashboards.size == 0) {
-			result.setInfo(
-				"There are no builds with dashboards. " +
-				"Make sure you're watching at least one metrics build."
-			)
-		}
-
 		new ModelAndView(
 			pluginDescriptor.getPluginResourcesPath + "/server/metrics/default.jsp",
 			"results",
@@ -92,20 +92,17 @@ class MetricsController(
 		)
 	}
 
-	def register() {
-		val mgr = getApplicationContext.
-			getBean("webControllerManager", classOf[WebControllerManager])
-
-		mgr.registerController("/metrics.html", this)
-	}
-
 	private def findAllBuildsWithDashboards(user : SUser) : List[SBuildType] = {
-		allBuilds(getWatchedBuilds(user.getId))
+		val buildIds = getWatchedBuildIds(user.getId)
+
+		buildIds.
+			map(projectManager.findBuildTypeById(_)).
+			filter(hasDashboard(_))
 	}
 	
-	private def getWatchedBuilds(userId : Long) : List[String] = {
+	private def getWatchedBuildIds(userId : Long) : List[String] = {
 		val result = new ListBuffer[String]
-		val rules = allRules(userId)
+		val rules = getAllNotificationRules(userId)
 
 		Convert.toScalaList(rules).foreach((rule : NotificationRule) => {
 			val temp = rule.getWatchedBuilds.getBuildTypeIds;
@@ -119,7 +116,7 @@ class MetricsController(
 		result toList
 	}
 
-	private def allRules(userId : Long) = {
+	private def getAllNotificationRules(userId : Long) = {
 		val allNotificators = Convert.toScalaList(notificatorRegistry.getNotificators.iterator)
 
 		var rules = new java.util.ArrayList[NotificationRule]()
@@ -134,12 +131,6 @@ class MetricsController(
 		})
 
 		rules
-	}
-
-	private def allBuilds(buildIds : List[String]) : List[SBuildType] = {
-		buildIds.map(buildId => {
-			projectManager.findBuildTypeById(buildId)
-		})
 	}
 
 	private def hasDashboard(buildType : SBuildType) : Boolean = {

@@ -20,6 +20,8 @@ class MetricsModel(
 	def getWatchedBuildCount = error
 	def setWatchedBuildCount(count : Int) = this.watchedBuildCount = count
 
+	def getDashboardCount = dashboards.size
+
 	private var error : String = null
 	private var info : String = null
 	private var watchedBuildCount = 0
