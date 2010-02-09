@@ -63,11 +63,11 @@
         </jar>
     </target>
 
-    <target name="local.package.and.deploy" depends="jar,clean">
+    <target name="local.package.and.deploy" depends="jar,zip">
         <exec executable="cmd">
             <arg value="/c"/>
-            <arg value="-p"/>
             <arg value="build\local.deploy.bat ${zip.path}"/>
+            <arg value="-p"/>
         </exec>
 
         <antcall target="local.teamcity.restart" />

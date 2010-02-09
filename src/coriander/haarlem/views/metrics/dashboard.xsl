@@ -7,7 +7,7 @@
 
     <xsl:key name="change" match="/comparison/assemblies/solution/change" use="@name"/>
     <xsl:variable name="project" select="/comparison/assemblies/solution/@name"/>
-    <xsl:variable name="imgPath">/plugins/coriander-haarlem/metrics/img/small</xsl:variable>
+    <xsl:variable name="imgPath">/plugins/coriander-haarlem/server/metrics/img/small</xsl:variable>
 
     <xsl:template match="/">
         <xsl:apply-templates select="/comparison/metrics"/>

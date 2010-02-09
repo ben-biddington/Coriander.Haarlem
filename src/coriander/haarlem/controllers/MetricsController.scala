@@ -13,11 +13,13 @@ import coriander.haarlem.http.query.Query
 import coriander.haarlem.core.{Dashboard, Convert}
 import coriander.haarlem.models.{DashboardInfo, MetricsModel}
 import java.util.{ArrayList}
+import jetbrains.buildServer.notification.{WatchedBuilds, NotificationRule, NotificationRulesManager}
 
 class MetricsController(
 	buildServer : SBuildServer,
 	projectManager : ProjectManager,
-	pluginDescriptor : PluginDescriptor
+	pluginDescriptor : PluginDescriptor,
+	notificationRulesManager : NotificationRulesManager
 ) extends BaseController {
 	override protected def doHandle(
 		request : HttpServletRequest,
@@ -64,7 +66,7 @@ class MetricsController(
 		val xsl = new File(
 			buildServer.getServerRootPath +
 			pluginDescriptor.getPluginResourcesPath +
-			"/metrics/dashboard.xsl"
+			"/server/metrics/dashboard.xsl"
 		)
 
 		allBuildsWithDashboards.foreach(build => {
@@ -75,9 +77,13 @@ class MetricsController(
 		})
 		
 		val result = new MetricsModel(user, Convert.toJavaList(temp.toList))
-		
+
+		if (allBuildsWithDashboards.size == 0) {
+			result.setError("There are no builds with dashboards.")
+		}
+
 		new ModelAndView(
-			pluginDescriptor.getPluginResourcesPath + "/metrics/default.jsp",
+			pluginDescriptor.getPluginResourcesPath + "/server/metrics/default.jsp",
 			"results",
 			result
 		)
@@ -93,10 +99,13 @@ class MetricsController(
 	private def findAllBuildsWithDashboards(user : SUser) : List[SBuildType] = {
 		val result = new ListBuffer[SBuildType]()
 		
-		val projects = Convert.toScalaList(getAllProjects(user))
+		val allProjects = Convert.toScalaList(getAllProjects(user))
 
-		projects.foreach((project : SProject) => {
-			val builds = Convert.toScalaList(project.getBuildTypes)
+		val watchedBuilds = getWatchedBuilds(user.getId)
+
+		allProjects.foreach((project : SProject) => {
+			val builds = Convert.toScalaList(project.getBuildTypes).
+				filter(build => watchedBuilds.contains(build.getBuildTypeId))
 
 			builds.foreach(build => {
 				if (hasDashboard(build)) {
@@ -123,6 +132,21 @@ class MetricsController(
 		else false
 	}
 
+	private def getWatchedBuilds(userId : Long) : List[String] = {
+		val result = new ListBuffer[String]
+
+		val temp = Convert.toScalaList(
+			notificationRulesManager.getAllUserNotificationRules(userId, NOTIFIER_TYPE_EMAIL)
+		)
+
+		temp.foreach((rule : NotificationRule) => {
+			val temp = rule.getWatchedBuilds.getBuildTypeIds;
+			temp.toArray.foreach(buildTypeID => result.append(buildTypeID.toString))
+		})
+
+		result toList
+	}
+
 	// TODO: Make sure they're projects I am following
 	private def getAllProjects(user : SUser) = {
 		val result = new ArrayList[SProject]()
@@ -143,5 +167,7 @@ class MetricsController(
 
 		result
 	}
+
+	private val NOTIFIER_TYPE_EMAIL = "email"
 }
 

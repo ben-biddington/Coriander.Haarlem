@@ -1,5 +1,6 @@
 <%@include file="../../include-internal.jsp"%>
-<jsp:useBean id="currentUser" type="jetbrains.buildServer.users.SUser" scope="request"/>
+<jsp:useBean id="currentUser" type="jetbrains.buildServer.users.User" scope="request"/>
+
 <style type="text/css">
     div.status {
         text-align:left;
@@ -25,7 +26,34 @@
     div.metric-some-other-number { float:left; padding:2px; }
     table.metric td { vertical-align:top; }
 
-    div.build, div.projectHeader, div.tableCaption { width:100% }
+    div.build, div.project, div.tableCaption { width:100% }
+
+    div.project {
+        margin: 0;
+        padding: 0 10px;
+        background: #4b4b4a url(/img/bgBuildTitle.gif) repeat-x 0 0;
+        border-top: solid 1px #41403f;
+        border-left: solid 1px #41403f;
+        border-right: solid 1px #41403f;
+    }
+
+    div.project h2 {
+        margin: 0;
+        padding: 3px 0 2px 0;
+        font-family: trebuchet ms, verdana, tahoma, arial, sans-serif;
+        color: #fff;
+        font-size: 130%;
+        font-weight: normal;
+    }
+
+    div.project h2, div.project a { color: #FFF; }
+    a.buildName {
+        margin: 0 0 0 6px;
+        padding: 0 0 0 5px;
+        font-family: tahoma, arial, sans-serif;
+        font-size: 110%;
+        font-weight:bold;
+    }
 </style>
 <div id="coriander.haarlem.tabs.metrics.status" class="status"></div>
 <div id="coriander.haarlem.tabs.metrics.results"></div>

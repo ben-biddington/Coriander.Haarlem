@@ -14,7 +14,7 @@ class MetricsTab(buildServer : SBuildServer)
 		val mgr = applicationContext.
 			getBean("webControllerManager", classOf[WebControllerManager])
 
-		mgr.getPlaceById(PlaceId.MY_TOOLS_SECTION).addExtension(this)
+		mgr.getPlaceById(PlaceId.PROJECT_TAB).addExtension(this)
 	}
 
 	def setApplicationContext(applicationContext : ApplicationContext) {
@@ -22,8 +22,8 @@ class MetricsTab(buildServer : SBuildServer)
 	}
 
 	def getTabId 		= "coriander.haarlem.metrics.tab"
-	def getTabTitle 	= "Metrics"
-	def getIncludeUrl 	= "/plugins/coriander-haarlem/tabs/metrics/default.jsp"
+	def getTabTitle 	= "All Dashboards"
+	def getIncludeUrl 	= "/plugins/coriander-haarlem/server/tabs/metrics/default.jsp"
 	def getPluginName 	= "coriander-haarlem"
 
 	def fillModel(
@@ -43,6 +43,6 @@ class MetricsTab(buildServer : SBuildServer)
 	def setIncludeUrl(includeUrl: String) { }
 
 	private var applicationContext : ApplicationContext = null
-	private var placeId 		= ""
-	private val QUERY_BUILD_ID 	= "buildId"
+	private var placeId = ""
+	private val QUERY_BUILD_ID = "buildId"
 }

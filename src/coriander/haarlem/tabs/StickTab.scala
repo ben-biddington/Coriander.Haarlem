@@ -27,13 +27,18 @@ class StickTab(buildServer : SBuildServer)
 	}
 
 	def getTabId 		= "coriander.haarlem.stick.tab"
-	def getTabTitle 	=
-		"<img width=\"16\" height=\"16\" " +
-		"src=\"/plugins/coriander-haarlem/tabs/fail/fail.gif\" " +
-		"alt=\"Stick\" " +
-		"style=\"margin-bottom:3px\" /> "
-	
-	def getIncludeUrl 	= "/plugins/coriander-haarlem/tabs/fail/default.jsp"
+
+	def getTabTitle 	= {
+		"Fail!"
+		// [!] Images break layout pre TeamCity v5.x
+		//	<img src="/plugins/coriander-haarlem/server/tabs/fail/fail.gif"
+		//	 	width="16" height="16"
+		//	 	alt="Stick"
+		//	 	style="margin-bottom:3px"
+		//	/>.toString
+	}
+
+	def getIncludeUrl 	= "/plugins/coriander-haarlem/server/tabs/fail/default.jsp"
 	def getPluginName 	= "coriander-haarlem"
 
 	def fillModel(

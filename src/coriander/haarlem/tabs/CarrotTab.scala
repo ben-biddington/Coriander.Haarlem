@@ -27,10 +27,14 @@ class CarrotTab(buildServer : SBuildServer)
 	}
 	
 	def getTabId 		= "coriander.haarlem.carrot.tab"
-	def getTabTitle 	=
-		"<img width=\"16\" height=\"16\" " +
-		"src=\"/plugins/coriander-haarlem/tabs/dilbert/dilbert.gif\" alt=\"Carrot\" style=\"margin-bottom:3px\"/>"
-	def getIncludeUrl 	= "/plugins/coriander-haarlem/tabs/dilbert/default.jsp"
+
+	def getTabTitle 	= {
+		"Dilbert"
+		// [!] Images break layout pre TeamCity v5.x
+		//<img src="/plugins/coriander-haarlem/server/tabs/dilbert/dilbert.gif"></img>.toString
+	}
+
+	def getIncludeUrl 	= "/plugins/coriander-haarlem/server/tabs/dilbert/default.jsp"
 	def getPluginName 	= "coriander-haarlem"
 
 	def fillModel(

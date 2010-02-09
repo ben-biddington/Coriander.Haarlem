@@ -4,41 +4,45 @@ import jetbrains.buildServer.controllers.BaseController
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import org.springframework.web.servlet.ModelAndView
 import java.io.{PrintWriter}
-import jetbrains.buildServer.web.openapi.WebControllerManager
+import coriander.haarlem.core.Convert
+import jetbrains.buildServer.web.openapi.{PluginDescriptor, WebControllerManager}
+import jetbrains.buildServer.serverSide.SBuildServer
+import coriander.haarlem.models.BeanListModel
 
-class BeanListController extends BaseController {
+class BeanListController(
+	buildServer : SBuildServer,
+	pluginDescriptor : PluginDescriptor
+) extends BaseController {
 	override protected def doHandle(
 		request : HttpServletRequest,
 		response : HttpServletResponse
 	) : ModelAndView = {
-		response.setContentType("text/html")
 
-		response.getWriter.write("<html><head></head><body><p>All beans:</p>")
-
-		printBeans(response.getWriter)
-
-		response.getWriter.write("</body></html>")
+		val test = getApplicationContext().getBean("buildGraphController")
 		
-		null
-	}
-
-	private def printBeans(out : PrintWriter) {
 		val allBeans = getApplicationContext().getBeanDefinitionNames.
 			toList.sort((left, right) => left < right)
 
-		out write("<ul>")
+		val viewPath = pluginDescriptor.getPluginResourcesPath + "server/beans/default.jsp"
 
-		allBeans.foreach(name => {
-			val bean = getApplicationContext().getBean(name)
-			out write(
-				"<li>Bean: " + name + "</li>" +
-				printInterfaces(bean, out)
-			)	
-		});
+		println("View path: " + viewPath)
 
-		out write("</ul>")
+		val result = new BeanListModel(Convert.toJavaList(allBeans))
+
+		new ModelAndView(
+			viewPath,
+			"results",
+		    result
+		)
 	}
 
+	def register() {
+		val mgr = getApplicationContext.
+			getBean("webControllerManager", classOf[WebControllerManager])
+
+		mgr.registerController("/beans.html", this)
+	}
+	
 	private def printInterfaces(c : java.lang.Object, out : PrintWriter) {
     	val interfaces = c.getClass.getInterfaces
 
@@ -48,11 +52,6 @@ class BeanListController extends BaseController {
 			out.write("</ul>")
 		}
 	}
-	
-	def register() {
-		val mgr : WebControllerManager = getApplicationContext.
-			getBean("webControllerManager", classOf[WebControllerManager])
 
-		mgr.registerController("/beans.html", this)
-	}
+	private val BEAN_NAME = "beanListController"
 }
