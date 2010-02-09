@@ -1,7 +1,7 @@
 <%@include file="../include-internal.jsp"%>
 <c:out value="${results.error}" escapeXml="false" />
 
-<c:forEach items="${results.builds}" var="dashboardInfo">
+<c:forEach items="${results.dashboards}" var="dashboardInfo">
     <div class="build" style="float:left;margin-bottom:10px;">
         <div class="project">
             <h2><a href="/project.html?projectId=${dashboardInfo.build.project.projectId}&amp;tab=projectOverview" title="Go to the project page">${dashboardInfo.build.project.name}</a>

@@ -4,12 +4,12 @@ import jetbrains.buildServer.users.SUser
 
 class MetricsModel(
 	user : SUser,
-	builds : java.util.List[DashboardInfo]
+	dashboards : java.util.List[DashboardInfo]
 ) {
 	def this(user : SUser) { this(user, null) }
 
 	def getUser = user
-	def getBuilds = builds
+	def getDashboards = dashboards
 
 	def getError = error
 	def setError(err : String) = this.error = err
