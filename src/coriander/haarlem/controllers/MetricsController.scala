@@ -13,6 +13,7 @@ import coriander.haarlem.http.query.Query
 import coriander.haarlem.core.{Dashboard, Convert}
 import coriander.haarlem.models.{DashboardInfo, MetricsModel}
 import jetbrains.buildServer.notification.{Notificator, NotificatorRegistry, NotificationRule, NotificationRulesManager}
+import coriander.haarlem.core.dashboards.DashboardXmlFinder
 
 class MetricsController(
 	buildServer : SBuildServer,
@@ -139,22 +140,5 @@ class MetricsController(
 	)
 
 	lazy val dashboardFinder = new DashboardXmlFinder()
-}
-
-class DashboardXmlFinder {
-	def hasDashboard(buildType : SBuildType) : Boolean = {
-		val dashboardFolderName = "dashboard"
-
-		val lastSuccessful = buildType.getLastChangesSuccessfullyFinished
-
-		if (null == lastSuccessful)
-			return false
-
-		val rootDir = lastSuccessful.getArtifactsDirectory.getCanonicalFile
-
-		return if (rootDir.list != null)
-			rootDir.list.contains(dashboardFolderName)
-		else false
-	}
 }
 
