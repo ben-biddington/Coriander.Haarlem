@@ -26,11 +26,11 @@
     function hideStatus() {
         new Effect.Opacity(
             'coriander.haarlem.tabs.dilbert.status',
-            { duration: 0.5, from: 1, to: 0 }
+            { duration: 1.5, from: 1, to: 0 }
         );
          new Effect.BlindUp(
             'coriander.haarlem.tabs.dilbert.status',
-            { duration: 0.5, scaleFrom: 100, scaleFrom: 0 }
+            { duration: 0.5 }
         );
     }
 

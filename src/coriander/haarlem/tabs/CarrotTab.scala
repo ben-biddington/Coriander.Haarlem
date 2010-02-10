@@ -8,7 +8,6 @@ import java.lang.Long._
 
 import jetbrains.buildServer.messages.Status
 import coriander.haarlem.http.query.Query
-import coriander.haarlem.rss.DilbertRssFeed
 
 class CarrotTab(buildServer : SBuildServer)
 	extends CustomTab
@@ -40,12 +39,7 @@ class CarrotTab(buildServer : SBuildServer)
 	def fillModel(
 		model : java.util.Map[java.lang.String,java.lang.Object],
 		httpServletRequest : HttpServletRequest
-	) {
-		val dill = new DilbertRssFeed().find
-		model.put("rssItemTitle", dill.title)
-		model.put("rssItemUrl", dill.media.url)
-		model.put("rssItemDate", dill.date)
-	}
+	) { }
 
 	override def isAvailable(request : HttpServletRequest) : Boolean = {
 		val query = new Query(request.getQueryString)
