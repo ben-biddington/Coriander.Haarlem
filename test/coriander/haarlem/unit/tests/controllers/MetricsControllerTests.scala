@@ -17,6 +17,7 @@ import coriander.haarlem.models.MetricsModel
 import jetbrains.buildServer.serverSide.{ProjectManager, SBuildServer}
 import jetbrains.buildServer.web.openapi.PluginDescriptor
 import jetbrains.buildServer.notification.{NotificationRulesManager, NotificationRule, NotificatorRegistry, Notificator}
+import java.io.{PrintWriter, StringWriter}
 
 class MetricsControllerTests extends ControllerUnitTest {
 	@Before
@@ -29,6 +30,8 @@ class MetricsControllerTests extends ControllerUnitTest {
 		request = mock(classOf[HttpServletRequest])
 		response = mock(classOf[HttpServletResponse])
 		result = null
+
+		given_writable_response
 	}
 
     @Test
@@ -45,6 +48,15 @@ class MetricsControllerTests extends ControllerUnitTest {
 		assertThat(model.getDashboardCount, is(equalTo(0)))
     }
 
+	@Test
+	def when_the_user_parameter_is_missing_then_400_error_is_returned { 
+		when(request.getQueryString).thenReturn("")
+
+		when_I_make_request
+
+		verify(response).setStatus(400)
+    }
+
 	private def given_I_am_watching_no_builds_at_all {
 		when(
 			notificationRulesManager.getAllUserNotificationRules(
@@ -55,7 +67,7 @@ class MetricsControllerTests extends ControllerUnitTest {
 	}
 
 	private def given_valid_request {
-		when(request.getQueryString).thenReturn("user=" + USERID)	
+		when(request.getQueryString).thenReturn("user=" + USERID)
 	}
 
 	private def given_user_exists {
@@ -76,6 +88,12 @@ class MetricsControllerTests extends ControllerUnitTest {
 		list.add(fakeNotificator)
 		
 		when(notificatorRegistry.getNotificators).thenReturn(list)
+	}
+
+	private def given_writable_response {
+		val printWriter = new PrintWriter(new StringWriter())
+		
+		when(response.getWriter).thenReturn(printWriter)
 	}
 
 	private def when_I_make_request {
