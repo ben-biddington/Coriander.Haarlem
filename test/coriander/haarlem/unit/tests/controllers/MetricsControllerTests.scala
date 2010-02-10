@@ -46,6 +46,8 @@ class MetricsControllerTests extends ControllerUnitTest {
 		val model : MetricsModel = modelMap.get("results").asInstanceOf[MetricsModel]
 		
 		assertThat(model.getDashboardCount, is(equalTo(0)))
+
+		then_content_type_is_html
     }
 
 	@Test
@@ -55,6 +57,21 @@ class MetricsControllerTests extends ControllerUnitTest {
 		when_I_make_request
 
 		verify(response).setStatus(400)
+
+		then_content_type_is_html
+    }
+
+	@Test
+	def when_the_user_parameter_is_supplied_but_does_not_exist_then_404_returned { 
+		given_user_does_not_exist
+
+		given_valid_request
+		
+		when_I_make_request
+
+		verify(response).setStatus(404)
+
+		then_content_type_is_html
     }
 
 	private def given_I_am_watching_no_builds_at_all {
@@ -78,6 +95,12 @@ class MetricsControllerTests extends ControllerUnitTest {
 		when(buildServer.getUserModel).thenReturn(userModel)
 	}
 
+	private def given_user_does_not_exist {
+		val userModel = mock(classOf[UserModel])
+		when(userModel.findUserById(USERID)).thenReturn(null)
+		when(buildServer.getUserModel).thenReturn(userModel)
+	}
+
 	private def given_a_single_notificator {
 		var list : java.util.List[Notificator] = new java.util.ArrayList[Notificator]
 
@@ -98,6 +121,10 @@ class MetricsControllerTests extends ControllerUnitTest {
 
 	private def when_I_make_request {
 		result = newController.go(request, response)
+	}
+
+	private def then_content_type_is_html {
+		verify(response).setContentType("text/html")
 	}
 
 	private def newController = {
