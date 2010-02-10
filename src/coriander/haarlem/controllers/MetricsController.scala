@@ -27,7 +27,11 @@ class MetricsController(
 
 		mgr.registerController("/metrics.html", this)
 	}
-	
+
+	def go(request : HttpServletRequest, response : HttpServletResponse) = {
+		doHandle(request, response)
+	}
+
 	override protected def doHandle(
 		request : HttpServletRequest,
 		response : HttpServletResponse

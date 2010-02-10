@@ -30,7 +30,7 @@
     div.metric-some-other-number { float:left; padding:2px; }
     table.metric td { vertical-align:top; }
 
-    div.build, div.project, div.tableCaption {  }
+    div.build { width:100%; }
 
     div.project {
         margin: 0;
