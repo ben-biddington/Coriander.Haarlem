@@ -13,7 +13,7 @@
             <a href="javascript:toggleVisibleAndChangeImage('dashboard-toggle-${dashboardInfo.build.buildTypeId}', 'dashboard-${dashboardInfo.build.buildTypeId}')">
                 <img id="dashboard-toggle-${dashboardInfo.build.buildTypeId}" src="/img/minus.gif" style="margin-right:10px;" border="0" />
             </a>
-            <a class="buildName" href="javascript:void(0);">
+            <a class="buildName" href="/viewType.html?buildTypeId=${dashboardInfo.build.buildTypeId}&tab=buildTypeStatusDiv">
                 <c:out value="${dashboardInfo.build.name}" escapeXml="true" />
             </a>
         </div>
