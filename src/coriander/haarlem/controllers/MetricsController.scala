@@ -72,12 +72,6 @@ class MetricsController(
 
 		var temp = new ListBuffer[DashboardInfo]
 		val dashboardRenderer = new Dashboard()
-		
-		val xsl = new File(
-			buildServer.getServerRootPath +
-			pluginDescriptor.getPluginResourcesPath +
-			"/server/metrics/dashboard.xsl"
-		)
 
 		allBuildsWithDashboards.foreach(build => {
 			temp += new DashboardInfo(	
@@ -135,8 +129,20 @@ class MetricsController(
 
 		rules
 	}
+	
+	private def hasDashboard(buildType : SBuildType) = dashboardFinder.hasDashboard(buildType)
 
-	private def hasDashboard(buildType : SBuildType) : Boolean = {
+	lazy val xsl = new File(
+		buildServer.getServerRootPath +
+		pluginDescriptor.getPluginResourcesPath +
+		"/server/metrics/dashboard.xsl"
+	)
+
+	lazy val dashboardFinder = new DashboardXmlFinder()
+}
+
+class DashboardXmlFinder {
+	def hasDashboard(buildType : SBuildType) : Boolean = {
 		val dashboardFolderName = "dashboard"
 
 		val lastSuccessful = buildType.getLastChangesSuccessfullyFinished

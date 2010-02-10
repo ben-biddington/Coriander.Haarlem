@@ -46,8 +46,6 @@ class MetricsControllerTests extends ControllerUnitTest {
 		val model : MetricsModel = modelMap.get("results").asInstanceOf[MetricsModel]
 		
 		assertThat(model.getDashboardCount, is(equalTo(0)))
-
-		then_content_type_is_html
     }
 
 	@Test
