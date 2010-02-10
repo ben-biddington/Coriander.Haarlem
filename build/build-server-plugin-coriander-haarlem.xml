@@ -11,6 +11,10 @@
         <!--<property name="pluginName" value="logSearchTab"/>-->
         <!--<property name="includeUrl" value="/log-search.html"/>-->
     <!--</bean>-->
+    <bean id="dilbertController" class="coriander.haarlem.controllers.DilbertController" init-method="register">
+        <property name="cacheSeconds" value="7200"/>
+        <property name="supportedMethods" value="GET"/>
+    </bean>
     <bean id="metricsController" class="coriander.haarlem.controllers.MetricsController" init-method="register">
         <property name="cacheSeconds" value="180"/>
         <property name="supportedMethods" value="GET"/>

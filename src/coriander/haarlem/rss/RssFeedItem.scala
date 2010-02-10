@@ -6,9 +6,15 @@ class RssFeedItem(val title : String, val media : RssFeedItemMedia, val date : D
 	def this(title : String, media : RssFeedItemMedia) {
 		this(title, media, null)
 	}
+
+	def getTitle = title
+	def getMedia = media
 }
 
-class RssFeedItemMedia(val url : String, val html : String)
+class RssFeedItemMedia(val url : String, val html : String) {
+	def getUrl = url
+	def getHtml = html
+}
 
 object RssFeedItemMedia {
 	def apply(url : String) : RssFeedItemMedia = apply(url, null)

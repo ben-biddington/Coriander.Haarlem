@@ -7,27 +7,27 @@ import jetbrains.buildServer.web.openapi.{PluginDescriptor, WebControllerManager
 import coriander.haarlem.rss.{DilbertRssFeed}
 
 class DilbertController(pluginDescriptor : PluginDescriptor) extends BaseController {	
+	def register() {
+		webControllerManager.registerController("/dilbert.html", this)
+	}
+	
 	override protected def doHandle(
-		httpServletRequest : HttpServletRequest,
-		httpServletResponse : HttpServletResponse
+		request : HttpServletRequest,
+		response : HttpServletResponse
 	) : ModelAndView = {
 		val rssFeedItem = getLatestDilbert
 
 		new ModelAndView(
-			pluginDescriptor.getPluginResourcesPath + "/default.jsp",
-			"",
+			pluginResourcePath + "default.jsp",
+			"results",
 			rssFeedItem
 		)
 	}
 
-	def register() {
-		val mgr = getApplicationContext.
-			getBean("webControllerManager", classOf[WebControllerManager])
-		
-		mgr.registerController("/dilbert.html", this)
-	}
+	private lazy val webControllerManager = getApplicationContext.
+		getBean("webControllerManager", classOf[WebControllerManager])
 
-	private def getLatestDilbert = {
-		new DilbertRssFeed().find
-	}
+	private def pluginResourcePath = pluginDescriptor.getPluginResourcesPath + "/server/dilbert/"
+
+	private def getLatestDilbert = new DilbertRssFeed().find
 }
