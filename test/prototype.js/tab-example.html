@@ -1,0 +1,139 @@
+<html>
+<head>
+	<script src="scriptaculous-js-1.8.3/lib/prototype.js"></script>
+	<script src="scriptaculous-js-1.8.3/src/build.js"></script>
+	<script src="scriptaculous-js-1.8.3/src/controls.js"></script>
+	<script src="scriptaculous-js-1.8.3/src/dragdrop.js"></script>
+	<script src="scriptaculous-js-1.8.3/src/effects.js"></script>
+	<script src="scriptaculous-js-1.8.3/src/scriptaculous.js"></script>
+	<script src="scriptaculous-js-1.8.3/src/slider.js"></script>
+	<script src="scriptaculous-js-1.8.3/src/sound.js"></script>
+	<style type="text/css">
+		body { font-family: tahoma, verdana, arial, sans-serif; font-size: 80% }
+		div#content { 
+			z-index:100;
+			position:relative;
+			margin-top:0px;
+			padding:5 5 5 0;  
+			clear:both; 
+			border:0px solid #E0E0E0;
+			background: url('img/underline.gif') no-repeat;
+			background-position: -500 0;
+			background-color: #FFF;
+		}
+		
+		div#status, div#tray { padding:2px; margin-bottom: 2px; border:1px solid #E0E0E0; vertical-align:middle;  } 
+		
+		div#status { height:18px; float:left; width:90%; vertical-align:middle; }
+		div#tray { height:18px; width:9%; float:right; vertical-align:middle; text-align: center; }
+		
+		div#status img { vertical-align:middle; margin-bottom:2px; width:16px; height:16px; }
+		
+		div.tab { 
+			z-index:0; position:relative;
+			border-color: #F0F0F0; 
+			border-style: solid; 
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-bottom-width: 0px;
+			border-left-width: 1px;
+			padding: 5px;
+			width: 35px;
+			text-align:center;
+			background: url('img/top_gradient.png') repeat-x;
+			background-position: 0 7;
+			margin:0px;
+			clip:rect(0px,60px,200px,0px);
+		}
+	</style>
+</head>
+<body>
+	<script language="javascript">
+		var loadingGraphic 			= 'img/ajax-loader.gif';
+		var anotherLoadingGraphic 	= 'img/buildStates/running_green_transparent.gif';
+		var okGraphic 				= 'img/buildStates/success_small.gif';
+		var dilbertGraphic 			= 'img/dilbert.gif';
+		var tabImage,tab,cartoon;
+		
+		document.observe('dom:loaded', function() {
+			tabImage = $('tab_image')
+			tab = $('tab')
+			cartoon = $('cartoon')
+			
+			showTab(anotherLoadingGraphic);
+			
+			window.setTimeout(loadCartoon, 3000);
+		});
+		
+		function loadCartoon() {
+			cartoon.setStyle({ "opacity" : "0" });
+			
+			cartoon.setAttribute(
+				'src', 
+				'http://dilbert.com/dyn/str_strip/000000000/00000000/0000000/000000/80000/1000/600/81607/81607.strip.gif'
+			);
+			
+			showDilbert();
+			
+			cartoon.fade({ duration: 1.0, from: 0, to: 1 });
+		}
+		
+		function showDilbert() {
+			var slideDownBy = 25;
+				
+			new Effect.Move(tab.getAttribute('id'), 
+				{ 
+					y: slideDownBy, 
+					mode: 'relative', 
+					queue: 'end', 
+					duration: 0.25, 
+					afterFinish : function() { tabImage.setAttribute('src', dilbertGraphic); } 
+				}
+			)	
+			
+			new Effect.Move(tab.getAttribute('id'), 
+				{ 
+					y: -(slideDownBy), 
+					mode: 'relative', 
+					queue: 'end',
+					duration: 2.5
+				}
+			)
+			
+			new Effect.Pulsate(
+				tabImage.getAttribute('id'),
+				{ duration: 1.0, pulses: 3, queue: 'end' }
+			);
+		}
+		
+		function showTab(url, andThen) {
+			tabImage.setAttribute('src', url);
+			
+			if (andThen != null) {
+				andThen();
+			}
+		}
+		
+		function hide(what) {
+			new Effect.Opacity(
+				what,
+				{ duration: 0.5, from: 1, to: 0, queue: 'front' }
+			);
+		}
+		
+		function flashAndFade(what) {
+			new Effect.Pulsate(
+				what,
+				{ duration: 0.75, pulses: 3, queue: 'front' }
+			);
+			
+			new Effect.Opacity(
+				what,
+				{ duration: 1.75, from: 1, to: 0, queue: 'end' }
+			);
+		}
+	</script>
+		<div id="tab" class="tab"><img id="tab_image"/></div>
+		<div id="content"><img id="cartoon" /></div>
+</body>
+</html>
