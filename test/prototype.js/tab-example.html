@@ -14,20 +14,16 @@
 			z-index:100;
 			position:relative;
 			margin-top:0px;
-			padding:5 5 5 0;  
+			padding:5 5 5 2;  
 			clear:both; 
 			border:0px solid #E0E0E0;
 			background: url('img/underline.gif') no-repeat;
-			background-position: -500 0;
+			background-position: -400 0;
 			background-color: #FFF;
 		}
 		
-		div#status, div#tray { padding:2px; margin-bottom: 2px; border:1px solid #E0E0E0; vertical-align:middle;  } 
-		
-		div#status { height:18px; float:left; width:90%; vertical-align:middle; }
-		div#tray { height:18px; width:9%; float:right; vertical-align:middle; text-align: center; }
-		
-		div#status img { vertical-align:middle; margin-bottom:2px; width:16px; height:16px; }
+		div#tab { float: left; }
+		div#status { float: left; color: #F0F0F0; padding: 5px; vertical-align: middle; }
 		
 		div.tab { 
 			z-index:0; position:relative;
@@ -43,6 +39,7 @@
 			background: url('img/top_gradient.png') repeat-x;
 			background-position: 0 7;
 			margin:0px;
+			margin-left:5px;
 			clip:rect(0px,60px,200px,0px);
 		}
 	</style>
@@ -53,14 +50,17 @@
 		var anotherLoadingGraphic 	= 'img/buildStates/running_green_transparent.gif';
 		var okGraphic 				= 'img/buildStates/success_small.gif';
 		var dilbertGraphic 			= 'img/dilbert.gif';
-		var tabImage,tab,cartoon;
+		var tabImage,tab,cartoon,statusMessage;
 		
 		document.observe('dom:loaded', function() {
-			tabImage = $('tab_image')
-			tab = $('tab')
-			cartoon = $('cartoon')
+			tabImage = $('tab_image');
+			tab = $('tab');
+			cartoon = $('cartoon');
+			statusMessage = $('status');
 			
 			showTab(anotherLoadingGraphic);
+			
+			showStatus("Waiting...");
 			
 			window.setTimeout(loadCartoon, 3000);
 		});
@@ -75,6 +75,8 @@
 			
 			showDilbert();
 			
+			showStatus("");
+			
 			cartoon.fade({ duration: 1.0, from: 0, to: 1 });
 		}
 		
@@ -86,7 +88,7 @@
 					y: slideDownBy, 
 					mode: 'relative', 
 					queue: 'end', 
-					duration: 0.25, 
+					duration: 0.0, 
 					afterFinish : function() { tabImage.setAttribute('src', dilbertGraphic); } 
 				}
 			)	
@@ -96,7 +98,7 @@
 					y: -(slideDownBy), 
 					mode: 'relative', 
 					queue: 'end',
-					duration: 2.5
+					duration: 1.0
 				}
 			)
 			
@@ -114,26 +116,15 @@
 			}
 		}
 		
-		function hide(what) {
-			new Effect.Opacity(
-				what,
-				{ duration: 0.5, from: 1, to: 0, queue: 'front' }
-			);
+		function showStatus(message) {
+			statusMessage.update(message);
 		}
 		
-		function flashAndFade(what) {
-			new Effect.Pulsate(
-				what,
-				{ duration: 0.75, pulses: 3, queue: 'front' }
-			);
-			
-			new Effect.Opacity(
-				what,
-				{ duration: 1.75, from: 1, to: 0, queue: 'end' }
-			);
-		}
 	</script>
-		<div id="tab" class="tab"><img id="tab_image"/></div>
+	<div id="structure" style="padding:40px">
+		<div id="tab" class="tab"><a href="javascript:void(0)"><img id="tab_image"/></a></div>
+		<div id="status"></div>
 		<div id="content"><img id="cartoon" /></div>
+	</div>
 </body>
 </html>
