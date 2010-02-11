@@ -12,9 +12,6 @@
         border-right-width: 0;
         border:0;
         width:100%;
-        background: #FFF url(/img/underline.gif);
-        background-repeat: no-repeat;
-        background-position-y: bottom, top;
     }
     
     div.status img { vertical-align:middle; margin-bottom:3px; }
@@ -58,11 +55,16 @@
         font-size: 110%;
         font-weight:bold;
     }
+
+    img#status_icon { width:16px; height:16px; }
 </style>
 <div id="coriander.haarlem.tabs.metrics.status" class="status"></div>
 <div id="coriander.haarlem.tabs.metrics.results"></div>
 
 <script language="javascript">
+    var loadingGraphic          = '../../img/ajax-loader.gif';
+    var anotherLoadingGraphic   = '../../img/buildStates/running_green_transparent.gif';
+    var okGraphic 				= '../../img/buildStates/success_small.gif';
     var currentUser = "";
     
     document.observe("dom:loaded", function() {
@@ -74,10 +76,7 @@
     });
 
     function showLoading(message) {
-        var loadingGraphic = '../../img/ajax-loader.gif';
-        var anotherLoadingGraphic = '../../img/buildStates/running_green_transparent.gif';
-
-        showStatus("<img width=\"16\" height=\"16\" src=\"" + anotherLoadingGraphic + "\" /> " + message);
+        showStatus("<img id=\"status_icon\" src=\"" + anotherLoadingGraphic + "\" /> " + message);
     }
 
     function showStatus(message) {
@@ -98,15 +97,47 @@
         var req = new Ajax.Request(url, {
             method: 'get',
             onSuccess: function(result) {
-                showLoading("Collecting dashboards...done.");
-                hideStatus();
+                showLoading("");
+                
+                $("status_icon").setAttribute("src", okGraphic);
+
+				flashAndHide("status_icon");
+					
                 $("coriander.haarlem.tabs.metrics.results").update(result.responseText || "<none>");
+
+                $("coriander.haarlem.tabs.metrics.results").update(result.responseText || "<none>");
+
+                // TODO: Do we need to do this just to stop flashing?
+                $("coriander.haarlem.tabs.metrics.results").setStyle({ "display" : "block", "opacity" : "0" });
+
+                new Effect.Opacity(
+                    'coriander.haarlem.tabs.metrics.results',
+                    { duration: 0.5, from: 0, to: 1, queue: 'front' }
+                );
             },
             onFailure: function(result) {
                 showStatus("Failed: " + result.responseText || "<none>");                
             }
         });
     }
+
+    function flashAndFade(what) {
+        new Effect.Pulsate(
+            what,
+            { duration: 0.75, pulses: 3, queue: 'front' }
+        );
+
+        new Effect.Opacity(
+            what,
+            { duration: 0.75, from: 1, to: 0, queue: 'end' }
+        );
+
+        hide(what);
+	}
+
+	function hide(what) {
+        new Effect.BlindUp(what);
+	}
 
     // HACK: See dashboard.xsl which calls these
     function toggleVisibleAndChangeImage(imageId, id) {
