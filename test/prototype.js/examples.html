@@ -1,0 +1,110 @@
+<html>
+<head>
+	<script src="scriptaculous-js-1.8.3/lib/prototype.js"></script>
+	<script src="scriptaculous-js-1.8.3/src/build.js"></script>
+	<script src="scriptaculous-js-1.8.3/src/controls.js"></script>
+	<script src="scriptaculous-js-1.8.3/src/dragdrop.js"></script>
+	<script src="scriptaculous-js-1.8.3/src/effects.js"></script>
+	<script src="scriptaculous-js-1.8.3/src/scriptaculous.js"></script>
+	<script src="scriptaculous-js-1.8.3/src/slider.js"></script>
+	<script src="scriptaculous-js-1.8.3/src/sound.js"></script>
+	<style type="text/css">
+		body { font-family: tahoma, verdana, arial, sans-serif; font-size: 80% }
+		div#content { padding:5px; margin-top:20px; clear:both; border:0px solid #E0E0E0;  }
+		
+		div#status, div#tray { padding:2px; margin-bottom: 2px; border:1px solid #E0E0E0; vertical-align:middle;  } 
+		
+		div#status { height:18px; float:left; width:90%; vertical-align:middle; }
+		div#tray { height:18px; width:9%; float:right; vertical-align:middle; text-align: center; }
+		
+		div#status img { vertical-align:middle; margin-bottom:2px; width:16px; height:16px; }
+	</style>
+</head>
+<body>
+	<script language="javascript">
+		var loadingGraphic 			= 'img/ajax-loader.gif';
+		var anotherLoadingGraphic 	= 'img/buildStates/running_green_transparent.gif';
+		var okGraphic 				= 'img/buildStates/composBuilds/success_small.gif';
+		
+		document.observe("dom:loaded", function() {
+			showLoading("Collecting something...");
+
+			window.setTimeout(fill, 1500);
+		});
+		
+		function reload() {
+			showLoading("Reloading...");
+			
+			window.setTimeout(fill, 1500);
+		}
+		
+		function fill() {
+			var url = "lorem-ipsum.txt";
+			
+			var req = new Ajax.Request(url, {
+				method: 'get',
+				onSuccess: function(result) {
+					showLoading("");
+					
+					$("status_icon").setAttribute("src", okGraphic);
+					
+					flash("status_icon");
+					
+					$("content").update(result.responseText || "<none>");
+					
+					// TODO: Do we need to do this just to stop flashing?
+					$("content").setStyle({ "border-width": "1px", "display" : "block", "opacity" : "0" });
+					
+					new Effect.Opacity(
+						'content',
+						{ duration: 0.5, from: 0, to: 1, queue: 'front' }
+					);
+				},
+				onFailure: function(result) {
+					showStatus("Failed: " + result.responseText || "<none>");
+				}
+			});
+		}
+		
+		function showLoading(message) {
+			showStatus("<img id=\"status_icon\" src=\"" + anotherLoadingGraphic + "\" /> " + message);
+		}
+
+		function showStatus(message) {
+			getStatus().show();
+			getStatus().update(message);
+		}
+		
+		function hideStatus() {
+			new Effect.Opacity(
+				'status',
+				{ duration: 0.5, from: 1, to: 0, queue: 'front' }
+			);
+			new Effect.BlindUp(
+				'status',
+				{ duration: 0.25, queue: 'end' }
+			);
+		}
+		
+		function getStatus() {
+			return $("status");
+		}
+		
+		function flash(what) {
+			new Effect.Pulsate(
+				what,
+				{ duration: 0.75, pulses: 3, queue: 'front' }
+			);
+			
+			new Effect.Opacity(
+				what,
+				{ duration: 1.75, from: 1, to: 0, queue: 'end' }
+			);
+		}
+	</script>
+		<div id="status"></div>
+		<div id="tray"><a href="javascript:reload()">Reload</a></div>
+	
+	<div id="content"></div>
+</body>
+</html>
