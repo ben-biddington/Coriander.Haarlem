@@ -66,7 +66,7 @@
 		});
 		
 		function loadCartoon() {
-			cartoon.setStyle({ "opacity" : "0" });
+			cartoon.setStyle({ "opacity" : "0", "visibility" : "visible" });
 			
 			cartoon.setAttribute(
 				'src', 
@@ -122,9 +122,9 @@
 		
 	</script>
 	<div id="structure" style="padding:40px">
-		<div id="tab" class="tab"><a href="javascript:void(0)"><img id="tab_image"/></a></div>
+		<div id="tab" class="tab"><a href="javascript:void(0)"><img id="tab_image" border="0"/></a></div>
 		<div id="status"></div>
-		<div id="content"><img id="cartoon" /></div>
+		<div id="content"><img id="cartoon" style="visibility:hidden"/></div>
 	</div>
 </body>
 </html>
