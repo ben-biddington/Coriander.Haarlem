@@ -121,7 +121,7 @@
         });
     }
 
-    function flashAndFade(what) {
+    function flashAndHide(what) {
         new Effect.Pulsate(
             what,
             { duration: 0.75, pulses: 3, queue: 'front' }
