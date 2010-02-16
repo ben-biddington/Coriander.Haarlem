@@ -3,10 +3,7 @@ function DilbertTabView(tab, tabImage, cartoon, status) {
 	this.tabImage 	= tabImage;
 	this.cartoon 	= cartoon;
 	this.status 	= status;
-	
 	var tabGraphic 	= 'img/dilbert.gif';
-	
-	this.show = function(html) {	}
 	
 	this.showCartoon = function(url) {
 		cartoon.setStyle({ "opacity" : "0", "visibility" : "visible" });
