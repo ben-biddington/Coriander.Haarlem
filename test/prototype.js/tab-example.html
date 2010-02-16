@@ -2,12 +2,12 @@
 <head>
 	<script src="scriptaculous-js-1.8.3/lib/prototype.js"></script>
 	<script src="scriptaculous-js-1.8.3/src/build.js"></script>
-	<script src="scriptaculous-js-1.8.3/src/controls.js"></script>
-	<script src="scriptaculous-js-1.8.3/src/dragdrop.js"></script>
 	<script src="scriptaculous-js-1.8.3/src/effects.js"></script>
 	<script src="scriptaculous-js-1.8.3/src/scriptaculous.js"></script>
 	<script src="scriptaculous-js-1.8.3/src/slider.js"></script>
 	<script src="scriptaculous-js-1.8.3/src/sound.js"></script>
+	<script src="scriptaculous-js-1.8.3/src/dragdrop.js"></script>
+	<script src="scriptaculous-js-1.8.3/src/controls.js"></script>
 	<script src="rss.tab.view.js"></script>
 	
 	<style type="text/css">
@@ -59,78 +59,27 @@
 		var anotherLoadingGraphic 	= 'img/buildStates/running_green_transparent.gif';
 		var okGraphic 				= 'img/buildStates/success_small.gif';
 		var dilbertGraphic 			= 'img/dilbert.gif';
+		var tabView					= null;
 		var tabImage,tab,cartoon,statusMessage;
 		
 		document.observe('dom:loaded', function() {
-			tabImage = $('tab_image');
-			tab = $('tab');
-			cartoon = $('cartoon');
-			statusMessage = $('status');
+			tabImage 		= $('tab_image');
+			tab 			= $('tab');
+			cartoon 		= $('cartoon');
+			statusMessage 	= $('status');
 			
-			showTab(anotherLoadingGraphic);
+			tabView = new DilbertTabView(tab, tabImage, cartoon, statusMessage);
 			
-			showStatus("Waiting...");
+			tabView.setTabIcon(anotherLoadingGraphic);
 			
-			window.setTimeout(loadCartoon, 3000);
+			tabView.showStatus("Waiting...");
 			
-			var rssTab = new DilbertTabView(tabImage, tab , cartoon, statusMessage);
+			window.setTimeout(loadCartoon, 2000);
 		});
 		
 		function loadCartoon() {
-			cartoon.setStyle({ "opacity" : "0", "visibility" : "visible" });
-			
-			cartoon.setAttribute(
-				'src', 
-				'http://dilbert.com/dyn/str_strip/000000000/00000000/0000000/000000/80000/1000/600/81607/81607.strip.gif'
-			);
-			
-			showDilbert();
-			
-			showStatus("");
-			
-			cartoon.fade({ duration: 1.0, from: 0, to: 1 });
+			tabView.showCartoon('http://dilbert.com/dyn/str_strip/000000000/00000000/0000000/000000/80000/1000/600/81607/81607.strip.gif');
 		}
-		
-		function showDilbert() {
-			var slideDownBy = 25;
-				
-			new Effect.Move(tab.getAttribute('id'), 
-				{ 
-					y: slideDownBy, 
-					mode: 'relative', 
-					queue: 'end', 
-					duration: 0.0, 
-					afterFinish : function() { tabImage.setAttribute('src', dilbertGraphic); } 
-				}
-			)	
-			
-			new Effect.Move(tab.getAttribute('id'), 
-				{ 
-					y: -(slideDownBy), 
-					mode: 'relative', 
-					queue: 'end',
-					duration: 1.0
-				}
-			)
-			
-			new Effect.Pulsate(
-				tabImage.getAttribute('id'),
-				{ duration: 1.0, pulses: 3, queue: 'end' }
-			);
-		}
-		
-		function showTab(url, andThen) {
-			tabImage.setAttribute('src', url);
-			
-			if (andThen != null) {
-				andThen();
-			}
-		}
-		
-		function showStatus(message) {
-			statusMessage.update(message);
-		}
-		
 	</script>
 	
 	<div id="structure" style="padding:40px">

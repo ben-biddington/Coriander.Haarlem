@@ -4,21 +4,23 @@ function DilbertTabView(tab, tabImage, cartoon, status) {
 	this.cartoon 	= cartoon;
 	this.status 	= status;
 	
-	this.prototype.show = function(html) {	}
+	var tabGraphic 	= 'img/dilbert.gif';
 	
-	function showCartoon(url) {
+	this.show = function(html) {	}
+	
+	this.showCartoon = function(url) {
 		cartoon.setStyle({ "opacity" : "0", "visibility" : "visible" });
 		
 		cartoon.setAttribute('src', url);
 		
-		showDilbert();
+		this.showTab();
 		
-		showStatus("");
+		this.showStatus("");
 		
 		cartoon.fade({ duration: 1.0, from: 0, to: 1 });
 	}
 	
-	function showTab() {
+	this.showTab = function() {
 		var slideDownBy = 25;
 			
 		new Effect.Move(tab.getAttribute('id'), 
@@ -27,7 +29,7 @@ function DilbertTabView(tab, tabImage, cartoon, status) {
 				mode: 'relative', 
 				queue: 'end', 
 				duration: 0.0, 
-				afterFinish : function() { tabImage.setAttribute('src', dilbertGraphic); } 
+				afterFinish : function() { tabImage.setAttribute('src', tabGraphic) } 
 			}
 		)	
 		
@@ -46,13 +48,11 @@ function DilbertTabView(tab, tabImage, cartoon, status) {
 		);
 	}
 	
-	function showStatus(message) {
+	this.setTabIcon = function(url) {
+		tabImage.setAttribute('src', url);
+	} 
+	
+	this.showStatus = function(message) {
 		statusMessage.update(message);
-	}
-}
-
-function DilbertTabModel() {
-	this.prototype.onload = function(doWhat) {
-		
 	}
 }
