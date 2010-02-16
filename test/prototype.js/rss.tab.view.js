@@ -23,7 +23,7 @@ function DilbertTabView(tab, tabImage, cartoon, status) {
 	this.showTab = function() {
 		var slideDownBy = 25;
 			
-		new Effect.Move(tab.getAttribute('id'), 
+		new Effect.Move(tab, 
 			{ 
 				y: slideDownBy, 
 				mode: 'relative', 
@@ -33,7 +33,7 @@ function DilbertTabView(tab, tabImage, cartoon, status) {
 			}
 		)	
 		
-		new Effect.Move(tab.getAttribute('id'), 
+		new Effect.Move(tab, 
 			{ 
 				y: -(slideDownBy), 
 				mode: 'relative', 
@@ -43,7 +43,7 @@ function DilbertTabView(tab, tabImage, cartoon, status) {
 		)
 		
 		new Effect.Pulsate(
-			tabImage.getAttribute('id'),
+			tabImage,
 			{ duration: 1.0, pulses: 3, queue: 'end' }
 		);
 	}
