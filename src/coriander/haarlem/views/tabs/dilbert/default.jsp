@@ -13,12 +13,19 @@
     }
 
     div#coriander-haarlem-carrot-tab-tab { float: left; }
-    div#coriander-haarlem-carrot-tab-tab-status { float: left; color: #F0F0F0; padding: 5px; vertical-align: middle; }
+    div#coriander-haarlem-carrot-tab-tab-status {
+        float: left;
+        position:relative;
+        color: #F0F0F0;
+        padding: 5px;
+        vertical-align: middle;
+        margin:0px;
+        line-height: 14px; 
+    }
 
     div.tab {
         z-index:0;
         position:relative;
-        top: 3px;
         border-color: #F0F0F0;
         border-style: solid;
         border-top-width: 1px;
@@ -26,7 +33,6 @@
         border-bottom-width: 0px;
         border-left-width: 1px;
         padding: 5px;
-        width: 35px;
         width: 35px;
         text-align:center;
         background: url('img/top_gradient.png') repeat-x;
@@ -44,8 +50,7 @@
 <script src="/plugins/coriander-haarlem/server/rss.tab.view.js" type="text/javascript"></script>
 
 <div id="coriander-haarlem-carrot-tab-content-structure" style="padding:5px">
-    <div id="coriander-haarlem-carrot-tab-tab" class="tab"><a href="javascript:void(0)"><img id="coriander-haarlem-carrot-tab-content-tab_image" border="0"/></a></div>
-    <div id="coriander-haarlem-carrot-tab-tab-status"></div>
+    <div id="coriander-haarlem-carrot-tab-tab" class="tab"><a href="javascript:void(0)"><img id="coriander-haarlem-carrot-tab-content-tab_image" border="0"/></a></div><div id="coriander-haarlem-carrot-tab-tab-status"></div>
     <div id="coriander-haarlem-carrot-tab-content"></div>
 </div>
 
