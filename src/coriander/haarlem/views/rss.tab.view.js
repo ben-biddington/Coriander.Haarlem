@@ -15,10 +15,10 @@ function DilbertTabView(tab, tabImage, statusMessage, content) {
 		content.update(html);
 
 		content.fade({
-		    duration: 0.0,
-		    from: 0, 
-		    to: 1,
-		    queue: { position: 'front', scope: effectScope }
+		    duration    : 0.25,
+		    from        : 0,
+		    to          : 1,
+		    queue       : { position: 'front', scope: effectScope }
 		});
 
 		this.showTab();
@@ -27,29 +27,21 @@ function DilbertTabView(tab, tabImage, statusMessage, content) {
 	this.showTab = function() {
 		var slideDownBy = 25;
 
-        log('Moving down, position is now <' + tab.positionedOffset() + '>'); 
-
-		new Effect.Move(tab, {
+        new Effect.Move(tab, {
             y           : slideDownBy,
             mode        : 'relative',
             queue       : { position: 'end', scope: effectScope },
             duration    : 0.5,
             afterFinish : function() {
                 tabImage.setAttribute('src', tabGraphic);
-                log('Moved down, position is now <' + tab.positionedOffset() + '>'); 
             }
 		});
 
-		log('Moving up, position is now <' + tab.positionedOffset() + '>');
-
-        new Effect.Move(tab, {
+		new Effect.Move(tab, {
             y           : -(slideDownBy),
             mode        : 'relative',
             queue       : { position: 'end', scope: effectScope },
-            duration    : 1.0,
-            afterFinish : function() {
-                log('Moved up, position is now <' + tab.positionedOffset() + '>');
-            }
+            duration    : 1.0
 		});
 
 		new Effect.Pulsate(tabImage, {
