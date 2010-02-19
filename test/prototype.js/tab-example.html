@@ -8,7 +8,7 @@
 	<script src="scriptaculous-js-1.8.3/src/sound.js"></script>
 	<script src="scriptaculous-js-1.8.3/src/dragdrop.js"></script>
 	<script src="scriptaculous-js-1.8.3/src/controls.js"></script>
-	<script src="rss.tab.view.js"></script>
+	<script src="../../src/coriander/haarlem/views/rss.tab.view.js"></script>
 	
 	<style type="text/css">
 		body { font-family: tahoma, verdana, arial, sans-serif; font-size: 80% }
@@ -57,32 +57,33 @@
 	<script language="javascript">
 		var anotherLoadingGraphic 	= 'img/buildStates/running_green_transparent.gif';
 		var tabView					= null;
-		var tabImage,tab,cartoon,statusMessage;
+		var tabImage,tab,statusMessage,content;
 		
 		document.observe('dom:loaded', function() {
 			tab 			= $('tab');
 			tabImage 		= $('tab_image');
-			cartoon 		= $('cartoon');
+			content         = $('content');
 			statusMessage 	= $('status');
 			
-			tabView = new DilbertTabView(tab, tabImage, cartoon, statusMessage);
-			
-			tabView.setTabIcon(anotherLoadingGraphic);
-			
-			tabView.showStatus("Waiting...");
-			
-			window.setTimeout(loadCartoon, 2000);
+			tabView = new DilbertTabView(tab, tabImage, statusMessage, content);
+
+            tabView.setTabIcon(anotherLoadingGraphic);
+
+            tabView.showStatus("Waiting...");
+
+            window.setTimeout(loadCartoon, 2000);
 		});
 		
 		function loadCartoon() {
-			tabView.showCartoon('http://dilbert.com/dyn/str_strip/000000000/00000000/0000000/000000/80000/1000/600/81607/81607.strip.gif');
+            var url = 'http://dilbert.com/dyn/str_strip/000000000/00000000/0000000/000000/80000/1000/600/81607/81607.strip.gif';
+			tabView.showCartoon("<img src='" + url + "'/>");
 		}
 	</script>
 	
 	<div id="structure" style="padding:40px">
 		<div id="tab" class="tab"><a href="javascript:void(0)"><img id="tab_image" border="0"/></a></div>
 		<div id="status"></div>
-		<div id="content"><img id="cartoon" style="visibility:hidden"/></div>
+		<div id="content"></div>
 	</div>
 </body>
 </html>

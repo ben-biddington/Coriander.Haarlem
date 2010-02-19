@@ -1,6 +1,7 @@
 <style type="text/css">
     div#coriander-haarlem-carrot-tab-content {
         z-index:100;
+        height:100%;
         position:relative;
         margin-top:0px;
         padding:10px;
