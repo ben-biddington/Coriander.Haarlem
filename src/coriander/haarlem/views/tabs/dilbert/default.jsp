@@ -1,53 +1,5 @@
-<style type="text/css">
-    div#coriander-haarlem-carrot-tab-content {
-        z-index:100;
-        height:100%;
-        position:relative;
-        margin-top:0px;
-        padding:10px;
-        clear:both;
-        border:0px solid #E0E0E0;
-        background: url('/img/underline.gif') no-repeat;
-        background-position: -700 0;
-        background-color: #fff;
-    }
-
-    div#coriander-haarlem-carrot-tab-tab { float: left; }
-    div#coriander-haarlem-carrot-tab-tab-status {
-        float: left;
-        position:relative;
-        color: #F0F0F0;
-        padding: 5px;
-        vertical-align: middle;
-        margin:0px;
-        line-height: 14px; 
-    }
-
-    div.tab {
-        z-index:0;
-        position:relative;
-        border-color: #F0F0F0;
-        border-style: solid;
-        border-top-width: 1px;
-        border-right-width: 1px;
-        border-bottom-width: 0px;
-        border-left-width: 1px;
-        padding: 5px;
-        width: 35px;
-        text-align:center;
-        background: url('img/top_gradient.png') repeat-x;
-        background-position: 0 7;
-        margin:0px;
-        margin-left:5px;
-        border-top-left-radius: 4px;
-        border-top-right-radius: 4px;
-        -moz-border-top-left-radius: 4px;
-        -moz-border-top-right-radius: 4px;
-        -webkit-border-top-left-radius: 4px;
-        -webkit-border-top-right-radius: 4px;
-    }
-</style>
-<script src="/plugins/coriander-haarlem/server/rss.tab.view.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="/plugins/coriander-haarlem/server/tabs/rss.tab.view.css" />
+<script src="/plugins/coriander-haarlem/server/tabs/rss.tab.view.js" type="text/javascript"></script>
 
 <div id="coriander-haarlem-carrot-tab-content-structure" style="padding:5px">
     <div id="coriander-haarlem-carrot-tab-tab" class="tab"><a href="javascript:void(0)"><img id="coriander-haarlem-carrot-tab-content-tab_image" border="0"/></a></div><div id="coriander-haarlem-carrot-tab-tab-status"></div>
