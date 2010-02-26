@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="jswdk">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/servlet.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

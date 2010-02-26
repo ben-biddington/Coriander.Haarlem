@@ -14,10 +14,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="lib" level="project" />
-    <orderEntry type="library" name="spring" level="project" />
-    <orderEntry type="library" name="jswdk" level="project" />
-    <orderEntry type="library" name="teamcity" level="project" />
-    <orderEntry type="library" name="xmlrpc" level="project" />
   </component>
 </module>
 

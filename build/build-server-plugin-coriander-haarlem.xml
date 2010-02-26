@@ -2,18 +2,17 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans default-autowire="constructor">
-    <!--<bean id="beanListController" class="coriander.haarlem.controllers.BeanListController" init-method="register"/>-->
-    <!--<bean id="logSearchController" class="coriander.haarlem.controllers.LogSearchController" init-method="register"/>-->
     <bean id="carrotTab" class="coriander.haarlem.tabs.CarrotTab" init-method="register" />
     <bean id="stickTab" class="coriander.haarlem.tabs.StickTab" init-method="register" />
-    <!--<bean id="logSearchTab" class="coriander.haarlem.tabs.LogSearchTab" init-method="register">-->
-        <!--<property name="placeId" value="#BUILD_RESULTS_TAB"/>-->
-        <!--<property name="pluginName" value="logSearchTab"/>-->
-        <!--<property name="includeUrl" value="/log-search.html"/>-->
-    <!--</bean>-->
     <bean id="dilbertController" class="coriander.haarlem.controllers.DilbertController" init-method="register">
         <property name="cacheSeconds" value="7200"/>
         <property name="supportedMethods" value="GET"/>
+        <property name="route" value="/dilbert.html"/>
+    </bean>
+    <bean id="failblogController" class="coriander.haarlem.controllers.FailblogController" init-method="register">
+        <property name="cacheSeconds" value="7200"/>
+        <property name="supportedMethods" value="GET"/>
+        <property name="route" value="/fail.html"/>
     </bean>
     <bean id="metricsController" class="coriander.haarlem.controllers.MetricsController" init-method="register">
         <property name="cacheSeconds" value="180"/>

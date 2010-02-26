@@ -2,9 +2,15 @@
   <library name="lib">
     <CLASSES>
       <root url="file://$PROJECT_DIR$/lib" />
+      <root url="file://$PROJECT_DIR$/lib/xmlrpc" />
+      <root url="file://$PROJECT_DIR$/lib/teamcity" />
+      <root url="file://$PROJECT_DIR$/lib/spring" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
     <jarDirectory url="file://$PROJECT_DIR$/lib" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/spring" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/teamcity" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/xmlrpc" recursive="false" />
   </library>
 </component>

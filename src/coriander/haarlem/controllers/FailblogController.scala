@@ -4,28 +4,21 @@ import jetbrains.buildServer.controllers.BaseController
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import org.springframework.web.servlet.ModelAndView
 import jetbrains.buildServer.web.openapi.{PluginDescriptor, WebControllerManager}
-import coriander.haarlem.rss.{DilbertRssFeed}
+import coriander.haarlem.rss.FailblogRssFeed
 
-class DilbertController(pluginDescriptor : PluginDescriptor) extends BaseController {	
+class FailblogController(pluginDescriptor : PluginDescriptor) extends BaseController {
 	def register() {
-		require (
-			route != null,
-			"Ensure you have defined the <route> property in your bean config"
-		)
-
 		webControllerManager.registerController(route, this)
 	}
-	
+
 	override protected def doHandle(
 		request : HttpServletRequest,
 		response : HttpServletResponse
-	) : ModelAndView = {
-		val rssFeedItem = getLatestDilbert
-
+	) = {
 		new ModelAndView(
 			pluginResourcePath + "default.jsp",
 			"results",
-			rssFeedItem
+			getLatestFail
 		)
 	}
 
@@ -34,9 +27,9 @@ class DilbertController(pluginDescriptor : PluginDescriptor) extends BaseControl
 	private lazy val webControllerManager = getApplicationContext.
 		getBean("webControllerManager", classOf[WebControllerManager])
 
-	private def pluginResourcePath = pluginDescriptor.getPluginResourcesPath + "/server/dilbert/"
+	private def pluginResourcePath = pluginDescriptor.getPluginResourcesPath + "/server/failblog/"
 
-	private def getLatestDilbert = new DilbertRssFeed().find
+	private def getLatestFail = new FailblogRssFeed().find
 
 	private var route : String = null
 }
