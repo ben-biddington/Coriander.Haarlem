@@ -1,10 +1,10 @@
-function DilbertTabView(tab, tabImage, statusMessage, content) {
-	this.tab 		= tab;
-	this.tabImage 	= tabImage;
+function DilbertTabView(tab, tabImage, tabGraphicUrl, statusMessage, content) {
+	this.tab 		    = tab;
+	this.tabImage 	    = tabImage;
 	this.statusMessage 	= statusMessage;
-	this.content 	= content;
+	this.content 	    = content;
+	this.tabGraphicUrl  = tabGraphicUrl;
 	
-	var tabGraphic 	= '/plugins/coriander-haarlem/server/tabs/dilbert/dilbert.gif';
     var effectScope = 'tab_effect';
 
 	this.showCartoon = function(html) {
@@ -33,7 +33,7 @@ function DilbertTabView(tab, tabImage, statusMessage, content) {
             queue       : { position: 'end', scope: effectScope },
             duration    : 0.5,
             afterFinish : function() {
-                tabImage.setAttribute('src', tabGraphic);
+                tabImage.setAttribute('src', tabGraphicUrl);
             }
 		});
 

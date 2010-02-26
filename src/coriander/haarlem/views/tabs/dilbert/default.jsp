@@ -18,7 +18,13 @@
         statusMessage 	= $('coriander-haarlem-tab-status');
         content         = $('coriander-haarlem-tab-content')
 
-        tabView = new DilbertTabView(tab, tabImage, statusMessage, content);
+         tabView = new DilbertTabView(
+            tab,
+            tabImage,
+            '/plugins/coriander-haarlem/server/tabs/dilbert/dilbert.gif',
+             statusMessage,
+             content
+        );
 
         tabView.setTabIcon(anotherLoadingGraphic);
 
