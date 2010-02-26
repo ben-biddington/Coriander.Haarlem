@@ -11,6 +11,10 @@ div#coriander-haarlem-tab-content {
     background-color: #fff;
 }
 
+div#coriander-haarlem-tab-content p.rss-title {
+    font-weight: bold;
+}
+
 div#coriander-haarlem-tab { float: left; }
 div#coriander-haarlem-tab-status {
     float: left;
