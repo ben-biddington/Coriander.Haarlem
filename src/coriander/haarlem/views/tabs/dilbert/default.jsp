@@ -18,7 +18,7 @@
         statusMessage 	= $('coriander-haarlem-tab-status');
         content         = $('coriander-haarlem-tab-content')
 
-         tabView = new DilbertTabView(
+        tabView = new RssTabView(
             tab,
             tabImage,
             '/plugins/coriander-haarlem/server/tabs/dilbert/dilbert.gif',

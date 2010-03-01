@@ -23,10 +23,7 @@ class RomeTests {
 		val firstFeedItem : SyndEntryImpl = allEntries.get(0)
 
 		val firstContent : SyndContentImpl = firstFeedItem.getContents.asInstanceOf[java.util.List[SyndContentImpl]].get(0)
-
-		val x = firstFeedItem.get
 		
-		println("Title: " 		+ firstFeedItem.getTitle)
-		println("Contents: " 	+ firstContent.getValue)
+		println("Title: " + firstFeedItem.getTitle)
     }
 }

@@ -1,4 +1,4 @@
-function DilbertTabView(tab, tabImage, tabGraphicUrl, statusMessage, content) {
+function RssTabView(tab, tabImage, tabGraphicUrl, statusMessage, content) {
 	this.tab 		    = tab;
 	this.tabImage 	    = tabImage;
 	this.statusMessage 	= statusMessage;
