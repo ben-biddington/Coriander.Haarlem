@@ -25,7 +25,7 @@
         tabView = new RssTabView(
             tab,
             tabImage,
-            '/plugins/coriander-haarlem/server/tabs/metrics/capsicum.ico',
+            '/plugins/coriander-haarlem/server/tabs/metrics/img/traffic-light.ico',
              statusMessage,
              content
         );
