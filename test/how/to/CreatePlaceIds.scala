@@ -5,7 +5,7 @@ import org.junit.Assert._
 import org.hamcrest.core.Is._
 import org.hamcrest.core.IsNot._
 import org.hamcrest.core.IsEqual._
-import jetbrains.buildServer.web.openapi.PlaceId
+import jetbrains.buildServer.web.openapi.{PagePlace, PlaceId}
 
 class CreatePlaceIds {
     @Test

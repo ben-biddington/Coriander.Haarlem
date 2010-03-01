@@ -27,10 +27,10 @@ class MetricsTab(buildServer : SBuildServer)
 	def getPluginName 	= "coriander-haarlem"
 
 	def fillModel(
-		model : java.util.Map[java.lang.String,java.lang.Object],
+		model : java.util.Map[java.lang.String, java.lang.Object],
 		request : HttpServletRequest
 	) {
-		
+		model.put("includeUrl", "/plugins/coriander-haarlem/server/tabs/metrics/")	
 	}
 
 	override def isAvailable(request : HttpServletRequest) : Boolean = true

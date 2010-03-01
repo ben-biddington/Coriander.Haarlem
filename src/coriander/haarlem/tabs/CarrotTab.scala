@@ -17,7 +17,7 @@ class CarrotTab(buildServer : SBuildServer)
 	def register() {
 		val mgr = applicationContext.
 			getBean("webControllerManager", classOf[WebControllerManager])
-
+		
 		mgr.getPlaceById(PlaceId.BUILD_RESULTS_TAB).addExtension(this)
 	}
 
