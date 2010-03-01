@@ -1,109 +1,49 @@
 <%@include file="../../include-internal.jsp"%>
 <jsp:useBean id="currentUser" type="jetbrains.buildServer.users.User" scope="request"/>
+
 <link rel="stylesheet" type="text/css" href="${includeUrl}/metrics-tab.css" />
-<div id="coriander.haarlem.tabs.metrics.status" class="status"></div>
-<div id="coriander.haarlem.tabs.metrics.results"></div>
+<link rel="stylesheet" type="text/css" href="/plugins/coriander-haarlem/server/tabs/rss.tab.view.css" />
+<script src="/plugins/coriander-haarlem/server/tabs/rss.tab.view.js" type="text/javascript"></script>
+
+<div class="coriander-haarlem-tab-container" style="padding:5px">
+    <div id="coriander-haarlem-tab" class="tab"><a href="javascript:void(0)"><img id="coriander-haarlem-tab-tab_image" border="0"/></a></div><div id="coriander-haarlem-tab-status"></div>
+    <div id="coriander-haarlem-tab-content"></div>
+</div>
 
 <script language="javascript">
-    var loadingGraphic          = '../../img/ajax-loader.gif';
-    var anotherLoadingGraphic   = '../../img/buildStates/running_green_transparent.gif';
-    var okGraphic 				= '../../img/buildStates/success_small.gif';
-    var currentUser = "";
+    var anotherLoadingGraphic 	= '/img/buildStates/running_green_transparent.gif';
+    var tabView					= null;
+    var url                     = "/metrics.html?user=${currentUser.id}";
+    var tabImage,tab,statusMessage,content;
 
-    var results, statusIcon;
-     
-    document.observe("dom:loaded", function() {
-        showLoading("Collecting dashboards...");
+    document.observe('dom:loaded', function() {
+        tab 			= $('coriander-haarlem-tab');
+        tabImage 		= $('coriander-haarlem-tab-tab_image');
+        statusMessage 	= $('coriander-haarlem-tab-status');
+        content         = $('coriander-haarlem-tab-content')
 
-        results     = $("coriander.haarlem.tabs.metrics.results")
-        statusIcon  = $("status_icon")
+        tabView = new RssTabView(
+            tab,
+            tabImage,
+            '/plugins/coriander-haarlem/server/tabs/fail/fail.gif',
+             statusMessage,
+             content
+        );
 
-        currentUser = "${currentUser.id}";
-        
-        window.setTimeout(fill, 500);
+        tabView.setTabIcon(anotherLoadingGraphic);
+
+        tabView.showStatus("Waiting...");
+
+        window.setTimeout(loadCartoon, 2000);
     });
 
-    function fill() {
-        var url = "/metrics.html?user=" + currentUser;
-
+    function loadCartoon() {
         var req = new Ajax.Request(url, {
             method: 'get',
             onSuccess: function(result) {
-                showLoading("");
-                
-                statusIcon.setAttribute("src", okGraphic);
-
-				flashAndHide("status_icon");
-					
-                results.update(result.responseText || "<none>");
-
-                results.setStyle({ "display" : "block", "opacity" : "0" });
-
-                new Effect.Opacity(
-                    results,
-                    { duration: 0.5, from: 0, to: 1, queue: 'front' }
-                );
+               tabView.showCartoon(result.responseText);
             },
-            onFailure: function(result) {
-                showStatus("Failed: " + result.responseText || "<none>");                
-            }
+            onFailure: function(result) { }
         });
-    }
-
-    function flashAndHide(what) {
-        new Effect.Pulsate(
-            what,
-            { duration: 0.75, pulses: 3, queue: 'front' }
-        );
-
-        new Effect.Opacity(
-            what,
-            { duration: 0.75, from: 1, to: 0, queue: 'end' }
-        );
-
-        hide(what);
-	}
-
-	function hide(what) {
-        new Effect.BlindUp(what);
-	}
-
-    // HACK: See dashboard.xsl which calls these
-    function toggleVisibleAndChangeImage(imageId, id) {
-        var theElementToToggle = $(id);
-        var theImage = $(imageId);
-
-        var isVisible = theElementToToggle.visible();
-        
-        var _to      = isVisible ? 0 : 1
-        var _from    = isVisible ? 1 : 0
-
-        if (false == isVisible) {
-            theElementToToggle.show();
-            theImage.setAttribute("src", "/img/minus.gif")
-        } else {
-            theImage.setAttribute("src", "/img/plus.gif")
-        }
-        
-        new Effect.Fade(
-            id,
-            { duration: 0.5, from: _from, to: _to }
-        );
-    }
-
-    function showLoading(message) {
-        showStatus("<img id=\"status_icon\" src=\"" + anotherLoadingGraphic + "\" /> " + message);
-    }
-
-    function showStatus(message) {
-        $("coriander.haarlem.tabs.metrics.status").show()
-        $("coriander.haarlem.tabs.metrics.status").update(message)
-    }
-
-    function hideStatus() {
-        new Effect.Opacity(
-            'coriander.haarlem.tabs.metrics.status',
-            { duration: 1.0, from: 1, to: 0 }
-        );
     }
 </script>
