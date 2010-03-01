@@ -25,7 +25,7 @@
         tabView = new RssTabView(
             tab,
             tabImage,
-            '/plugins/coriander-haarlem/server/tabs/metrics/whale-spray.ico',
+            '/plugins/coriander-haarlem/server/tabs/metrics/capsicum.ico',
              statusMessage,
              content
         );
@@ -38,12 +38,35 @@
     });
 
     function loadCartoon() {
-        var req = new Ajax.Request(url, {
-            method: 'get',
-            onSuccess: function(result) {
-               tabView.showCartoon(result.responseText);
+        new Ajax.Request(url, {
+            method      : 'get',
+            onSuccess   : function(result) {
+                tabView.showCartoon(result.responseText);
             },
-            onFailure: function(result) { }
+            onFailure   : function(result) { }
         });
+    }
+
+     // HACK: See dashboard.xsl which calls these
+    function toggleVisibleAndChangeImage(imageId, id) {
+        var theElementToToggle = $(id);
+        var theImage = $(imageId);
+
+        var isVisible = theElementToToggle.visible();
+
+        var _to      = isVisible ? 0 : 1
+        var _from    = isVisible ? 1 : 0
+
+        if (false == isVisible) {
+            theElementToToggle.show();
+            theImage.setAttribute("src", "/img/minus.gif")
+        } else {
+            theImage.setAttribute("src", "/img/plus.gif")
+        }
+
+        new Effect.Fade(
+            id,
+            { duration: 0.5, from: _from, to: _to }
+        );
     }
 </script>
