@@ -25,7 +25,7 @@
         tabView = new RssTabView(
             tab,
             tabImage,
-            '/plugins/coriander-haarlem/server/tabs/fail/fail.gif',
+            '/plugins/coriander-haarlem/server/tabs/metrics/whale-spray.ico',
              statusMessage,
              content
         );
