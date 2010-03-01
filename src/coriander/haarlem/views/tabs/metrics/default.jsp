@@ -11,9 +11,11 @@
 </div>
 
 <script language="javascript">
-    var anotherLoadingGraphic 	= '/img/buildStates/running_green_transparent.gif';
+    var loadingGraphic 	        = '/img/buildStates/running_green_transparent.gif';
     var tabView					= null;
     var url                     = "/metrics.html?user=${currentUser.id}";
+    var includeUrl              = "${includeUrl}";
+    
     var tabImage,tab,statusMessage,content;
 
     document.observe('dom:loaded', function() {
@@ -25,16 +27,16 @@
         tabView = new RssTabView(
             tab,
             tabImage,
-            '/plugins/coriander-haarlem/server/tabs/metrics/img/traffic-light.ico',
-             statusMessage,
-             content
+            includeUrl + '/img/traffic-light.ico',
+            statusMessage,
+            content
         );
 
-        tabView.setTabIcon(anotherLoadingGraphic);
+        tabView.setTabIcon(loadingGraphic);
 
-        tabView.showStatus("Waiting...");
+        tabView.showStatus("Collecting dashboards...");
 
-        window.setTimeout(loadCartoon, 2000);
+        window.setTimeout(loadCartoon, 1500);
     });
 
     function loadCartoon() {
@@ -58,6 +60,7 @@
         var _from    = isVisible ? 1 : 0
 
         if (false == isVisible) {
+            theElementToToggle.setStyle({ "opacity" : "0", "visibility" : "visible" });
             theElementToToggle.show();
             theImage.setAttribute("src", "/img/minus.gif")
         } else {
