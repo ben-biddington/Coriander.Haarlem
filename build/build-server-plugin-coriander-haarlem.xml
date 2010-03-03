@@ -15,7 +15,7 @@
         <property name="route" value="/fail.html"/>
     </bean>
     <bean id="metricsController" class="coriander.haarlem.controllers.MetricsController" init-method="register">
-        <property name="cacheSeconds" value="180"/>
+        <property name="cacheSeconds" value="7200"/>
         <property name="supportedMethods" value="GET"/>
     </bean>
     <bean id="metricsTab" class="coriander.haarlem.tabs.MetricsTab" init-method="register" />
