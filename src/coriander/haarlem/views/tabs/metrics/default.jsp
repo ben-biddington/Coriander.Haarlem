@@ -36,7 +36,7 @@
 
         tabView.showStatus("Collecting dashboards...");
 
-        window.setTimeout(loadCartoon, 1500);
+        window.setTimeout(loadCartoon, 100);
     });
 
     function loadCartoon() {

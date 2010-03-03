@@ -30,7 +30,7 @@
 
         tabView.showStatus("Waiting...");
 
-        window.setTimeout(loadCartoon, 2000);
+        window.setTimeout(loadCartoon, 250);
     });
 
     function loadCartoon() {
