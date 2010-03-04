@@ -9,7 +9,7 @@ import jetbrains.buildServer.messages.Status
 import coriander.haarlem.tabs.CarrotTab
 import coriander.haarlem.unit.tests.TabUnitTest
 
-class DilbertTabTests extends TabUnitTest {
+class CarrotTabTests extends TabUnitTest {
 	@Before
 	def before {
 		tab = new CarrotTab(mockBuildServer)
@@ -59,6 +59,18 @@ class DilbertTabTests extends TabUnitTest {
 			actual, is(false)
 		)
     }
+
+	@Test
+	def is_not_available_until_build_has_completed {
+		given_any_build_with_status(Status.ERROR)
+
+    	val actual = tab.isAvailable(mockRequest)
+
+		assertThat(
+			"Expected that the tab should not be available for a normal build.",
+			actual, is(false)
+		)
+	}
 
 	private var tab : CarrotTab = null
 }
