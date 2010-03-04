@@ -61,7 +61,9 @@ class CarrotTab(buildServer : SBuildServer)
 	def setIncludeUrl(includeUrl: String) { }
 
 	private def buildSuccessful(buildId : Long) = {
-		buildServer.findBuildInstanceById(buildId).getBuildStatus == Status.NORMAL
+		var theBuild = buildServer.findBuildInstanceById(buildId)
+		
+		theBuild.getBuildStatus == Status.NORMAL && theBuild.isFinished
 	}
 
 	private var applicationContext : ApplicationContext = null

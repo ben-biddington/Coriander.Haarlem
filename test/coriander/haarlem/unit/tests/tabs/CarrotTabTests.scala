@@ -26,7 +26,7 @@ class CarrotTabTests extends TabUnitTest {
 
 	@Test
 	def is_not_available_when_build_failed {
-		given_any_build_with_status(Status.FAILURE)
+		given_any_finished_build_with_status(Status.FAILURE)
 
     	val actual = tab.isAvailable(mockRequest)
 
@@ -38,7 +38,7 @@ class CarrotTabTests extends TabUnitTest {
 
 	@Test
 	def is_available_when_build_normal {
-		given_any_build_with_status(Status.NORMAL)
+		given_any_finished_build_with_status(Status.NORMAL)
 
     	val actual = tab.isAvailable(mockRequest)
 
@@ -50,7 +50,7 @@ class CarrotTabTests extends TabUnitTest {
 
 	@Test
 	def is_not_available_when_build_errors {
-		given_any_build_with_status(Status.ERROR)
+		given_any_finished_build_with_status(Status.ERROR)
 
     	val actual = tab.isAvailable(mockRequest)
 
@@ -62,12 +62,12 @@ class CarrotTabTests extends TabUnitTest {
 
 	@Test
 	def is_not_available_until_build_has_completed {
-		given_any_build_with_status(Status.ERROR)
+		given_any_running_build_with_status(Status.NORMAL)
 
     	val actual = tab.isAvailable(mockRequest)
 
 		assertThat(
-			"Expected that the tab should not be available for a normal build.",
+			"Expected that the tab should not be available for a running build.",
 			actual, is(false)
 		)
 	}

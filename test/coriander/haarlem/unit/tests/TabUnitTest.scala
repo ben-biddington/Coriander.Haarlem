@@ -14,9 +14,14 @@ class TabUnitTest {
 		mockBuildServer = mock(classOf[SBuildServer])
 	}
 
-	protected def given_any_build_with_status(status : Status) {
+	protected def given_any_finished_build_with_status(status : Status) {
 		given_query_string("buildId=" + ANY_BUILD_ID.toString)
-		given_build_has_status(ANY_BUILD_ID, status)
+		given_build_has_status(ANY_BUILD_ID, status, true)
+	}
+
+	protected def given_any_running_build_with_status(status : Status) {
+		given_query_string("buildId=" + ANY_BUILD_ID.toString)
+		given_build_has_status(ANY_BUILD_ID, status, false)
 	}
 
 	protected def given_query_string(queryString : String) {
@@ -24,11 +29,14 @@ class TabUnitTest {
 		thenReturn(queryString)
 	}
 
-	protected def given_build_has_status(buildId : Long, status : Status) {
-		val aFailedBuild = aFakeBuildWithStatus(status)
+	protected def given_build_has_status(buildId : Long, status : Status, finished : Boolean) {
+		val build = aFakeBuildWithStatus(status)
 
 		when(mockBuildServer.findBuildInstanceById(buildId)).
-		thenReturn(aFailedBuild)
+		thenReturn(build)
+
+		when(build.isFinished).
+		thenReturn(finished)
 	}
 
 	protected def aFakeBuildWithStatus(status : Status) : SBuild = {
