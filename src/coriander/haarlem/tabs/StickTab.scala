@@ -67,7 +67,9 @@ class StickTab(buildServer : SBuildServer)
 	def setIncludeUrl(includeUrl: String) {}
 
 	private def buildSuccessful(buildId : Long) = {
-		buildServer.findBuildInstanceById(buildId).getBuildStatus != Status.NORMAL
+		val theBuild = buildServer.findBuildInstanceById(buildId)
+
+		theBuild.isFinished && theBuild.getBuildStatus != Status.NORMAL
 	}
 
 	private var applicationContext : ApplicationContext = null

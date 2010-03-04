@@ -63,7 +63,7 @@ class CarrotTab(buildServer : SBuildServer)
 	private def buildSuccessful(buildId : Long) = {
 		var theBuild = buildServer.findBuildInstanceById(buildId)
 		
-		theBuild.getBuildStatus == Status.NORMAL && theBuild.isFinished
+		theBuild.isFinished && theBuild.getBuildStatus == Status.NORMAL
 	}
 
 	private var applicationContext : ApplicationContext = null
