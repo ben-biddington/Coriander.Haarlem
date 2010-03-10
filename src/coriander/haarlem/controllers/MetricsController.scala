@@ -68,7 +68,7 @@ class MetricsController(
 		null
 	}
 
-	private def run(user: SUser) = {
+	private def run(user : SUser) = {
 		val allBuildsWithDashboards = findAllBuildsWithDashboards(user)
 
 		var temp = new ListBuffer[DashboardInfo]

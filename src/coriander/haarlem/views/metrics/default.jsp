@@ -16,6 +16,7 @@
             <a class="buildName" href="/viewType.html?buildTypeId=${dashboardInfo.build.buildTypeId}&tab=buildTypeStatusDiv">
                 <c:out value="${dashboardInfo.build.name}" escapeXml="true" />
             </a>
+            <span class="date" title="Last successful run"><c:out value="${dashboardInfo.build.lastChangesFinished.finishDate}" escapeXml="true" /></span>
         </div>
         <div style="padding:10px 5px 5px 15px" id="dashboard-${dashboardInfo.build.buildTypeId}">
             ${dashboardInfo.html}
