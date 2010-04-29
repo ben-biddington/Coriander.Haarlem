@@ -5,6 +5,8 @@ import jetbrains.buildServer.controllers.BaseController
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import org.springframework.web.servlet.ModelAndView
 import jetbrains.buildServer.web.openapi.{WebControllerManager, PluginDescriptor}
+import org.joda.time
+import time.DateTime
 
 class ReleasesController(
 	buildServer 		: SBuildServer,
@@ -15,7 +17,7 @@ class ReleasesController(
 		val mgr = getApplicationContext.
 			getBean("webControllerManager", classOf[WebControllerManager])
 
-		mgr.registerController("/releases.html", this)
+		mgr.registerController(route, this)
 	}
 
 	def setRoute(route : String) = this.route = route
@@ -28,8 +30,12 @@ class ReleasesController(
 		request : HttpServletRequest,
 		response : HttpServletResponse
 	) : ModelAndView = {
-		 return null;
+		response.setStatus(200)
+		val today = new DateTime()
+		response.getOutputStream.print(today.toString("dd:MM:yyyy"))
+
+		null
 	}
 
-	private var route : String = "releases.html"
+	private var route : String = "/releases.html"
 }
