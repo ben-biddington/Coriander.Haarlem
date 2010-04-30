@@ -22,7 +22,7 @@
     <bean id="releasesController" class="coriander.haarlem.controllers.ReleasesController" init-method="register">
         <property name="cacheSeconds" value="7200" />
         <property name="supportedMethods" value="GET" />
-        <property name="route" value="/ben_rules.html"/>
+        <property name="route" value="/releases.html"/>
     </bean>
 </beans>
         
