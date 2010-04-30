@@ -1,12 +1,14 @@
 package coriander.haarlem.controllers
 
-import jetbrains.buildServer.serverSide.{ProjectManager, SBuildServer}
 import jetbrains.buildServer.controllers.BaseController
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import org.springframework.web.servlet.ModelAndView
 import jetbrains.buildServer.web.openapi.{WebControllerManager, PluginDescriptor}
 import org.joda.time
 import time.DateTime
+import coriander.haarlem.models.ReleasesModel
+import jetbrains.buildServer.serverSide.{SFinishedBuild, ProjectManager, SBuildServer}
+import coriander.haarlem.core.Convert
 
 class ReleasesController(
 	buildServer 		: SBuildServer,
@@ -30,11 +32,15 @@ class ReleasesController(
 		request : HttpServletRequest,
 		response : HttpServletResponse
 	) : ModelAndView = {
-		response.setStatus(200)
-		val today = new DateTime()
-		response.getOutputStream.print(today.toString("dd:MM:yyyy"))
+		new ModelAndView(
+			pluginDescriptor.getPluginResourcesPath + "/server/releases/default.jsp",
+			"results",
+			new ReleasesModel(findAllOfTheBuildsIAmSupposedToShow)
+		)
+	}
 
-		null
+	private def findAllOfTheBuildsIAmSupposedToShow : java.util.List[SFinishedBuild] = {
+		Convert.toJavaList(List())
 	}
 
 	private var route : String = "/releases.html"
