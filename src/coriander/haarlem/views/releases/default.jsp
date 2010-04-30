@@ -26,6 +26,3 @@
         </c:forEach>
     </jsp:attribute>
 </bs:page>
-
-
-
