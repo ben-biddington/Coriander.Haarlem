@@ -22,17 +22,11 @@ class BuildFinderTests extends Spec with ShouldMatchers {
 			then_it_queries_the_project_manager_for_all_build_types
 		}
 
-		it("Returns only builds completed within date range") {
-			
-		}
+		it("Returns only builds completed within date range") (pending)
 
-		it("Ignores failed builds") {
-			
-		}
+		it("Ignores failed builds") (pending)
 
-		it("Ignores builds that are currently running") {
-			
-		}
+		it("Ignores builds that are currently running") (pending)
 	}
 
 	private def given_a_finder {
