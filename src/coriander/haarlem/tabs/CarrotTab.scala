@@ -1,28 +1,20 @@
 package coriander.haarlem.tabs
 
 import javax.servlet.http.HttpServletRequest
-import org.springframework.context.{ApplicationContext, ApplicationContextAware}
 import jetbrains.buildServer.web.openapi._
-import jetbrains.buildServer.serverSide.{SBuildServer}
-import java.lang.Long._
-
 import jetbrains.buildServer.messages.Status
-import coriander.haarlem.http.query.Query
+import jetbrains.buildServer.serverSide.{SBuild, SBuildServer}
 
 class CarrotTab(buildServer : SBuildServer)
-	extends CustomTab
+	extends Tab(buildServer)
 	with PageExtension
-	with ApplicationContextAware
+	with CustomTab
 {
 	def register() {
 		val mgr = applicationContext.
 			getBean("webControllerManager", classOf[WebControllerManager])
 		
 		mgr.getPlaceById(PlaceId.BUILD_RESULTS_TAB).addExtension(this)
-	}
-
-	def setApplicationContext(applicationContext : ApplicationContext) {
-		this.applicationContext = applicationContext
 	}
 	
 	def getTabId 		= "coriander.haarlem.carrot.tab"
@@ -42,15 +34,7 @@ class CarrotTab(buildServer : SBuildServer)
 	) { }
 
 	override def isAvailable(request : HttpServletRequest) : Boolean = {
-		val query = new Query(request.getQueryString)
-
-		if (query.contains(QUERY_BUILD_ID)) {
-			return buildSuccessful(parseLong(
-				query.value(QUERY_BUILD_ID)
-			))
-		}
-
-		return false
+		successful(theCurrentBuild(request))
 	}
 
 	def isVisible : Boolean = true
@@ -60,13 +44,13 @@ class CarrotTab(buildServer : SBuildServer)
 	def setPluginName(pluginName: String) { }
 	def setIncludeUrl(includeUrl: String) { }
 
-	private def buildSuccessful(buildId : Long) = {
-		var theBuild = buildServer.findBuildInstanceById(buildId)
-		
-		theBuild.isFinished && theBuild.getBuildStatus == Status.NORMAL
-	}
+	private def buildSuccessful(buildId : Long) =
+		successful(buildServer.findBuildInstanceById(buildId))
 
-	private var applicationContext : ApplicationContext = null
-	private var placeId 		= ""
-	private val QUERY_BUILD_ID 	= "buildId"
+	private def successful(build : SBuild) : Boolean =
+		build != null &&
+			build.isFinished &&
+			build .getBuildStatus == Status.NORMAL
+
+	private var placeId = ""
 }
