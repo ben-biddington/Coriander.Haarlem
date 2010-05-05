@@ -22,6 +22,8 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 			when_asked_to_find_sommit
 
 			then_it_queries_the_project_manager_for_all_build_types
+
+			then_the_result_is_empty
 		}
 
 		it("Collects all successful builds") {
@@ -51,13 +53,14 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 
 	private def given_no_finished_builds {
 		require(buildType != null, "No build type")
-		when(buildType.getLastChangesSuccessfullyFinished).thenReturn(null)
+		when(buildType.getLastSuccessfullyFinished).thenReturn(null)
 	}
 
 	private def given_one_finished_build {
 		val fakeFinishedBuild : SFinishedBuild = mock(classOf[SFinishedBuild])
 		when(fakeFinishedBuild.getBuildDescription).thenReturn("A fake example build")
-		when(buildType.getLastChangesSuccessfullyFinished).thenReturn(fakeFinishedBuild)
+		
+		when(buildType.getLastSuccessfullyFinished).thenReturn(fakeFinishedBuild)
 	}
 
 	private def when_asked_to_find_sommit {
@@ -68,6 +71,10 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 
 	private def then_it_queries_the_project_manager_for_all_build_types {
 		verify(projectManager).getAllBuildTypes
+	}
+
+	private def then_the_result_is_empty {
+		result.length should be(0)
 	}
 
 	private var projectManager 	: ProjectManager = null

@@ -1,7 +1,6 @@
 package coriander.haarlem.core.calendar
 
-import jetbrains.buildServer.serverSide.{SFinishedBuild, SBuildType, ProjectManager}
-import collection.mutable.ListBuffer
+import jetbrains.buildServer.serverSide.{SFinishedBuild, ProjectManager}
 import coriander.haarlem.core.Convert
 
 class BuildFinder(val projectManager : ProjectManager) {
@@ -10,7 +9,10 @@ class BuildFinder(val projectManager : ProjectManager) {
 	private def allSuccessfulBuilds : List[SFinishedBuild] = {
 		val allBuildTypes = Convert.toScalaList(projectManager.getAllBuildTypes);
 
-		allBuildTypes.
-			map(_.getLastSuccessfullyFinished)
+		val result = allBuildTypes.
+			map(_.getLastSuccessfullyFinished).
+			filter(_ != null)
+
+		result
 	}
 }
