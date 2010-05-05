@@ -23,52 +23,31 @@ class StickTabTests extends TabUnitTest {
     }
 
 	@Test
-	def is_available_when_build_failed {
+	def
+	is_available_when_build_finishes_and_fails {
 		given_any_finished_build_with_status(Status.FAILURE)
 
-    	val actual = tab.isAvailable(mockRequest)
-
-		assertThat(
-			"Expected that the tab should be available for a failed build.",
-			actual, is(true)
-		)
+    	then_tab_is_available
     }
 
 	@Test
-	def is_not_available_when_build_normal {
+	def is_not_available_when_build_finishes_normally {
 		given_any_finished_build_with_status(Status.NORMAL)
 
-    	val actual = tab.isAvailable(mockRequest)
-
-		assertThat(
-			"Expected that the tab should not be available for a normal build.",
-			actual, is(false)
-		)
+    	then_tab_is_not_available
     }
 
 	@Test
-	def is_available_when_build_errors {
+	def is_available_when_build_finishes_with_errors {
 		given_any_finished_build_with_status(Status.ERROR)
 
-    	val actual = tab.isAvailable(mockRequest)
-
-		assertThat(
-			"Expected that the tab should be available for a error build.",
-			actual, is(true)
-		)
+    	then_tab_is_available
     }
 
 	@Test
 	def is_not_available_until_failed_build_has_completed {
 		given_any_running_build_with_status(Status.ERROR)
 
-    	val actual = tab.isAvailable(mockRequest)
-
-		assertThat(
-			"Expected that the tab should not be available for a running build.",
-			actual, is(false)
-		)
+    	then_tab_is_not_available
 	}
-
-	private var tab : StickTab = null
 }
