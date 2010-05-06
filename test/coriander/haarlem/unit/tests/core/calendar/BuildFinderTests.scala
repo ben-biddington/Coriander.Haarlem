@@ -7,6 +7,7 @@ import org.mockito.Matchers._
 import coriander.haarlem.core.Convert
 import jetbrains.buildServer.serverSide.{SBuildType, SFinishedBuild, ProjectManager}
 import org.scalatest.{BeforeAndAfterEach, Spec}
+import org.joda.time.Instant
 
 class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach {
 	override def beforeEach() {
@@ -57,10 +58,8 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 	}
 
 	private def given_one_finished_build {
-		val fakeFinishedBuild : SFinishedBuild = mock(classOf[SFinishedBuild])
-		when(fakeFinishedBuild.getBuildDescription).thenReturn("A fake example build")
-		
-		when(buildType.getLastSuccessfullyFinished).thenReturn(fakeFinishedBuild)
+		val fake = newFakeFinishedBuild
+		when(buildType.getLastSuccessfullyFinished).thenReturn(fake)
 	}
 
 	private def when_asked_to_find_sommit {
@@ -77,8 +76,16 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 		result.length should be(0)
 	}
 
+	private def newFakeFinishedBuild = {
+		val fakeFinishedBuild = mock(classOf[SFinishedBuild])
+		when(fakeFinishedBuild.getBuildId).thenReturn(new Instant().getMillis)
+
+		fakeFinishedBuild
+	}
+
 	private var projectManager 	: ProjectManager = null
 	private var finder 			: BuildFinder = null
 	private var result			: List[SFinishedBuild] = null
 	private var buildType		: SBuildType = null
+	private var buildId			: Long = 0L
 }
