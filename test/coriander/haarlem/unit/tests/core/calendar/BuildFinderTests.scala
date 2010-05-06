@@ -1,6 +1,5 @@
 package coriander.haarlem.unit.tests.core.calendar
 
-import org.joda.time.Instant
 import collection.mutable.ListBuffer
 import coriander.haarlem.core.calendar.BuildFinder
 import coriander.haarlem.core.Convert
@@ -9,6 +8,9 @@ import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.{BeforeAndAfterEach, Spec}
 import org.mockito.Mockito._
 import org.mockito.Matchers._
+import org.joda.time.{DateTime, Instant}
+import java.util.Date
+import jetbrains.buildServer.users.User
 
 class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach {
 	override def beforeEach() {
@@ -76,6 +78,13 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 		buildTypes += newBuildType
 	}
 
+	private def given_a_build_type_with_a(finishedBuild : SFinishedBuild) {
+		when(newFakeBuildType.getLastSuccessfullyFinished).
+		thenReturn(finishedBuild)
+
+		buildTypes += newFakeBuildType
+	}
+
 	private def when_it_is_asked_to_find_sommit {
 		require(finder != null, "Can't proceed without the CUT (there is no finder).")
 
@@ -91,10 +100,14 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 	}
 
 	private def newFakeFinishedBuild = {
-		val fakeFinishedBuild = mock(classOf[SFinishedBuild])
-		when(fakeFinishedBuild.getBuildId).thenReturn(new Instant().getMillis)
-
-		fakeFinishedBuild
+		var oneHourAgo = new Instant().toDateTime.plusHours(-1)
+		newFakeFinishedBuildThatFinishedAt(oneHourAgo.toDate)
+	}
+	
+	private def newFakeFinishedBuildThatFinishedAt(when : Date) = {
+		var result : FakeFinishedBuild = mock(classOf[FakeFinishedBuild])
+		result.setFinishDate(new Instant().toDate)
+		result
 	}
 
 	private def newFakeBuildType =  mock(classOf[SBuildType])
@@ -103,4 +116,11 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 	private var finder 			: BuildFinder = null
 	private var result			: List[SFinishedBuild] = null
 	private var buildTypes		: ListBuffer[SBuildType] = new ListBuffer[SBuildType]
+}
+
+abstract class FakeFinishedBuild extends SFinishedBuild {
+	def getFinishDate() : Date = thatFinishedAt
+	def setFinishDate(when : Date) = thatFinishedAt = when
+
+	private var thatFinishedAt : Date = null
 }
