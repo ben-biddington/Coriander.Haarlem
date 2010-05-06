@@ -40,7 +40,18 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 			result.length should equal(2)
 		}
 
-		it("Returns only builds completed within date range") (pending)
+		it("Only returns builds completed within specified date range") {
+			(pending)
+			
+			var oneYearAgo = new Instant().toDateTime.plusYears(-1).toDate
+			given_a_build_type_with_a(newFakeFinishedBuildThatFinishedAt(oneYearAgo))
+
+			given_a_finder
+
+			when_it_is_asked_to_find_sommit
+
+			result.length should equal(0)
+		}
 
 		it("Ignores failed builds") (pending)
 
@@ -103,7 +114,10 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 		var oneHourAgo = new Instant().toDateTime.plusHours(-1)
 		newFakeFinishedBuildThatFinishedAt(oneHourAgo.toDate)
 	}
-	
+
+	private def newFakeFinishedBuildThatFinishedAt(when : DateTime) : FakeFinishedBuild =
+		newFakeFinishedBuildThatFinishedAt(when.toDate)
+
 	private def newFakeFinishedBuildThatFinishedAt(when : Date) = {
 		var result : FakeFinishedBuild = mock(classOf[FakeFinishedBuild])
 		result.setFinishDate(new Instant().toDate)
