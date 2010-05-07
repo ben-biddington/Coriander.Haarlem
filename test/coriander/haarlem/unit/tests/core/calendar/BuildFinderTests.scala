@@ -95,26 +95,19 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 	}
 
 	private def given_a_build_type_with_a_finished_build {
-		val newBuildType = newFakeBuildType
-		val fakeFinishedBuild = newFakeFinishedBuild
+		given_a_build_type_with_a(newFakeFinishedBuild)
+	}
 
-		when(newBuildType.getLastSuccessfullyFinished).
-		thenReturn(fakeFinishedBuild)
-
+	private def given_a_build_type_with_a(finishedBuild : SFinishedBuild) {
 		var buildHistory = new ArrayList[SFinishedBuild]()
-		buildHistory.add(fakeFinishedBuild)
+		buildHistory.add(finishedBuild)
+
+		val newBuildType = newFakeBuildType
 
 		when(newBuildType.getHistoryFull(true)).
 		thenReturn(buildHistory)
 
-		buildTypes += newBuildType
-	}
-
-	private def given_a_build_type_with_a(finishedBuild : SFinishedBuild) {
-		when(newFakeBuildType.getLastSuccessfullyFinished).
-		thenReturn(finishedBuild)
-
-		buildTypes += newFakeBuildType
+		buildTypes += newBuildType 
 	}
 
 	private def when_it_is_asked_to_find_sommit {
@@ -146,12 +139,9 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 		var result = mock(classOf[SFinishedBuild])
 
 		var toDate = when.toDate
-		
-		println("New fake build at: <" + toDate + ">")
 
 		stub(result.getFinishDate).toReturn(toDate)
 		stub(result.getBuildStatus).toReturn(Status.NORMAL)
-		println("xxx: <" + result.getFinishDate + ">")
 
 		result
 	}
