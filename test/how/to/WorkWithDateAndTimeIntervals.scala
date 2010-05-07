@@ -2,7 +2,8 @@ package how.to
 
 import org.scalatest.{Spec, BeforeAndAfterEach}
 import org.scalatest.matchers.ShouldMatchers
-import org.joda.time.{Duration, Instant, Interval}
+import org.joda.time._
+import java.util.Date
 
 class WorkWithDateAndTimeIntervals extends Spec with ShouldMatchers with BeforeAndAfterEach  {
     override def beforeEach() {
@@ -16,6 +17,30 @@ class WorkWithDateAndTimeIntervals extends Spec with ShouldMatchers with BeforeA
 			then_this_instant_is_out(fifteenMinutesAgo)
 			then_this_instant_is_in(fiveMinutesAgo)
 			then_this_instant_is_out(tomorrow)
+		}
+
+		it("start and end is always UTC") {
+			val start : DateTime = theLastTenMinutes.getStart
+			val end : DateTime = theLastTenMinutes.getEnd
+
+			val startUTC = start.toDateTime(DateTimeZone.UTC)
+			val endUTC = end.toDateTime(DateTimeZone.UTC)
+
+			startUTC should equal(start)
+			endUTC should equal(end)
+		}
+
+		it("when DateTime is converted to Date it becomes local, unless DateTimeZone is supplied") {
+			val date : Date = now.toDate
+
+			new DateTime(date).getZone should not equal(DateTimeZone.UTC)
+			new DateTime(date, DateTimeZone.UTC).getZone should equal(DateTimeZone.UTC)
+		}
+	}
+
+	describe("Instant") {
+		it("is always local") {
+			(new Instant).toDateTime.getZone should not be(DateTimeZone.UTC)
 		}
 	}
 
@@ -33,7 +58,7 @@ class WorkWithDateAndTimeIntervals extends Spec with ShouldMatchers with BeforeA
 		instant.isAfter(interval.getStart) && instant.isBefore(interval.getEnd)
 	}
 
-	private lazy val now = new Instant
+	private lazy val now = new Instant()
 	private var interval : Interval = null
 	private val tenMinutesAgoToNow = now.plus(Duration.standardMinutes(-10))
 	private val theLastTenMinutes = new Interval(tenMinutesAgoToNow, now)
