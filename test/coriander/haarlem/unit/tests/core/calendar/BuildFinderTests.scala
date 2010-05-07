@@ -1,16 +1,18 @@
 package coriander.haarlem.unit.tests.core.calendar
 
 import collection.mutable.ListBuffer
-import coriander.haarlem.core.calendar.BuildFinder
 import coriander.haarlem.core.Convert
 import jetbrains.buildServer.serverSide.{SBuildType, SFinishedBuild, ProjectManager}
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.{BeforeAndAfterEach, Spec}
 import org.mockito.Mockito._
 import org.mockito.Matchers._
-import org.joda.time.{DateTime, Instant}
-import java.util.Date
 import jetbrains.buildServer.users.User
+import coriander.haarlem.core.calendar.{FilterOptions, BuildFinder}
+import coriander.haarlem.core.calendar.FilterOptions._
+import java.util.{ArrayList, Date}
+import jetbrains.buildServer.messages.Status
+import org.joda.time._
 
 class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach {
 	override def beforeEach() {
@@ -18,7 +20,7 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 	}
 
 	describe("BuildFinder") {
-		it("Queries the project manager for all build types") {
+		it("queries the project manager for all build types") {
 			given_no_finished_builds
 
 			given_a_finder
@@ -29,7 +31,7 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 			then_the_result_is_empty
 		}
 
-		it("Collects all successfully finished build instances from all build types") {
+		it("collects all successfully finished build instances from all build types") {
 			given_a_build_type_with_a_finished_build
 			given_a_build_type_with_a_finished_build
 			
@@ -40,22 +42,32 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 			result.length should equal(2)
 		}
 
-		it("Only returns builds completed within specified date range") {
-			(pending)
-			
-			var oneYearAgo = new Instant().toDateTime.plusYears(-1).toDate
-			given_a_build_type_with_a(newFakeFinishedBuildThatFinishedAt(oneYearAgo))
+		it("only returns builds completed within specified date range") {
+			val tenMinutesAgo = new Instant().minus(Duration.standardMinutes(20))
+			val theInterval = new Interval(tenMinutesAgo, new Instant())
+
+			given_a_build_type_with_a(aBuildThatFinished(tenMinutesAgo))
 
 			given_a_finder
 
-			when_it_is_asked_to_find_sommit
+			when_it_is_asked_to_find_sommit_in(theInterval)
 
-			result.length should equal(0)
+			result.length should equal(1)
 		}
 
-		it("Ignores failed builds") (pending)
+		it("returns all finished builds within range, NOT just the last sucessful") (pending)
 
-		it("Ignores builds that are currently running") (pending)
+		it("ignores failed builds") (pending)
+
+		it("ignores builds that are currently running") (pending)
+
+		it("ignores all completed builds when no interval supplied") {
+			pending
+		}
+
+		it("May be better to implement a fake build") {
+			pending
+		}
 	}
 
 	private def given_a_finder {
@@ -73,8 +85,11 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 	private def given_no_finished_builds {
 		val newBuildType = newFakeBuildType
 
-		when(newBuildType.getLastSuccessfullyFinished).
-		thenReturn(null)
+		stub(newBuildType.getLastSuccessfullyFinished).
+		toReturn(null)
+
+		stub(newBuildType.getHistoryFull(true)).
+		toReturn(new java.util.ArrayList[SFinishedBuild])
 
 		buildTypes += newBuildType
 	}
@@ -85,6 +100,12 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 
 		when(newBuildType.getLastSuccessfullyFinished).
 		thenReturn(fakeFinishedBuild)
+
+		var buildHistory = new ArrayList[SFinishedBuild]()
+		buildHistory.add(fakeFinishedBuild)
+
+		when(newBuildType.getHistoryFull(true)).
+		thenReturn(buildHistory)
 
 		buildTypes += newBuildType
 	}
@@ -102,6 +123,12 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 		result = finder.find()
 	}
 
+	private def when_it_is_asked_to_find_sommit_in(interval : Interval) {
+		require(finder != null, "Can't proceed without the CUT (there is no finder).")
+
+		result = finder.find(in(interval))
+	}
+
 	private def then_it_queries_the_project_manager_for_all_build_types {
 		verify(projectManager).getAllBuildTypes
 	}
@@ -111,16 +138,21 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 	}
 
 	private def newFakeFinishedBuild = {
-		var oneHourAgo = new Instant().toDateTime.plusHours(-1)
-		newFakeFinishedBuildThatFinishedAt(oneHourAgo.toDate)
+		var oneHourAgo = new Instant().minus(Duration.standardHours(1))
+		aBuildThatFinished(oneHourAgo)
 	}
 
-	private def newFakeFinishedBuildThatFinishedAt(when : DateTime) : FakeFinishedBuild =
-		newFakeFinishedBuildThatFinishedAt(when.toDate)
+	private def aBuildThatFinished(when : Instant) = {
+		var result = mock(classOf[SFinishedBuild])
 
-	private def newFakeFinishedBuildThatFinishedAt(when : Date) = {
-		var result : FakeFinishedBuild = mock(classOf[FakeFinishedBuild])
-		result.setFinishDate(new Instant().toDate)
+		var toDate = when.toDate
+		
+		println("New fake build at: <" + toDate + ">")
+
+		stub(result.getFinishDate).toReturn(toDate)
+		stub(result.getBuildStatus).toReturn(Status.NORMAL)
+		println("xxx: <" + result.getFinishDate + ">")
+
 		result
 	}
 
@@ -130,11 +162,4 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 	private var finder 			: BuildFinder = null
 	private var result			: List[SFinishedBuild] = null
 	private var buildTypes		: ListBuffer[SBuildType] = new ListBuffer[SBuildType]
-}
-
-abstract class FakeFinishedBuild extends SFinishedBuild {
-	def getFinishDate() : Date = thatFinishedAt
-	def setFinishDate(when : Date) = thatFinishedAt = when
-
-	private var thatFinishedAt : Date = null
 }

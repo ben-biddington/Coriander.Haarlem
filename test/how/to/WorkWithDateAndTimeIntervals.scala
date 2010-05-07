@@ -39,8 +39,12 @@ class WorkWithDateAndTimeIntervals extends Spec with ShouldMatchers with BeforeA
 	}
 
 	describe("Instant") {
-		it("is always local") {
+		it("is always local DateTime") {
 			(new Instant).toDateTime.getZone should not be(DateTimeZone.UTC)
+		}
+
+		it("toDate returns local") {
+			(pending)			
 		}
 	}
 
