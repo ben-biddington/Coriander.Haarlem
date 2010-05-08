@@ -19,32 +19,29 @@ class WorkWithDateAndTimeIntervals extends Spec with ShouldMatchers with BeforeA
 			then_this_instant_is_out(tomorrow)
 		}
 
-		it("start and end is always UTC") {
-			val start : DateTime = theLastTenMinutes.getStart
-			val end : DateTime = theLastTenMinutes.getEnd
-
-			val startUTC = start.toDateTime(DateTimeZone.UTC)
-			val endUTC = end.toDateTime(DateTimeZone.UTC)
-
-			startUTC should equal(start)
-			endUTC should equal(end)
-		}
-
-		it("when DateTime is converted to Date it becomes local, unless DateTimeZone is supplied") {
-			val date : Date = now.toDate
-
-			new DateTime(date).getZone should not equal(DateTimeZone.UTC)
-			new DateTime(date, DateTimeZone.UTC).getZone should equal(DateTimeZone.UTC)
+		it("start and end are always UTC") {
+			theLastTenMinutes.getStart.getZone 	should equal(DateTimeZone.UTC)
+			theLastTenMinutes.getEnd.getZone 	should equal(DateTimeZone.UTC)
 		}
 	}
 
 	describe("Instant") {
 		it("is always local DateTime") {
-			(new Instant).toDateTime.getZone should not be(DateTimeZone.UTC)
+			now.toDateTime.getZone should be(myLocalTimeZone)
 		}
 
-		it("toDate returns local") {
-			(pending)			
+		it("is always local Date") {
+			getZone(now.toDate) should be(myLocalTimeZone)
+		}
+
+		it("can be converted to UTC") {
+			now.toDateTime(DateTimeZone.UTC).getZone should equal(DateTimeZone.UTC)
+		}
+	}
+
+	describe("java.util.Date") {
+		it("yields its timezone by using a Calendar") {
+			(pending)
 		}
 	}
 
@@ -62,6 +59,8 @@ class WorkWithDateAndTimeIntervals extends Spec with ShouldMatchers with BeforeA
 		instant.isAfter(interval.getStart) && instant.isBefore(interval.getEnd)
 	}
 
+	private def getZone(date : Date) = new DateTime(date).getZone
+
 	private lazy val now = new Instant()
 	private var interval : Interval = null
 	private val tenMinutesAgoToNow = now.plus(Duration.standardMinutes(-10))
@@ -69,5 +68,6 @@ class WorkWithDateAndTimeIntervals extends Spec with ShouldMatchers with BeforeA
 	private val fiveMinutesAgo = now.minus(Duration.standardMinutes(5))
 	private val fifteenMinutesAgo = now.minus(Duration.standardMinutes(15))
 	private val tomorrow = now.plus(Duration.standardDays(1))
+	private lazy val myLocalTimeZone = DateTimeZone.getDefault
 
 }
