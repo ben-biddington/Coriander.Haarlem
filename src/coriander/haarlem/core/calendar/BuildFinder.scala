@@ -16,17 +16,10 @@ class BuildFinder(val projectManager : ProjectManager) {
 		allSuccessfulBuilds.filter((build : SFinishedBuild) => {
 			val finishedAt = new DateTime(build.getFinishDate, DateTimeZone.UTC)
 
-			println("Finish date as recorded: <" + build.getFinishDate + ">")
-			println("Finish date UTC: <" + finishedAt + ">")
+			val from = interval.getStart.toDateTime(DateTimeZone.UTC)
+			var to = interval.getEnd.toDateTime(DateTimeZone.UTC)
 
-			val from = interval.getStart//.toDateTime(DateTimeZone.UTC)
-			var to = interval.getEnd//.toDateTime(DateTimeZone.UTC)
-
-			println("Interval: <" + from + "> to <" + to + ">")
-			println("Interval: <" + from.toDateTime(DateTimeZone.UTC) + "> to <" + to.toDateTime(DateTimeZone.UTC) + ">")
-
-			finishedAt.isAfter(interval.getStart.toDateTime(DateTimeZone.UTC)) &&
-			finishedAt.isBefore(interval.getEnd.toDateTime(DateTimeZone.UTC))
+			finishedAt.isAfter(from) && finishedAt.isBefore(to)
 		})
 	}
 
@@ -41,7 +34,7 @@ class BuildFinder(val projectManager : ProjectManager) {
 			}).
 			flatten[SFinishedBuild]
 
-		println("(" + result.length + ") successful builds in total")
+		println("(" + result.length + ") successful finished builds in total")
 
 		result
 	}

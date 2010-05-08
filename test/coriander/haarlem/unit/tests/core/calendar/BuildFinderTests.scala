@@ -17,6 +17,7 @@ import org.joda.time._
 class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach {
 	override def beforeEach() {
 		result = null
+		buildTypes.clear
 	}
 
 	describe("BuildFinder") {
@@ -43,14 +44,11 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 		}
 
 		it("only returns builds completed within specified date range") {
-			val tenMinutesAgo = new Instant().minus(Duration.standardMinutes(20))
-			val theInterval = new Interval(tenMinutesAgo, new Instant())
-
-			given_a_build_type_with_a(aBuildThatFinished(tenMinutesAgo))
+			given_a_build_type_with_a(aBuildThatFinished(fiveMinutesAgo))
 
 			given_a_finder
 
-			when_it_is_asked_to_find_sommit_in(theInterval)
+			when_it_is_asked_to_find_sommit_in(theLastTenMinutes)
 
 			result.length should equal(1)
 		}
@@ -104,8 +102,8 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 
 		val newBuildType = newFakeBuildType
 
-		when(newBuildType.getHistoryFull(true)).
-		thenReturn(buildHistory)
+		stub(newBuildType.getHistoryFull(true)).
+		toReturn(buildHistory)
 
 		buildTypes += newBuildType 
 	}
@@ -152,4 +150,9 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 	private var finder 			: BuildFinder = null
 	private var result			: List[SFinishedBuild] = null
 	private var buildTypes		: ListBuffer[SBuildType] = new ListBuffer[SBuildType]
+
+	private lazy val now 			= new Instant
+	private val tenMinutesAgo 		= new Instant().minus(Duration.standardMinutes(10))
+	private val fiveMinutesAgo 		= new Instant().minus(Duration.standardMinutes(5))
+	private val theLastTenMinutes 	= new Interval(tenMinutesAgo, now)
 }
