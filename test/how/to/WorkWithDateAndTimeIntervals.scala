@@ -11,7 +11,7 @@ class WorkWithDateAndTimeIntervals extends Spec with ShouldMatchers with BeforeA
 	}
 
 	describe("Interval") {
-		it("start and end can be used to determine whether a date is in interval or not") {
+		it("start and end can be used to determine whether a DateTime is in interval or not") {
 			given(theLastTenMinutes)
 
 			then_this_instant_is_out(fifteenMinutesAgo)
@@ -63,11 +63,11 @@ class WorkWithDateAndTimeIntervals extends Spec with ShouldMatchers with BeforeA
 
 	private lazy val now = new Instant()
 	private var interval : Interval = null
-	private val tenMinutesAgoToNow = now.plus(Duration.standardMinutes(-10))
-	private val theLastTenMinutes = new Interval(tenMinutesAgoToNow, now)
-	private val fiveMinutesAgo = now.minus(Duration.standardMinutes(5))
-	private val fifteenMinutesAgo = now.minus(Duration.standardMinutes(15))
-	private val tomorrow = now.plus(Duration.standardDays(1))
+	private val tenMinutesAgoToNow 	= now.minus(Duration.standardMinutes(10))
+	private val theLastTenMinutes 	= new Interval(tenMinutesAgoToNow, now)
+	private val fiveMinutesAgo 		= now.minus(Duration.standardMinutes(5))
+	private val fifteenMinutesAgo 	= now.minus(Duration.standardMinutes(15))
+	private val tomorrow 			= now.plus(Duration.standardDays(1))
 	private lazy val myLocalTimeZone = DateTimeZone.getDefault
 
 }
