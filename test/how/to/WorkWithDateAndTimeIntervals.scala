@@ -19,7 +19,7 @@ class WorkWithDateAndTimeIntervals extends Spec with ShouldMatchers with BeforeA
 			then_this_instant_is_out(tomorrow)
 		}
 
-		it("start and end are always UTC") {
+		it("start and end are always UTC DateTimes") {
 			theLastTenMinutes.getStart.getZone 	should equal(DateTimeZone.UTC)
 			theLastTenMinutes.getEnd.getZone 	should equal(DateTimeZone.UTC)
 		}

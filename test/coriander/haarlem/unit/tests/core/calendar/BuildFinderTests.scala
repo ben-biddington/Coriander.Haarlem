@@ -53,8 +53,6 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 			result.length should equal(1)
 		}
 
-		it("returns all finished builds within range, NOT just the last sucessful") (pending)
-
 		it("ignores failed builds") (pending)
 
 		it("ignores builds that are currently running") (pending)
@@ -63,7 +61,7 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 			pending
 		}
 
-		it("May be better to implement a fake build") {
+		it("returns builds sorted by date ascending, i.e., newest first") {
 			pending
 		}
 	}
