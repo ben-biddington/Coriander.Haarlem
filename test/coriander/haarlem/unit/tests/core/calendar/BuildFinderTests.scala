@@ -2,7 +2,6 @@ package coriander.haarlem.unit.tests.core.calendar
 
 import collection.mutable.ListBuffer
 import coriander.haarlem.core.Convert
-import jetbrains.buildServer.serverSide.{SBuildType, SFinishedBuild, ProjectManager}
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.{BeforeAndAfterEach, Spec}
 import org.mockito.Mockito._
@@ -13,6 +12,7 @@ import coriander.haarlem.core.calendar.FilterOptions._
 import java.util.{ArrayList, Date}
 import jetbrains.buildServer.messages.Status
 import org.joda.time._
+import jetbrains.buildServer.serverSide.{SRunningBuild, SBuildType, SFinishedBuild, ProjectManager}
 
 class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach {
 	override def beforeEach() {
@@ -53,9 +53,19 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 			result.length should equal(1)
 		}
 
-		it("ignores failed builds") (pending)
+		it("includes failed builds") (pending)
 
-		it("ignores builds that are currently running") (pending)
+		it("includes builds that are currently running") {
+			(pending)
+			
+			given_a_build_type_with_a_running_build
+
+			given_a_finder
+
+			when_it_is_asked_to_find_sommit
+
+			result.length should equal(1)
+		}
 
 		it("ignores all completed builds when no interval supplied") {
 			pending
@@ -94,6 +104,19 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 		given_a_build_type_with_a(newFakeFinishedBuild)
 	}
 
+	private def given_a_build_type_with_a_running_build {
+		given_a_build_type_with_some(newFakerRunningBuild)
+	}
+
+	private def given_a_build_type_with_some(runningBuilds : SRunningBuild*) {
+		val newBuildType = newFakeBuildType
+
+		stub(newBuildType.getRunningBuilds).
+		toReturn(Convert.toJavaList(runningBuilds.toList))
+
+		buildTypes += newBuildType
+	}
+
 	private def given_a_build_type_with_a(finishedBuild : SFinishedBuild) {
 		given_a_build_type_with_history(finishedBuild)
 	}
@@ -130,6 +153,11 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 	private def newFakeFinishedBuild = {
 		var oneHourAgo = new Instant().minus(Duration.standardHours(1))
 		aBuildThatFinished(oneHourAgo)
+	}
+
+	private def newFakerRunningBuild = {
+		var result = mock(classOf[SRunningBuild])
+		result
 	}
 
 	private def aBuildThatFinished(when : Instant) = {
