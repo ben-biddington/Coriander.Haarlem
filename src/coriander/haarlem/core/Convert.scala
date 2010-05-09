@@ -18,7 +18,7 @@ object Convert {
 		result toList
 	}
 
-	def toJavaList[T](from : List[T]) : java.util.List[T] = {
+	def toJavaList[T](from : Seq[T]) : java.util.List[T] = {
 		var result = new ArrayList[T]()
 
 		from.forall(thing => result.add(thing))
