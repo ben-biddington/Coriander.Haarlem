@@ -95,15 +95,16 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 	}
 
 	private def given_a_build_type_with_a(finishedBuild : SFinishedBuild) {
-		var buildHistory = new ArrayList[SFinishedBuild]()
-		buildHistory.add(finishedBuild)
+		given_a_build_type_with_history(finishedBuild)
+	}
 
+	private def given_a_build_type_with_history(buildHistory : SFinishedBuild*) {
 		val newBuildType = newFakeBuildType
 
 		stub(newBuildType.getHistoryFull(true)).
-		toReturn(buildHistory)
+		toReturn(Convert.toJavaList(buildHistory.toList))
 
-		buildTypes += newBuildType 
+		buildTypes += newBuildType
 	}
 
 	private def when_it_is_asked_to_find_sommit {
