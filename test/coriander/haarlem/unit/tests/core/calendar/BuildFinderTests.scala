@@ -101,7 +101,7 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 		}
 	}
 
-	private def given_a_finder {
+	private def given_a_finder {                                                                  s
 		given_a_project_manager
 		finder = new BuildFinder(projectManager)
 	}
