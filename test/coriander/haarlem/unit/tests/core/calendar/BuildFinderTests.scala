@@ -109,8 +109,8 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 	private def given_a_project_manager {
 		projectManager = mock(classOf[ProjectManager])
 
-		when(projectManager.getAllBuildTypes).
-		thenReturn(Convert.toJavaList(buildTypes.toList))
+		stub(projectManager.getAllBuildTypes).
+		toReturn(Convert.toJavaList(buildTypes.toList))
 	}
 
 	private def given_no_finished_builds {
