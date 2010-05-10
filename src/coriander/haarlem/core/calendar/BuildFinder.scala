@@ -4,7 +4,7 @@ import coriander.haarlem.core.Convert
 import jetbrains.buildServer.serverSide.{SBuildType, SFinishedBuild, ProjectManager}
 import org.joda.time.{Duration, DateTimeZone, DateTime, Interval}
 
-class BuildFinder(val projectManager : ProjectManager) {
+class BuildFinder(val projectManager : ProjectManager) extends IBuildFinder {
 	def find() : List[SFinishedBuild] = find(FilterOptions.ALL);
 	
 	def find(options : FilterOptions) =
