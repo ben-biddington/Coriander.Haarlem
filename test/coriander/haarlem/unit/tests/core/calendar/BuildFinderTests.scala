@@ -61,18 +61,6 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 			result.length should equal(1)
 		}
 
-		it("includes running builds") {
-			(pending)
-			
-			given_a_build_type_with_a_running_build
-
-			given_a_finder
-
-			when_it_is_asked_to_find_sommit
-
-			result.length should equal(1)
-		}
-
 		it("returns builds sorted by date ascending, i.e., newest first") {
 			given_a_build_type_with_history(
 				aBuildThatFinished(tenMinutesAgo),
