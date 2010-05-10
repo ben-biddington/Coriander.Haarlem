@@ -26,7 +26,7 @@ class BuildFinder(val projectManager : ProjectManager) {
 		allBuildTypes.map(buildType => 
 			fullHistory(buildType)).
 			flatten[SFinishedBuild].
-			sort((left : SFinishedBuild, right : SFinishedBuild) =>
+			sort((left, right) =>
 				new DateTime(left.getFinishDate).isAfter(new DateTime(right.getFinishDate))
 			)
 	}
