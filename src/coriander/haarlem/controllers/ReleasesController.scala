@@ -4,16 +4,15 @@ import jetbrains.buildServer.controllers.BaseController
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import org.springframework.web.servlet.ModelAndView
 import jetbrains.buildServer.web.openapi.{WebControllerManager, PluginDescriptor}
-import org.joda.time
-import time.DateTime
 import coriander.haarlem.models.ReleasesModel
 import jetbrains.buildServer.serverSide.{SFinishedBuild, ProjectManager, SBuildServer}
 import coriander.haarlem.core.Convert
+import coriander.haarlem.core.calendar.{FilterOptions, IBuildFinder}
+import org.joda.time.{Interval, Duration, Instant}
 
 class ReleasesController(
-	buildServer 		: SBuildServer,
-	projectManager 		: ProjectManager,
-	pluginDescriptor 	: PluginDescriptor
+	pluginDescriptor 	: PluginDescriptor,
+	buildFinder 		: IBuildFinder
 ) extends BaseController {
 	def register() {
 		val mgr = getApplicationContext.
@@ -40,8 +39,11 @@ class ReleasesController(
 	}
 
 	private def findAllOfTheBuildsIAmSupposedToShow : java.util.List[SFinishedBuild] = {
-		Convert.toJavaList(List())
+		val sevenDaysAgo = new Instant().minus(Duration.standardDays(7))
+		val thePastWeek = new Interval(sevenDaysAgo, now)
+		Convert.toJavaList(buildFinder.find(new FilterOptions(thePastWeek)))
 	}
 
-	private var route : String = "/releases.html"
+	private lazy val now 	= new Instant
+	private var route 		= "/releases.html"
 }
