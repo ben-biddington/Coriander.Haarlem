@@ -75,10 +75,6 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 			result.length should equal(1)
 		}
 
-		it("ignores all completed builds when no interval supplied") {
-			pending
-		}
-
 		it("returns builds sorted by date ascending, i.e., newest first") {
 			given_a_build_type_with_history(
 				aBuildThatFinished(tenMinutesAgo),
