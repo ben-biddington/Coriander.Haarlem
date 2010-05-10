@@ -25,7 +25,10 @@ class BuildFinder(val projectManager : ProjectManager) {
 		
 		allBuildTypes.map(buildType => 
 			fullHistory(buildType)).
-			flatten[SFinishedBuild]
+			flatten[SFinishedBuild].
+			sort((left : SFinishedBuild, right : SFinishedBuild) =>
+				new DateTime(left.getFinishDate).isAfter(new DateTime(right.getFinishDate))
+			)
 	}
 
 	private def fullHistory(_of : SBuildType) =

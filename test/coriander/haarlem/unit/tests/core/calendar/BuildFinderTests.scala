@@ -80,7 +80,18 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 		}
 
 		it("returns builds sorted by date ascending, i.e., newest first") {
-			pending
+			given_a_build_type_with_history(
+				aBuildThatFinished(tenMinutesAgo),
+				aBuildThatFinished(yesterday),
+				aBuildThatFinished(fiveMinutesAgo)
+			)
+
+			given_a_finder
+
+			when_it_is_asked_to_find_sommit_in(theLastWeek)
+
+			toUtc(result.first.getFinishDate) should equal(fiveMinutesAgo)
+			toUtc(result.last.getFinishDate) should equal(yesterday)
 		}
 	}
 
@@ -182,6 +193,8 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 		result
 	}
 
+	private def toUtc(date : Date) : DateTime = new DateTime(date, DateTimeZone.UTC)
+
 	private def newFakeBuildType =  mock(classOf[SBuildType])
 
 	private var projectManager 	: ProjectManager = null
@@ -192,5 +205,8 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 	private lazy val now 			= new Instant
 	private val tenMinutesAgo 		= new Instant().minus(Duration.standardMinutes(10))
 	private val fiveMinutesAgo 		= new Instant().minus(Duration.standardMinutes(5))
+	private val yesterday 			= new Instant().minus(Duration.standardDays(1))
+	private val sevenDaysAgo 		= new Instant().minus(Duration.standardDays(7))
 	private val theLastTenMinutes 	= new Interval(tenMinutesAgo, now)
+	private val theLastWeek 		= new Interval(sevenDaysAgo, now)
 }
