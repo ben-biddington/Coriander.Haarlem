@@ -89,6 +89,16 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 			toUtc(result.first.getFinishDate) should equal(fiveMinutesAgo)
 			toUtc(result.last.getFinishDate) should equal(yesterday)
 		}
+
+		it("returns and empty list (not null) when nothing matching found") {
+			given_a_build_type_with_history(aBuildThatFinished(yesterday))
+
+			given_a_finder
+
+			when_it_is_asked_to_find_sommit_in(theLastTenMinutes)
+
+			result.length should equal(0)
+		}
 	}
 
 	private def given_a_finder {
