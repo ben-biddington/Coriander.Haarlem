@@ -5,11 +5,9 @@ import coriander.haarlem.core.Convert
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.{BeforeAndAfterEach, Spec}
 import org.mockito.Mockito._
-import org.mockito.Matchers._
-import jetbrains.buildServer.users.User
-import coriander.haarlem.core.calendar.{FilterOptions, BuildFinder}
+import coriander.haarlem.core.calendar.{BuildFinder}
 import coriander.haarlem.core.calendar.FilterOptions._
-import java.util.{ArrayList, Date}
+import java.util.{Date}
 import jetbrains.buildServer.messages.Status
 import org.joda.time._
 import jetbrains.buildServer.serverSide.{SRunningBuild, SBuildType, SFinishedBuild, ProjectManager}
@@ -101,7 +99,7 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 		}
 	}
 
-	private def given_a_finder {                                                                  s
+	private def given_a_finder {                                                                  
 		given_a_project_manager
 		finder = new BuildFinder(projectManager)
 	}
