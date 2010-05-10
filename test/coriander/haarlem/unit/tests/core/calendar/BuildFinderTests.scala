@@ -32,7 +32,7 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 			then_the_result_is_empty
 		}
 
-		it("collects all successfully finished build instances from all build types") {
+		it("collects all build instances from all build types") {
 			given_a_build_type_with_a_finished_build
 			given_a_build_type_with_a_finished_build
 			
@@ -53,7 +53,7 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 			result.length should equal(1)
 		}
 
-		it("includes failed builds") {
+		it("collects failed builds too") {
 			given_a_build_type_with_history(aBuildThatFailed(fiveMinutesAgo))
 
 			given_a_finder
@@ -63,7 +63,7 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 			result.length should equal(1)
 		}
 
-		it("includes builds that are currently running") {
+		it("includes running builds") {
 			(pending)
 			
 			given_a_build_type_with_a_running_build
