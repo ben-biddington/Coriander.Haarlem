@@ -16,19 +16,15 @@ class BuildFinder(val projectManager : ProjectManager) {
 		allSuccessfulBuilds.filter((build : SFinishedBuild) => {
 			val finishedAtUTC = new DateTime(build.getFinishDate, DateTimeZone.UTC)
 			
-			interval.contains(finishedAtUTC)
+			interval contains(finishedAtUTC)
 		})
 	}
 
 	private def allSuccessfulBuilds : List[SFinishedBuild] = {
 		val allBuildTypes = Convert.toScalaList(projectManager.getAllBuildTypes);
 		
-		allBuildTypes.
-			map((buildType : SBuildType) => {
-				fullHistory(buildType).filter((finishedBuild : SFinishedBuild) => {
-					finishedBuild.getBuildStatus == Status.NORMAL
-				})
-			}).
+		allBuildTypes.map(buildType => 
+			fullHistory(buildType).filter(_.getBuildStatus == Status.NORMAL)).
 			flatten[SFinishedBuild]
 	}
 
