@@ -33,10 +33,3 @@ class BuildFinder(val projectManager : ProjectManager) {
 	private def fullHistory(_of : SBuildType) =
 		Convert.toScalaList(_of.getHistoryFull(true))
 }
-
-class FilterOptions(val interval : Interval)
-
-object FilterOptions {
-	def ALL = new FilterOptions(null)
-	def in(interval : Interval) = new FilterOptions(interval)
-}
