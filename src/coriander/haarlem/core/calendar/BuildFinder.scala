@@ -24,7 +24,7 @@ class BuildFinder(val projectManager : ProjectManager) {
 		val allBuildTypes = Convert.toScalaList(projectManager.getAllBuildTypes);
 		
 		allBuildTypes.map(buildType => 
-			fullHistory(buildType).filter(_.getBuildStatus == Status.NORMAL)).
+			fullHistory(buildType)).
 			flatten[SFinishedBuild]
 	}
 

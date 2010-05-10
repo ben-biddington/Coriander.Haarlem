@@ -53,7 +53,15 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 			result.length should equal(1)
 		}
 
-		it("includes failed builds") (pending)
+		it("includes failed builds") {
+			given_a_build_type_with_history(aBuildThatFailed(fiveMinutesAgo))
+
+			given_a_finder
+
+			when_it_is_asked_to_find_sommit_in(theLastTenMinutes)
+
+			result.length should equal(1)
+		}
 
 		it("includes builds that are currently running") {
 			(pending)
@@ -160,13 +168,16 @@ class BuildFinderTests extends Spec with ShouldMatchers with BeforeAndAfterEach 
 		result
 	}
 
-	private def aBuildThatFinished(when : Instant) = {
+	private def aBuildThatFinished(when : Instant) = newBuild(when, Status.NORMAL)
+	private def aBuildThatFailed(when : Instant) = newBuild(when, Status.FAILURE)
+
+	private def newBuild(thatFinishedAt : Instant, withStatus : Status) = {
 		var result = mock(classOf[SFinishedBuild])
 
-		var toDate = when.toDate
+		var toDate = thatFinishedAt.toDate
 
 		stub(result.getFinishDate).toReturn(toDate)
-		stub(result.getBuildStatus).toReturn(Status.NORMAL)
+		stub(result.getBuildStatus).toReturn(withStatus)
 
 		result
 	}
