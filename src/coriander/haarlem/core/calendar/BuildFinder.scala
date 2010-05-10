@@ -2,15 +2,13 @@ package coriander.haarlem.core.calendar
 
 import coriander.haarlem.core.Convert
 import jetbrains.buildServer.serverSide.{SBuildType, SFinishedBuild, ProjectManager}
-import jetbrains.buildServer.messages.Status
 import org.joda.time.{DateTimeZone, DateTime, Interval}
 
 class BuildFinder(val projectManager : ProjectManager) {
 	def find() : List[SFinishedBuild] = find(FilterOptions.ALL);
 	
-	def find(options : FilterOptions) : List[SFinishedBuild] = {
+	def find(options : FilterOptions) =
 		if (options.interval != null) allBuildsIn(options.interval) else allBuilds
-	}
 
 	private def allBuildsIn(interval : Interval) : List[SFinishedBuild] = {
 		allBuilds.
