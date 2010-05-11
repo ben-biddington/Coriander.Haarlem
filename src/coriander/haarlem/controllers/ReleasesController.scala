@@ -5,7 +5,7 @@ import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import org.springframework.web.servlet.ModelAndView
 import jetbrains.buildServer.web.openapi.{WebControllerManager, PluginDescriptor}
 import coriander.haarlem.models.ReleasesModel
-import jetbrains.buildServer.serverSide.{SFinishedBuild, ProjectManager, SBuildServer}
+import jetbrains.buildServer.serverSide.{SFinishedBuild}
 import coriander.haarlem.core.Convert
 import coriander.haarlem.core.calendar.{FilterOptions, IBuildFinder}
 import org.joda.time.{Interval, Duration, Instant}
