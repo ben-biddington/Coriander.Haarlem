@@ -22,7 +22,7 @@
   results:
         <c:forEach items="${results.builds}" var="build">
             <div class="build" style="float:left;margin-bottom:10px;">
-                <span>${build.project.description}</span>
+                <span>${build}</span>
             </div>
         </c:forEach>
     </jsp:attribute>
