@@ -24,5 +24,6 @@
         <property name="supportedMethods" value="GET" />
         <property name="route" value="/releases.html"/>
     </bean>
+    <bean id="buildFinder" class="coriander.haarlem.core.calendar.BuildFinder" />
 </beans>
         
