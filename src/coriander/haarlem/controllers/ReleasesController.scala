@@ -40,7 +40,8 @@ class ReleasesController(
 			"results",
 			new ReleasesModel(
 				findAllOfTheBuildsIAmSupposedToShow(thePastWeek),
-				thePastWeek
+				thePastWeek,
+				now
 			) 
 		)
 	}
