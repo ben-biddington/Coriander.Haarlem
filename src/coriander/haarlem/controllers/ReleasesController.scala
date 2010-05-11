@@ -8,7 +8,8 @@ import coriander.haarlem.models.ReleasesModel
 import jetbrains.buildServer.serverSide.{SFinishedBuild}
 import coriander.haarlem.core.Convert
 import coriander.haarlem.core.calendar.{FilterOptions, IBuildFinder}
-import org.joda.time.{Interval, Duration, Instant}
+import org.joda.time._
+import org.joda.time.Days._
 
 class ReleasesController(
 	pluginDescriptor 	: PluginDescriptor,
@@ -32,18 +33,20 @@ class ReleasesController(
 		response : HttpServletResponse
 	) : ModelAndView = {
 		new ModelAndView(
-			pluginDescriptor.getPluginResourcesPath + "/server/releases/default.jsp",
+			view,
 			"results",
 			new ReleasesModel(findAllOfTheBuildsIAmSupposedToShow)
 		)
 	}
 
 	private def findAllOfTheBuildsIAmSupposedToShow : java.util.List[SFinishedBuild] = {
-		val sevenDaysAgo = new Instant().minus(Duration.standardDays(7))
+		val sevenDaysAgo = new Instant().minus(days(7).toStandardDuration)
 		val thePastWeek = new Interval(sevenDaysAgo, now)
+
 		Convert.toJavaList(buildFinder.find(new FilterOptions(thePastWeek)))
 	}
 
+	private lazy val view 	= pluginDescriptor.getPluginResourcesPath + "/server/releases/default.jsp"
 	private lazy val now 	= new Instant
 	private var route 		= "/releases.html"
 }

@@ -3,6 +3,8 @@ package how.to
 import org.scalatest.{Spec, BeforeAndAfterEach}
 import org.scalatest.matchers.ShouldMatchers
 import org.joda.time._
+import org.joda.time.Minutes._
+import org.joda.time.Days._
 import java.util.Date
 
 class WorkWithDateAndTimeIntervals extends Spec with ShouldMatchers with BeforeAndAfterEach  {
@@ -63,11 +65,11 @@ class WorkWithDateAndTimeIntervals extends Spec with ShouldMatchers with BeforeA
 
 	private lazy val now = new Instant()
 	private var interval : Interval = null
-	private val tenMinutesAgoToNow 	= now.minus(Duration.standardMinutes(10))
+	private val tenMinutesAgoToNow 	= now.minus(minutes(10).toStandardDuration)
 	private val theLastTenMinutes 	= new Interval(tenMinutesAgoToNow, now)
-	private val fiveMinutesAgo 		= now.minus(Duration.standardMinutes(5))
-	private val fifteenMinutesAgo 	= now.minus(Duration.standardMinutes(15))
-	private val tomorrow 			= now.plus(Duration.standardDays(1))
+	private val fiveMinutesAgo 		= now.minus(minutes(5).toStandardDuration)
+	private val fifteenMinutesAgo 	= now.minus(minutes(15).toStandardDuration)
+	private val tomorrow 			= now.plus(days(1).toStandardDuration)
 	private lazy val myLocalTimeZone = DateTimeZone.getDefault
 
 }

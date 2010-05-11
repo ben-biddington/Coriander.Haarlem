@@ -2,7 +2,8 @@ package coriander.haarlem.core.calendar
 
 import coriander.haarlem.core.Convert
 import jetbrains.buildServer.serverSide.{SBuildType, SFinishedBuild, ProjectManager}
-import org.joda.time.{Duration, DateTimeZone, DateTime, Interval}
+import org.joda.time.{DateTimeZone, DateTime, Interval}
+import org.joda.time.Days._
 
 class BuildFinder(val projectManager : ProjectManager) extends IBuildFinder {
 	def find() : List[SFinishedBuild] = find(FilterOptions.ALL);
@@ -36,10 +37,10 @@ class BuildFinder(val projectManager : ProjectManager) extends IBuildFinder {
 		Convert.toScalaList(_of.getHistoryFull(true))
 
 	private def validate(interval : Interval) = {
-		val days = 31
-		if (interval.toDuration.isLongerThan(Duration.standardDays(days)))
+		var howMany = 31
+		if (interval.toDuration.isLongerThan(days(howMany).toStandardDuration))
 			throw new IllegalArgumentException(
-				"Duration must be smaller than about <" + days + " days>"
+				"Duration must be smaller than about <" + howMany + " days>"
 			)
 	}
 }

@@ -9,6 +9,9 @@ import coriander.haarlem.core.calendar.FilterOptions._
 import java.util.{Date}
 import jetbrains.buildServer.messages.Status
 import org.joda.time._
+import org.joda.time.Minutes._
+import org.joda.time.Days._
+import org.joda.time.Hours._
 import jetbrains.buildServer.serverSide.{SRunningBuild, SBuildType, SFinishedBuild, ProjectManager}
 import org.scalatest.matchers.{MustMatchers, ShouldMatchers}
 
@@ -93,7 +96,7 @@ class BuildFinderTests
 		it("rejects an interval greater than about one month") {
 			given_a_finder
 
-			val thirtyTwoDaysAgo 	= new Instant().minus(Duration.standardDays(32))
+			val thirtyTwoDaysAgo 	= new Instant().minus(days(32).toStandardDuration)
 			val aBitOverAMonth 		= new Interval(thirtyTwoDaysAgo, now)
 
 			intercept[IllegalArgumentException] {
@@ -177,7 +180,7 @@ class BuildFinderTests
 	}
 
 	private def newFakeFinishedBuild = {
-		var oneHourAgo = new Instant().minus(Duration.standardHours(1))
+		var oneHourAgo = new Instant().minus(hours(1).toStandardDuration)
 		aBuildThatFinished(oneHourAgo)
 	}
 
@@ -210,10 +213,10 @@ class BuildFinderTests
 	private var buildTypes		: ListBuffer[SBuildType] = new ListBuffer[SBuildType]
 
 	private lazy val now 			= new Instant
-	private val tenMinutesAgo 		= new Instant().minus(Duration.standardMinutes(10))
-	private val fiveMinutesAgo 		= new Instant().minus(Duration.standardMinutes(5))
-	private val yesterday 			= new Instant().minus(Duration.standardDays(1))
-	private val sevenDaysAgo 		= new Instant().minus(Duration.standardDays(7))
+	private val tenMinutesAgo 		= new Instant().minus(minutes(10).toStandardDuration)
+	private val fiveMinutesAgo 		= new Instant().minus(minutes(5).toStandardDuration)
+	private val yesterday 			= new Instant().minus(days(1).toStandardDuration)
+	private val sevenDaysAgo 		= new Instant().minus(days(7).toStandardDuration)
 	private val theLastTenMinutes 	= new Interval(tenMinutesAgo, now)
 	private val theLastWeek 		= new Interval(sevenDaysAgo, now)
 }
