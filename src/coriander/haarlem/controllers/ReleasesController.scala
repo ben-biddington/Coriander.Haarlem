@@ -32,19 +32,21 @@ class ReleasesController(
 		request : HttpServletRequest,
 		response : HttpServletResponse
 	) : ModelAndView = {
+		val sevenDaysAgo = new Instant().minus(days(7).toStandardDuration)
+		val thePastWeek = new Interval(sevenDaysAgo, now)
+		
 		new ModelAndView(
 			view,
 			"results",
-			new ReleasesModel(findAllOfTheBuildsIAmSupposedToShow)
+			new ReleasesModel(
+				findAllOfTheBuildsIAmSupposedToShow(thePastWeek),
+				thePastWeek
+			) 
 		)
 	}
 
-	private def findAllOfTheBuildsIAmSupposedToShow : java.util.List[SFinishedBuild] = {
-		val sevenDaysAgo = new Instant().minus(days(7).toStandardDuration)
-		val thePastWeek = new Interval(sevenDaysAgo, now)
-
-		Convert.toJavaList(buildFinder.find(new FilterOptions(thePastWeek)))
-	}
+	private def findAllOfTheBuildsIAmSupposedToShow(interval : Interval) =
+		Convert.toJavaList(buildFinder.find(new FilterOptions(interval)))
 
 	private lazy val view 	= pluginDescriptor.getPluginResourcesPath + "/server/releases/default.jsp"
 	private lazy val now 	= new Instant

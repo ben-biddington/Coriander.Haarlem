@@ -19,7 +19,8 @@
     </jsp:attribute>
 
   <jsp:attribute name="body_include">
-  results:
+        <p>Results (from: ${results.interval.start} to: ${results.interval.end} ):</p>
+
         <c:forEach items="${results.builds}" var="build">
             <div class="build" style="float:left;margin-bottom:10px;">
                 <span>${build}</span>

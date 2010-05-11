@@ -38,6 +38,7 @@ class BuildFinder(val projectManager : ProjectManager) extends IBuildFinder {
 
 	private def validate(interval : Interval) = {
 		var howMany = 31
+
 		if (interval.toDuration.isLongerThan(days(howMany).toStandardDuration))
 			throw new IllegalArgumentException(
 				"Duration must be smaller than about <" + howMany + " days>"
