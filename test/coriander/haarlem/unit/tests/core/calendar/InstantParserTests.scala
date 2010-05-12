@@ -52,6 +52,14 @@ class InstantParserTests extends Spec
 		}
 	}
 
+	describe("Parsing a string that does not match expected pattern") {
+		it("throws an exception") {
+			intercept[Exception] {
+				when_parsing("xxx_clearly_not_right_pattern_xxx")
+			}
+		}
+	}
+
 	private def when_parsing(what : String) {
 		result = parser.parse(what)
 	}
