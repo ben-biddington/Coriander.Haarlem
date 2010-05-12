@@ -68,7 +68,7 @@ class BuildFinderTests
 			result.length should equal(1)
 		}
 
-		it("returns builds sorted by date ascending, i.e., newest first") {
+		it("returns builds sorted by date descending, i.e., newest first") {
 			given_a_build_type_with_history(
 				aBuildThatFinished(tenMinutesAgo),
 				aBuildThatFinished(yesterday),
