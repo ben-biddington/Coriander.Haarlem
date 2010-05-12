@@ -46,8 +46,11 @@ class ReleasesController(
 		)
 	}
 
-	private def findAllOfTheBuildsIAmSupposedToShow(interval : Interval) =
-		Convert.toJavaList(buildFinder.find(new FilterOptions(interval)))
+	private def findAllOfTheBuildsIAmSupposedToShow(interval : Interval) = {
+		var list = buildFinder.find(new FilterOptions(interval))
+		
+		Convert.toJavaList(list)
+	}
 
 	private lazy val view 	= pluginDescriptor.getPluginResourcesPath + "/server/releases/default.jsp"
 	private lazy val now 	= new Instant

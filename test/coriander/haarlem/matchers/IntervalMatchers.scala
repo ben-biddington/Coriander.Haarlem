@@ -1,7 +1,7 @@
 package coriander.haarlem.matchers
 
-import org.joda.time.{Interval, Instant}
 import org.scalatest.matchers.{MatchResult, Matcher}
+import org.joda.time.{Duration, Interval, Instant}
 
 trait IntervalMatchers {
 	class IntervalMatcher (val right : Instant) extends Matcher[Interval] {
