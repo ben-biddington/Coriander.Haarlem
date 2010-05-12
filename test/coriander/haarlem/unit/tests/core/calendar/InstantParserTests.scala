@@ -32,6 +32,11 @@ class InstantParserTests extends Spec
 			when_parsing("1-days-ago")
 			then_result_is_more_or_less(yesterday)
 		}
+
+		it("uses absolute value of negative numbers") {
+			when_parsing("-1-day-ago")
+			then_result_is_more_or_less(yesterday)			
+		}
 	}
 
 	describe("Parsing weeks ago") {

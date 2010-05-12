@@ -7,7 +7,7 @@ import org.joda.time.Days._
 
 class InstantParser(val now : Instant) {
 	def parse(what : String) : Instant = {
-		val pattern : Regex = new Regex("([\\d]+)-(day|week)s?-ago", "count", "unit")
+		val pattern : Regex = new Regex("([\\d]+)-(day|week)s?-ago$", "count", "unit")
 
 		val theMatch = pattern.findFirstMatchIn(what)
 
@@ -18,6 +18,7 @@ class InstantParser(val now : Instant) {
 			)
 
 		val count = parseInt(theMatch.get.group("count"))
+
 		val unit = theMatch.get.group("unit").toString.toLowerCase
 
 		if (unit == "day") daysAgo(count) else weeksAgo(count)
