@@ -65,6 +65,12 @@ class InstantParserTests extends Spec
 		}
 	}
 
+	describe("Supports some sugar") {
+		it("things like \"yesterday\" or \"last week\"") {
+			(pending)
+		}
+	}
+
 	private def when_parsing(what : String) {
 		result = parser.parse(what)
 	}
