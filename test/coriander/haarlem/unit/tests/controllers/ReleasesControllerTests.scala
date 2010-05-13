@@ -11,6 +11,7 @@ import org.junit.{Before, Test}
 import coriander.haarlem.core.calendar.{FilterOptions, IBuildFinder}
 import org.joda.time.{Instant, Interval}
 import org.joda.time.Days._
+import coriander.haarlem.matchers.FilterOptionsMatcher._
 
 class ReleasesControllerTests extends ControllerUnitTest {
 	@Before
@@ -50,9 +51,7 @@ class ReleasesControllerTests extends ControllerUnitTest {
 	}
 
 	private def then_builds_are_searched_in(interval : Interval) {
-		verify(buildFinder).find(any(classOf[FilterOptions]))
-
-		throw new Exception("Start HERE!")
+		verify(buildFinder).find(argThat(hasMatching(interval)))
 	}
 
 	private var projectManager 	: ProjectManager = null
