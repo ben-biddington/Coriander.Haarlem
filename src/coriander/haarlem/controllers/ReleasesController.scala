@@ -35,10 +35,8 @@ class ReleasesController(
 	) : ModelAndView = {
 		var sinceWhen = getInterval(Query(request.getQueryString))
 
-		println(sinceWhen)
-
 		val interval = new Interval(sinceWhen, now)
-		
+
 		new ModelAndView(
 			view,
 			"results",
@@ -53,7 +51,7 @@ class ReleasesController(
 	private def getInterval(query : Query) : Instant = {
 		val since = query.value("since")
 
-		if (since != null) parse(since) else sevenDaysAgo
+		if (since != null) parse(since) else DEFAULT
 	}
 
 	private def parse(what : String) = new InstantParser(now).parse(what) 
@@ -70,4 +68,5 @@ class ReleasesController(
 	private lazy val now 	= new Instant
 	private var route 		= "/releases.html"
 	private lazy val sevenDaysAgo = new Instant().minus(days(7).toStandardDuration)
+	private lazy val DEFAULT = sevenDaysAgo
 }

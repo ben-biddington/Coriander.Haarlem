@@ -20,7 +20,7 @@ class FilterOptionsMatcher(expected : Interval)
 
 	def describeTo(description : Description) {
     	description.appendText(
-			"The supplied value <" + actual.interval + "> does match <" + expected + ">"
+			"Expected <" + expected + "> but got <" + actual.interval + ">"
 		)
   	}
 }
