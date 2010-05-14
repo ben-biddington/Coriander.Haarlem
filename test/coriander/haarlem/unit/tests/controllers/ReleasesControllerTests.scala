@@ -42,6 +42,12 @@ class ReleasesControllerTests extends ControllerUnitTest {
 		when_since_supplied_as("today")
 	}
 
+	@Test @Ignore
+	def accepts_last_parameter {
+		// when_last_supplied_as("10")
+		// then_we_search_for_the_last(10)
+	}
+
 	@Test
 	def since_defaults_to_seven_days {
 		when_since_not_supplied

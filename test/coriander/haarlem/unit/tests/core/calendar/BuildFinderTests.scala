@@ -25,7 +25,7 @@ class BuildFinderTests
 		buildTypes.clear
 	}
 
-	describe("BuildFinder") {
+	describe("BuildFinder.find") {
 		it("queries the project manager for all build types") {
 			given_no_finished_builds
 
@@ -105,6 +105,49 @@ class BuildFinderTests
 		}
 	}
 
+	describe("BuildFinder.last") {
+			it("returns empty list when given zero") {
+				given_a_build_type_with_history(
+					aBuildThatFinished(tenMinutesAgo),
+					aBuildThatFinished(fiveMinutesAgo)
+				)
+
+				given_a_finder
+
+				when_it_is_asked_to_find_the_last(0)
+
+				result.length should equal(0)
+			}
+
+			it("returns at most the supplied count") {
+				given_a_build_type_with_history(
+					aBuildThatFinished(tenMinutesAgo),
+					aBuildThatFinished(fiveMinutesAgo)
+				)
+
+				given_a_finder
+
+				when_it_is_asked_to_find_the_last(1)
+
+				result.length should equal(1)
+			}
+
+			it("returns the builds sorted desc (newest first)") {
+				given_a_build_type_with_history(
+					aBuildThatFinished(tenMinutesAgo),
+					aBuildThatFinished(yesterday),
+					aBuildThatFinished(fiveMinutesAgo)
+				)
+
+				given_a_finder
+
+				when_it_is_asked_to_find_the_last(5)
+
+				toUtc(result.first.getFinishDate) should equal(fiveMinutesAgo)
+				toUtc(result.last.getFinishDate) should equal(yesterday)
+			}
+		}
+
 	private def given_a_finder {                                                                  
 		given_a_project_manager
 		finder = new BuildFinder(projectManager)
@@ -169,6 +212,12 @@ class BuildFinderTests
 		require(finder != null, "Can't proceed without the CUT (there is no finder).")
 
 		result = finder.find(in(interval))
+	}
+
+	private def when_it_is_asked_to_find_the_last(howMany : Int) {
+		require(finder != null, "Can't proceed without the CUT (there is no finder).")
+
+		result = finder.last(howMany)
 	}
 
 	private def then_it_queries_the_project_manager_for_all_build_types {

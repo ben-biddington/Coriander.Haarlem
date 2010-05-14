@@ -6,7 +6,10 @@ import org.joda.time.{DateTimeZone, DateTime, Interval}
 import org.joda.time.Days._
 
 class BuildFinder(val projectManager : ProjectManager) extends IBuildFinder {
-	def find() : List[SFinishedBuild] = find(FilterOptions.ALL);
+	def last(howMany : Int) : List[SFinishedBuild] =
+		allBuilds.sort(byNewestFirst).slice(0, howMany)
+	
+	def find() : List[SFinishedBuild] = find(FilterOptions.ALL)
 	
 	def find(options : FilterOptions) =
 		if (options.interval != null) allBuildsIn(options.interval) else allBuilds
@@ -20,9 +23,7 @@ class BuildFinder(val projectManager : ProjectManager) extends IBuildFinder {
 			
 				interval contains(finishedAtUTC)
 			}).
-			sort((left, right) =>
-				new DateTime(left.getFinishDate).isAfter(new DateTime(right.getFinishDate))
-			)
+			sort(byNewestFirst)
 	}
 
 	private def allBuilds : List[SFinishedBuild] = {
@@ -44,4 +45,7 @@ class BuildFinder(val projectManager : ProjectManager) extends IBuildFinder {
 				"Duration must be smaller than about <" + howMany + " days>"
 			)
 	}
+
+	private val byNewestFirst = (left : SFinishedBuild, right: SFinishedBuild) =>
+		new DateTime(left.getFinishDate).isAfter(new DateTime(right.getFinishDate))
 }
