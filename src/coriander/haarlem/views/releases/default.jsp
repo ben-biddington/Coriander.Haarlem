@@ -19,7 +19,7 @@
     </jsp:attribute>
 
   <jsp:attribute name="body_include">
-        <p>${results.now.get(DateTimeFieldType.dayOfMonth)}</p>
+        <p>${results.now}</p>
         <p>Results (from: ${results.interval.start} to: ${results.interval.end})</p>
 
         <c:forEach items="${results.builds}" var="build">

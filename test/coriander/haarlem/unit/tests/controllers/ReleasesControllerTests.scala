@@ -37,6 +37,11 @@ class ReleasesControllerTests extends ControllerUnitTest {
 		then_builds_are_searched_in(theLastDay)
 	}
 
+	@Test @Ignore
+	def since_can_be_today {
+		when_since_supplied_as("today")
+	}
+
 	@Test
 	def since_defaults_to_seven_days {
 		when_since_not_supplied

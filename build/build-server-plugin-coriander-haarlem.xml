@@ -20,7 +20,7 @@
     </bean>
     <bean id="metricsTab" class="coriander.haarlem.tabs.MetricsTab" init-method="register" />
     <bean id="releasesController" class="coriander.haarlem.controllers.ReleasesController" init-method="register">
-        <property name="cacheSeconds" value="7200" />
+        <property name="cacheSeconds" value="90" />
         <property name="supportedMethods" value="GET" />
         <property name="route" value="/releases.html"/>
     </bean>

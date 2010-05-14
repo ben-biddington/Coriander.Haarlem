@@ -5,7 +5,6 @@ import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import org.springframework.web.servlet.ModelAndView
 import jetbrains.buildServer.web.openapi.{WebControllerManager, PluginDescriptor}
 import coriander.haarlem.models.ReleasesModel
-import jetbrains.buildServer.serverSide.{SFinishedBuild}
 import coriander.haarlem.core.Convert._
 import org.joda.time._
 import org.joda.time.Days._
@@ -25,15 +24,16 @@ class ReleasesController(
 
 	def setRoute(route : String) = this.route = route
 	
-	def go(request : HttpServletRequest, response : HttpServletResponse) = {
+	def go(request : HttpServletRequest, response : HttpServletResponse) =
 		doHandle(request, response)
-	}
 	
 	override protected def doHandle(
 		request : HttpServletRequest,
 		response : HttpServletResponse
 	) : ModelAndView = {
-		var sinceWhen = getInterval(Query(request.getQueryString))
+		val now = new Instant
+		
+		var sinceWhen = fromWhen(now, Query(request.getQueryString))
 
 		val interval = new Interval(sinceWhen, now)
 
@@ -48,13 +48,13 @@ class ReleasesController(
 		)
 	}
 
-	private def getInterval(query : Query) = {
+	private def fromWhen(now : Instant, query : Query) : Instant = {
 		var value = query.value("since")
 
-		if (value != null) parse(value) else DEFAULT
+		if (value != null) parse(now, value) else DEFAULT
 	}
 
-	private def parse(what : String) =
+	private def parse(now : Instant, what : String) =
 		new InstantParser(now).parse(what) 
 
 	private def findBuildsIn(interval : Interval) =
@@ -63,7 +63,6 @@ class ReleasesController(
 	private lazy val view 	= pluginDescriptor.getPluginResourcesPath + "/server/releases/default.jsp"
 	private var route 		= "/releases.html"
 
-	private lazy val now 			= new Instant
 	private lazy val sevenDaysAgo 	= new Instant().minus(days(7).toStandardDuration)
 	private lazy val DEFAULT 		= sevenDaysAgo
 }
