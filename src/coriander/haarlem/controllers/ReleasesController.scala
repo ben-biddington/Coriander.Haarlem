@@ -54,9 +54,8 @@ class ReleasesController(
 			interval = new Interval(fromWhen(now, query), now)
 			result = findBuildsIn(interval)
 		} else if (query.contains("last")) {
-			result = findLast(parseInt(query.value("last")))
-
 			interval = calculateInterval(result)
+			result = findLast(parseInt(query.value("last")))
 		}
 
 		new ReleasesModel(result, interval, now)
