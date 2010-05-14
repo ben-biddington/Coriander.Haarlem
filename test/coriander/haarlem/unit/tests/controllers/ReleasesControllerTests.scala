@@ -39,13 +39,14 @@ class ReleasesControllerTests extends ControllerUnitTest {
 
 	@Test @Ignore
 	def since_can_be_today {
+		throw new Exception("PENDING")
 		when_since_supplied_as("today")
 	}
 
-	@Test @Ignore
+	@Test
 	def accepts_last_parameter {
-		// when_last_supplied_as("10")
-		// then_we_search_for_the_last(10)
+		when_last_supplied_as(10)
+		then_we_search_for_the_last(10)
 	}
 
 	@Test
@@ -56,6 +57,9 @@ class ReleasesControllerTests extends ControllerUnitTest {
 
 	private def given_a_build_finder {
 		stub(buildFinder.find(any(classOf[FilterOptions]))).
+		toReturn(List())
+
+		stub(buildFinder.last(any(classOf[Int]))).
 		toReturn(List())
 	}
 
@@ -77,8 +81,19 @@ class ReleasesControllerTests extends ControllerUnitTest {
 		controller.go(request, response)
 	}
 
+	private def when_last_supplied_as(howMany : Int) {
+		stub(request.getQueryString).
+		toReturn("last=" + howMany.toString)
+
+		controller.go(request, response)
+	}
+
 	private def then_builds_are_searched_in(interval : Interval) {
 		verify(buildFinder).find(argThat(hasMatching(interval)))
+	}
+
+	private def then_we_search_for_the_last(howMany : Int) {
+		verify(buildFinder).last(howMany)
 	}
 
 	private var projectManager 	: ProjectManager = null
