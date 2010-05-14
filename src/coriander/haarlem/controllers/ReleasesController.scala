@@ -51,30 +51,44 @@ class ReleasesController(
 		var interval : Interval = new Interval(0L, 0L)
 
 		if (query.contains("since")) {
-			val sinceWhen = fromWhen(now, query)
-			interval = new Interval(sinceWhen, now)
+			interval = new Interval(fromWhen(now, query), now)
 			result = findBuildsIn(interval)
 		} else if (query.contains("last")) {
 			result = findLast(parseInt(query.value("last")))
+
+			interval = calculateInterval(result)
 		}
 
 		new ReleasesModel(result, interval, now)
 	}
 
-	private def fromWhen(now : Instant, query : Query) : Instant = {
-		var value = query.value("since")
+	private def calculateInterval(builds : java.util.List[SFinishedBuild]) : Interval = {
+		if (builds.size == 0)
+			 return new Interval(0L, 0L)
 
-		if (value != null) parse(now, value) else DEFAULT
+		var from = new DateTime(builds.get(0).getFinishDate, DateTimeZone.UTC)
+
+		val index = Math.max(builds.size - 1, 0)
+
+		var to = new DateTime(builds.get(index).getFinishDate, DateTimeZone.UTC)
+
+		new Interval(to, from)
 	}
-
-	private def parse(now : Instant, what : String) =
-		new InstantParser(now).parse(what) 
 
 	private def findBuildsIn(interval : Interval) =
 		toJavaList(buildFinder.find(new FilterOptions(interval)))
 
 	private def findLast(howMany : Int) =
 		toJavaList(buildFinder.last(howMany))
+
+	private def fromWhen(now : Instant, query : Query) : Instant = {
+		var value = query.value("since")
+
+		if (value != null) parse(now, value) else DEFAULT
+	}
+	
+	private def parse(now : Instant, what : String) =
+		new InstantParser(now).parse(what)
 
 	private lazy val view 	= pluginDescriptor.getPluginResourcesPath + "/server/releases/default.jsp"
 	private var route 		= "/releases.html"
