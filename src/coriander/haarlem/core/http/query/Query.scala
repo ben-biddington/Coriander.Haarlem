@@ -3,16 +3,14 @@ package coriander.haarlem.http.query
 class Query(queryString : String) {
 	val namesAndValues = new QueryParser().parse(queryString)	
 
-	def value(name : String) :  String = {
-		if (false == contains(name))
-			return null
-	
-		namesAndValues.find(_.getName == name).get.getValue
-	}
+	def value(name : String) :  String =
+		if (contains(name)) get(name) else null
 
-	def contains(name : String) = {
+	def contains(name : String) =
 		namesAndValues.exists(_.getName == name)
-	}
+
+	private def get(what : String) =
+		namesAndValues.find(_.getName == what).get.getValue
 }
 
 object Query {
