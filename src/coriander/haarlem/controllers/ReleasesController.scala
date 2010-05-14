@@ -48,8 +48,11 @@ class ReleasesController(
 		)
 	}
 
-	private def getInterval(query : Query) =
-		if (query.contains("since")) parse(query.value("since")) else DEFAULT
+	private def getInterval(query : Query) = {
+		var value = query.value("since")
+
+		if (value != null) parse(value) else DEFAULT
+	}
 
 	private def parse(what : String) =
 		new InstantParser(now).parse(what) 

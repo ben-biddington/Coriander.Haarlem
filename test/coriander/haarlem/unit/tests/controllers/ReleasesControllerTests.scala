@@ -37,6 +37,12 @@ class ReleasesControllerTests extends ControllerUnitTest {
 		then_builds_are_searched_in(theLastDay)
 	}
 
+	@Test
+	def since_defaults_to_seven_days {
+		when_since_not_supplied
+		then_builds_are_searched_in(theLastSevenDays)
+	}
+
 	private def given_a_build_finder {
 		stub(buildFinder.find(any(classOf[FilterOptions]))).
 		toReturn(List())
@@ -47,6 +53,10 @@ class ReleasesControllerTests extends ControllerUnitTest {
 			pluginDescriptor,
 			buildFinder
 		);
+	}
+
+	private def when_since_not_supplied {
+		when_since_supplied_as("")	
 	}
 
 	private def when_since_supplied_as(what : String) {
