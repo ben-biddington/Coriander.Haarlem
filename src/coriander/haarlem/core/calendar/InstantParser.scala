@@ -19,6 +19,9 @@ class InstantParser(val now : Instant) {
 
 		val count = parseInt(theMatch.get.group("count"))
 
+		if (count == 0)
+			throw new IllegalArgumentException("The count must be greater than zero")
+
 		val unit = theMatch.get.group("unit").toString.toLowerCase
 
 		if (unit == "day") daysAgo(count) else weeksAgo(count)

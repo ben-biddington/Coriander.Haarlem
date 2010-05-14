@@ -35,7 +35,13 @@ class InstantParserTests extends Spec
 
 		it("uses absolute value of negative numbers") {
 			when_parsing("-1-day-ago")
-			then_result_is_more_or_less(yesterday)			
+			then_result_is_more_or_less(yesterday)
+		}
+
+		it("Fails when number equal to zero") {
+			intercept[IllegalArgumentException] {
+				when_parsing("0-day-ago")
+			}
 		}
 	}
 
