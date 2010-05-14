@@ -51,7 +51,7 @@ class ReleasesControllerTests extends ControllerUnitTest {
 
 	private def when_since_supplied_as(what : String) {
 		stub(request.getQueryString).
-		toReturn("?since=" + what)
+		toReturn("since=" + what)
 
 		controller.go(request, response)
 	}

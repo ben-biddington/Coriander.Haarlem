@@ -1,9 +1,11 @@
 package coriander.haarlem.matchers
 
-import org.joda.time.Interval
 import org.junit.internal.matchers.TypeSafeMatcher
 import coriander.haarlem.core.calendar.FilterOptions
 import org.hamcrest.Description
+import org.joda.time.Hours._
+import org.joda.time.{DateTime, Interval}
+import org.joda.time.format.DateTimeFormat._
 
 class FilterOptionsMatcher(expected : Interval)
 	extends TypeSafeMatcher[FilterOptions] {
@@ -13,16 +15,33 @@ class FilterOptionsMatcher(expected : Interval)
 	override def matchesSafely(what : FilterOptions) = {
 		actual = what
 
-		// @todo: introduce tolerance
-		actual.interval.equals(expected) ||
-			expected.contains(actual.interval)
+		startRoughlyEquals(expected.getStart) &&
+		endRoughlyEquals(expected.getEnd)
 	}
 
 	def describeTo(description : Description) {
     	description.appendText(
-			"Expected <" + expected + "> but got <" + actual.interval + ">"
+			"Expected: interval between \n\t<" + format(expected.getStart) + "> and <" + format(expected.getEnd) + "> \n" +
+			"Actual: interval between \n\t<" + format(actual.interval.getStart) + "> and <" + format(actual.interval.getEnd) + "> "
 		)
   	}
+
+	private def format(what : DateTime) =
+		what.toString(fullDate) + " at " + what.toString(fullTime)
+
+	private def startRoughlyEquals(when : DateTime) = {
+		val theDifference = Math.abs(actual.interval.getStart.getMillis - when.getMillis)
+
+		theDifference <= gracePeriod.getMillis
+	}
+
+	private def endRoughlyEquals(when : DateTime) = {
+		val theDifference = Math.abs(actual.interval.getEnd.getMillis - when.getMillis)
+
+		theDifference <= gracePeriod.getMillis
+	}
+
+	private val gracePeriod = hours(1).toStandardDuration
 }
 
 object FilterOptionsMatcher {

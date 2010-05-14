@@ -48,25 +48,21 @@ class ReleasesController(
 		)
 	}
 
-	private def getInterval(query : Query) : Instant = {
-		val since = query.value("since")
-
-		if (since != null) parse(since) else DEFAULT
-	}
+	private def getInterval(query : Query) =
+		if (query.contains("since")) parse(query.value("since")) else DEFAULT
 
 	private def parse(what : String) = new InstantParser(now).parse(what) 
 
 	private def findAllOfTheBuildsIAmSupposedToShow(interval : Interval) = {
 		var list = buildFinder.find(new FilterOptions(interval))
 
-		println(list)
-
 		Convert.toJavaList(list)
 	}
 
 	private lazy val view 	= pluginDescriptor.getPluginResourcesPath + "/server/releases/default.jsp"
-	private lazy val now 	= new Instant
 	private var route 		= "/releases.html"
-	private lazy val sevenDaysAgo = new Instant().minus(days(7).toStandardDuration)
-	private lazy val DEFAULT = sevenDaysAgo
+
+	private lazy val now 			= new Instant
+	private lazy val sevenDaysAgo 	= new Instant().minus(days(7).toStandardDuration)
+	private lazy val DEFAULT 		= sevenDaysAgo
 }
