@@ -6,7 +6,7 @@ import org.springframework.web.servlet.ModelAndView
 import jetbrains.buildServer.web.openapi.{WebControllerManager, PluginDescriptor}
 import coriander.haarlem.models.ReleasesModel
 import jetbrains.buildServer.serverSide.{SFinishedBuild}
-import coriander.haarlem.core.Convert
+import coriander.haarlem.core.Convert._
 import org.joda.time._
 import org.joda.time.Days._
 import coriander.haarlem.http.query.Query
@@ -41,7 +41,7 @@ class ReleasesController(
 			view,
 			"results",
 			new ReleasesModel(
-				findAllOfTheBuildsIAmSupposedToShow(interval),
+				findBuildsIn(interval),
 				interval,
 				now
 			) 
@@ -51,13 +51,11 @@ class ReleasesController(
 	private def getInterval(query : Query) =
 		if (query.contains("since")) parse(query.value("since")) else DEFAULT
 
-	private def parse(what : String) = new InstantParser(now).parse(what) 
+	private def parse(what : String) =
+		new InstantParser(now).parse(what) 
 
-	private def findAllOfTheBuildsIAmSupposedToShow(interval : Interval) = {
-		var list = buildFinder.find(new FilterOptions(interval))
-
-		Convert.toJavaList(list)
-	}
+	private def findBuildsIn(interval : Interval) =
+		toJavaList(buildFinder.find(new FilterOptions(interval)))
 
 	private lazy val view 	= pluginDescriptor.getPluginResourcesPath + "/server/releases/default.jsp"
 	private var route 		= "/releases.html"
