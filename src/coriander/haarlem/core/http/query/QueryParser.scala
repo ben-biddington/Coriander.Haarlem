@@ -13,18 +13,13 @@ class QueryParser {
         if (null == queryString || queryString.trim == "")
             return List()
 
-        queryString split(delimiter) foreach(pair => {
-            val nameAndValue = parser.parse(pair)
-
-            if (nameAndValue != null) {
-                buffer += nameAndValue
-            }
-        });
-
-        buffer toList
+		queryString.split(delimiter).
+			map(parser.parse(_)).
+			filter(_ != null).
+			toList
     }
 
-	val parser = new NameValuePairParser
+	private val parser = new NameValuePairParser
 
-	val DEFAULT_DELIMITER = "&"
+	private val DEFAULT_DELIMITER = "&"
 }
