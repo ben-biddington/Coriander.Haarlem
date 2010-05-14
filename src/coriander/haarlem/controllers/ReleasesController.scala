@@ -34,31 +34,31 @@ class ReleasesController(
 		request : HttpServletRequest,
 		response : HttpServletResponse
 	) : ModelAndView = {
-		val now = new Instant
-
 		val query = Query(request.getQueryString)
-
-		var searchResult : java.util.List[SFinishedBuild] = new ArrayList[SFinishedBuild]()
-
-		var interval : Interval = new Interval(0L, 0L)
-		
-		if (query.contains("since")) {
-			val sinceWhen = fromWhen(now, query)
-			interval = new Interval(sinceWhen, now)
-			searchResult = findBuildsIn(interval)
-		} else if (query.contains("last")) {
-			searchResult = findLast(parseInt(query.value("last")))
-		}
 
 		new ModelAndView(
 			view,
 			"results",
-			new ReleasesModel(
-				searchResult,
-				interval,
-				now
-			) 
+			find(query) 
 		)
+	}
+
+	private def find(query : Query) : ReleasesModel = {
+	 	val now = new Instant
+
+		var result : java.util.List[SFinishedBuild] = new ArrayList[SFinishedBuild]()
+
+		var interval : Interval = new Interval(0L, 0L)
+
+		if (query.contains("since")) {
+			val sinceWhen = fromWhen(now, query)
+			interval = new Interval(sinceWhen, now)
+			result = findBuildsIn(interval)
+		} else if (query.contains("last")) {
+			result = findLast(parseInt(query.value("last")))
+		}
+
+		new ReleasesModel(result, interval, now)
 	}
 
 	private def fromWhen(now : Instant, query : Query) : Instant = {
