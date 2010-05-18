@@ -25,6 +25,7 @@
         <table cellspacing="0" class="testList historyList dark borderBottom">
             <tr>
                 <th class="firstCell">#</th>
+                <th>Project</th>
                 <th>Build</th>
                 <th>Results</th>
                 <th>Artifacts</th>
@@ -47,7 +48,13 @@
                       <bs:buildCommentIcon build="${entry}"/>
                     </td>
 
-                    <td>${entry.fullName}</td>
+                    <td>
+                        <strong><a title="Open project page" href="/project.html?projectId=${entry.buildType.projectId}">${entry.buildType.projectName}</a></strong>
+                    </td>
+
+                    <td>
+                        <a title="Open build page" href="/viewType.html?buildTypeId=${entry.buildTypeId}">${entry.buildTypeName}</a>
+                    </td>
 
                     <td class="${rowClass}">
                       <bs:buildDataIcon buildData="${entry}"/>
