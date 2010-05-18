@@ -25,6 +25,7 @@
         <table cellspacing="0" class="testList historyList dark borderBottom">
             <tr>
                 <th class="firstCell">#</th>
+                <th>Build</th>
                 <th>Results</th>
                 <th>Artifacts</th>
                 <th>Changes</th>
@@ -45,6 +46,8 @@
                       <bs:buildNumber buildData="${entry}"/>
                       <bs:buildCommentIcon build="${entry}"/>
                     </td>
+
+                    <td>${entry.fullName}</td>
 
                     <td class="${rowClass}">
                       <bs:buildDataIcon buildData="${entry}"/>
