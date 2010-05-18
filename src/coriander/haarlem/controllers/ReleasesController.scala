@@ -46,7 +46,7 @@ class ReleasesController(
 	private def find(query : Query) : ReleasesModel = {
 	 	val now = new Instant
 
-		var result : java.util.List[SFinishedBuild] = new ArrayList[SFinishedBuild]()
+		var result : List[SFinishedBuild] = null
 
 		var interval : Interval = new Interval(0L, 0L)
 
@@ -54,31 +54,44 @@ class ReleasesController(
 			interval = new Interval(fromWhen(now, query), now)
 			result = findBuildsIn(interval)
 		} else if (query.contains("last")) {
-			interval = calculateInterval(result)
 			result = findLast(parseInt(query.value("last")))
+			interval = calculateInterval(result)
+		} else
+			throw new Exception("Currently you must supply either <since> or <last> query parameter.")
+
+		if (query.contains("matching")) {
+			result = filterByName(result, query.value("matching"))
 		}
 
-		new ReleasesModel(result, interval, now)
+		new ReleasesModel(toJavaList(result), interval, now)
 	}
 
-	private def calculateInterval(builds : java.util.List[SFinishedBuild]) : Interval = {
+	private def filterByName(what : List[SFinishedBuild], by : String) : List[SFinishedBuild] = {
+		 what.filter((build : SFinishedBuild) =>
+			(
+				build.getBuildDescription != null &&
+				build.getBuildDescription.contains(by)
+			) || (
+				build.getBuildTypeName != null &&
+				build.getBuildTypeName.contains(by)
+			)
+		)
+	}
+
+	private def calculateInterval(builds : List[SFinishedBuild]) : Interval = {
 		if (builds.size == 0)
 			 return new Interval(0L, 0L)
 
-		var from = new DateTime(builds.get(0).getFinishDate, DateTimeZone.UTC)
+		var from = new DateTime(builds.first.getFinishDate, DateTimeZone.UTC)
 
-		val index = Math.max(builds.size - 1, 0)
-
-		var to = new DateTime(builds.get(index).getFinishDate, DateTimeZone.UTC)
+		var to = new DateTime(builds.last.getFinishDate, DateTimeZone.UTC)
 
 		new Interval(to, from)
 	}
 
-	private def findBuildsIn(interval : Interval) =
-		toJavaList(buildFinder.find(new FilterOptions(interval)))
+	private def findBuildsIn(interval : Interval) = buildFinder.find(new FilterOptions(interval))
 
-	private def findLast(howMany : Int) =
-		toJavaList(buildFinder.last(howMany))
+	private def findLast(howMany : Int) = buildFinder.last(howMany)
 
 	private def fromWhen(now : Instant, query : Query) : Instant = {
 		var value = query.value("since")
