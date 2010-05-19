@@ -11,7 +11,6 @@ import org.joda.time.Days._
 import coriander.haarlem.http.query.Query
 import coriander.haarlem.core.calendar.{InstantParser, FilterOptions, IBuildFinder}
 import jetbrains.buildServer.serverSide.SFinishedBuild
-import java.util.ArrayList
 import java.lang.Integer._
 
 class ReleasesController(

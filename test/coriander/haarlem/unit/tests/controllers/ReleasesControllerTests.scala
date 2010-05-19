@@ -68,6 +68,16 @@ class ReleasesControllerTests extends ControllerUnitTest {
 		then_we_search_for_the_last_with_an_non_null_filter(10)
 	}
 
+	@Test @Ignore
+	def you_can_only_ask_for_up_to_the_last_100_for_performance_reasons {
+		
+	}
+
+	@Test @Ignore
+	def you_can_only_ask_for_builds_since_a_maximum_31_days_ago_for_performance_reasons {
+
+	}
+
 	private def given_a_build_finder {
 	   given_a_build_finder_that_returns(List())
 	}
