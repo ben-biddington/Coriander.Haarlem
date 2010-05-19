@@ -6,6 +6,9 @@ class Query(queryString : String) {
 	def value(name : String) :  String =
 		if (contains(name)) get(name) else null
 
+	def containsWithValue(name : String) =
+		contains(name) && value(name) != null
+
 	def contains(name : String) =
 		namesAndValues.exists(_.getName == name)
 
