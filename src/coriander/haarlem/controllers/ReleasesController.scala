@@ -50,20 +50,58 @@ class ReleasesController(
 
 		var interval : Interval = new Interval(0L, 0L)
 
+		val matching = if (query.contains("matching")) query.value("matching") else null
+
 		if (query.contains("since")) {
 			interval = new Interval(fromWhen(now, query), now)
-			result = findBuildsIn(interval)
+			result = buildFinder.find(new FilterOptions(interval, newBuildMatcher(matching)))
 		} else if (query.contains("last")) {
-			result = findLast(parseInt(query.value("last")))
+			result = findLast(parseInt(query.value("last")), matching)
+
 			interval = calculateInterval(result)
 		} else
 			throw new Exception("Currently you must supply either <since> or <last> query parameter.")
 
-		if (query.contains("matching")) {
-			result = filterByName(result, query.value("matching"))
-		}
-
 		new ReleasesModel(toJavaList(result), interval, now)
+	}
+
+	private def calculateInterval(builds : List[SFinishedBuild]) : Interval = {
+		if (builds.size == 0)
+			 return new Interval(0L, 0L)
+
+		var from = new DateTime(builds.first.getFinishDate, DateTimeZone.UTC)
+
+		var to = new DateTime(builds.last.getFinishDate, DateTimeZone.UTC)
+
+		new Interval(to, from)
+	}
+
+	private def findLast(
+		howMany : Int,
+		matching : String
+	) = {
+		val options = if(matching != null) new FilterOptions(null, newBuildMatcher(matching)) else FilterOptions.NONE
+
+		buildFinder.last(howMany, options)
+	}
+
+	private def newBuildMatcher(thatMatches : String) : SFinishedBuild => Boolean = {
+		 build => {
+			(
+				build.getBuildDescription != null &&
+				build.getBuildDescription.contains(thatMatches)
+			) ||
+			(
+				build.getBuildTypeName != null &&
+				build.getBuildTypeName.contains(thatMatches)
+			)
+		}
+	}
+
+	private def fromWhen(now : Instant, query : Query) : Instant = {
+		var value = query.value("since")
+
+		if (value != null) parse(now, value) else DEFAULT
 	}
 
 	private def filterByName(what : List[SFinishedBuild], by : String) : List[SFinishedBuild] = {
@@ -78,27 +116,6 @@ class ReleasesController(
 		)
 	}
 
-	private def calculateInterval(builds : List[SFinishedBuild]) : Interval = {
-		if (builds.size == 0)
-			 return new Interval(0L, 0L)
-
-		var from = new DateTime(builds.first.getFinishDate, DateTimeZone.UTC)
-
-		var to = new DateTime(builds.last.getFinishDate, DateTimeZone.UTC)
-
-		new Interval(to, from)
-	}
-
-	private def findBuildsIn(interval : Interval) = buildFinder.find(new FilterOptions(interval))
-
-	private def findLast(howMany : Int) = buildFinder.last(howMany)
-
-	private def fromWhen(now : Instant, query : Query) : Instant = {
-		var value = query.value("since")
-
-		if (value != null) parse(now, value) else DEFAULT
-	}
-	
 	private def parse(now : Instant, what : String) =
 		new InstantParser(now).parse(what)
 

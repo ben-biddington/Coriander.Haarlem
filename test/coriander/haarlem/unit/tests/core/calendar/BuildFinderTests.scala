@@ -4,7 +4,6 @@ import collection.mutable.ListBuffer
 import coriander.haarlem.core.Convert
 import org.scalatest.{BeforeAndAfterEach, Spec}
 import org.mockito.Mockito._
-import coriander.haarlem.core.calendar.{BuildFinder}
 import coriander.haarlem.core.calendar.FilterOptions._
 import java.util.{Date}
 import jetbrains.buildServer.messages.Status
@@ -14,6 +13,7 @@ import org.joda.time.Days._
 import org.joda.time.Hours._
 import jetbrains.buildServer.serverSide.{SRunningBuild, SBuildType, SFinishedBuild, ProjectManager}
 import org.scalatest.matchers.{MustMatchers, ShouldMatchers}
+import coriander.haarlem.core.calendar.{FilterOptions, BuildFinder}
 
 class BuildFinderTests
 	extends Spec
@@ -106,47 +106,51 @@ class BuildFinderTests
 	}
 
 	describe("BuildFinder.last") {
-			it("returns empty list when given zero") {
-				given_a_build_type_with_history(
-					aBuildThatFinished(tenMinutesAgo),
-					aBuildThatFinished(fiveMinutesAgo)
-				)
+		it("returns empty list when given zero") {
+			given_a_build_type_with_history(
+				aBuildThatFinished(tenMinutesAgo),
+				aBuildThatFinished(fiveMinutesAgo)
+			)
 
-				given_a_finder
+			given_a_finder
 
-				when_it_is_asked_to_find_the_last(0)
+			when_it_is_asked_to_find_the_last(0)
 
-				result.length should equal(0)
-			}
-
-			it("returns at most the supplied count") {
-				given_a_build_type_with_history(
-					aBuildThatFinished(tenMinutesAgo),
-					aBuildThatFinished(fiveMinutesAgo)
-				)
-
-				given_a_finder
-
-				when_it_is_asked_to_find_the_last(1)
-
-				result.length should equal(1)
-			}
-
-			it("returns the builds sorted desc (newest first)") {
-				given_a_build_type_with_history(
-					aBuildThatFinished(tenMinutesAgo),
-					aBuildThatFinished(yesterday),
-					aBuildThatFinished(fiveMinutesAgo)
-				)
-
-				given_a_finder
-
-				when_it_is_asked_to_find_the_last(5)
-
-				toUtc(result.first.getFinishDate) should equal(fiveMinutesAgo)
-				toUtc(result.last.getFinishDate) should equal(yesterday)
-			}
+			result.length should equal(0)
 		}
+
+		it("returns at most the supplied count") {
+			given_a_build_type_with_history(
+				aBuildThatFinished(tenMinutesAgo),
+				aBuildThatFinished(fiveMinutesAgo)
+			)
+
+			given_a_finder
+
+			when_it_is_asked_to_find_the_last(1)
+
+			result.length should equal(1)
+		}
+
+		it("returns the builds sorted desc (newest first)") {
+			given_a_build_type_with_history(
+				aBuildThatFinished(tenMinutesAgo),
+				aBuildThatFinished(yesterday),
+				aBuildThatFinished(fiveMinutesAgo)
+			)
+
+			given_a_finder
+
+			when_it_is_asked_to_find_the_last(5)
+
+			toUtc(result.first.getFinishDate) should equal(fiveMinutesAgo)
+			toUtc(result.last.getFinishDate) should equal(yesterday)
+		}
+	}
+
+	describe("The optional filter") {
+		it("invokes my filter") (pending)
+	}
 
 	private def given_a_finder {                                                                  
 		given_a_project_manager
@@ -205,7 +209,7 @@ class BuildFinderTests
 	private def when_it_is_asked_to_find_sommit {
 		require(finder != null, "Can't proceed without the CUT (there is no finder).")
 
-		result = finder.find()
+		result = finder.find(FilterOptions.NONE)
 	}
 
 	private def when_it_is_asked_to_find_sommit_in(interval : Interval) {
@@ -217,7 +221,7 @@ class BuildFinderTests
 	private def when_it_is_asked_to_find_the_last(howMany : Int) {
 		require(finder != null, "Can't proceed without the CUT (there is no finder).")
 
-		result = finder.last(howMany)
+		result = finder.last(howMany, FilterOptions.NONE)
 	}
 
 	private def then_it_queries_the_project_manager_for_all_build_types {
@@ -228,16 +232,26 @@ class BuildFinderTests
 		result.length should be(0)
 	}
 
+	private def then_only_builds_with_description_or_name_matching_are_returned() {
+		throw new Exception("Not implemented properly -- moved straightt from release controller test")
+		
+		require(result != null, "Unable to work with no result")
+
+//		toScalaList(result.builds).foreach(build =>
+//			assertTrue(
+//				"The build description <" + build.getBuildDescription + "> " +
+//				"does not contain <" + matching + ">",
+//				build.getBuildDescription.contains(matching)
+//			)
+//		)
+	}
+
 	private def newFakeFinishedBuild = {
 		var oneHourAgo = new Instant().minus(hours(1).toStandardDuration)
 		aBuildThatFinished(oneHourAgo)
 	}
 
-	private def newFakerRunningBuild = {
-		var result = mock(classOf[SRunningBuild])
-		result
-	}
-
+	private def newFakerRunningBuild = mock(classOf[SRunningBuild])
 	private def aBuildThatFinished(when : Instant) = newBuild(when, Status.NORMAL)
 	private def aBuildThatFailed(when : Instant) = newBuild(when, Status.FAILURE)
 

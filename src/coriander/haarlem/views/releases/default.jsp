@@ -97,8 +97,8 @@
             <tr>
                 <td class="details permalinks" colspan="11">
                     <div style="margin-top:10px;">You can bookmark these links for quicker navigation:</div>
-                    <a href="releases.html?last=20&matching=live">last 20 live releases</a>
-                    <a href="releases.html?since=7-days-ago&matching=live">All live releases for the past week</a>
+                    <img src="img/star.gif" width="16" height="16" /><a href="releases.html?last=20&matching=live">Last 20 live releases</a>
+                    <img src="img/star.gif" width="16" height="16" /><a href="releases.html?since=7-days-ago&matching=live">All live releases for the past week</a>
                 </td>
             </tr>
         </table>

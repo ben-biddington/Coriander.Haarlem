@@ -53,7 +53,7 @@ class ReleasesControllerTests extends ControllerUnitTest {
 	@Test
 	def accepts_last_parameter {
 		when_last_supplied_as(10)
-		then_we_search_for_the_last(10)
+		then_we_search_for_the_last_with_no_match(10)
 	}
 
 	@Test
@@ -64,28 +64,8 @@ class ReleasesControllerTests extends ControllerUnitTest {
 
 	@Test
 	def accepts_matching_parameter {
-		var s = "live"
-
-		val aValidBuild = newFakeBuildWithDescription("anything containing <" + s + ">")
-		val anInvalidBuild = newFakeBuildWithDescription("Sir Chubbsalot goes to town")
-		val anInvalidWithNullDesc = newFakeBuildWithDescription(null)
-
-		given_a_build_finder_that_returns(List(
-			aValidBuild,
-			anInvalidBuild,
-			anInvalidWithNullDesc
-		))
-
-		given_a_controller
-		when_matching_supplied_as(s)
-		then_only_builds_with_description_or_name_matching_are_returned()
-	}
-
-	private def newFakeBuildWithDescription(what : String) = {
-		val result = mock(classOf[SFinishedBuild])
-		stub(result.getBuildDescription).toReturn(what)
-
-		result
+		when_matching_supplied_with_required_count_as(10, "live")
+		then_we_search_for_the_last_with_an_non_null_filter(10)
 	}
 
 	private def given_a_build_finder {
@@ -94,7 +74,7 @@ class ReleasesControllerTests extends ControllerUnitTest {
 
 	private def given_a_build_finder_that_returns(what : List[SFinishedBuild]) {
 		stub(buildFinder.find(any(classOf[FilterOptions]))).toReturn(what)
-		stub(buildFinder.last(any(classOf[Int]))).toReturn(what)
+		stub(buildFinder.last(any(classOf[Int]), any(classOf[FilterOptions]))).toReturn(what)
 	}
 
 	private def given_a_controller {
@@ -120,10 +100,10 @@ class ReleasesControllerTests extends ControllerUnitTest {
 		controller.go(request, response)
 	}
 
-	private def when_matching_supplied_as(what : String) {
+	private def when_matching_supplied_with_required_count_as(howMany : Int, what : String) {
 		matching = what
-		
-		stub(request.getQueryString).toReturn("last=10&matching=" + what)
+
+		stub(request.getQueryString).toReturn("last=" + howMany + "&matching=" + what)
 
 		result = controller.go(request, response).
 			getModel.get("results").asInstanceOf[ReleasesModel]
@@ -133,19 +113,19 @@ class ReleasesControllerTests extends ControllerUnitTest {
 		verify(buildFinder).find(argThat(hasMatching(interval)))
 	}
 
-	private def then_we_search_for_the_last(howMany : Int) {
-		verify(buildFinder).last(howMany)
+	private def then_we_search_for_the_last_with_no_match(howMany : Int) {
+		verify(buildFinder).last(argThat(is(howMany)), argThat(is(FilterOptions.NONE)))
 	}
 
-	private def then_only_builds_with_description_or_name_matching_are_returned() {
-		require(result != null, "Unable to work with no result")
-		require(result.builds != null, "Unable to work with no builds")
-		
-		toScalaList(result.builds).foreach(build => {
-			println(build.getBuildDescription)
-			assertTrue(build.getBuildDescription.contains(matching))
-			}
-		)
+	private def then_we_search_for_the_last_with_an_non_null_filter(howMany : Int) {
+		verify(buildFinder).last(argThat(is(howMany)), argThat(is(not(FilterOptions.NONE))))
+	}
+
+	private def newFakeBuildWithDescription(what : String) = {
+		val result = mock(classOf[SFinishedBuild])
+		stub(result.getBuildDescription).toReturn(what)
+
+		result
 	}
 
 	private var projectManager 	: ProjectManager = null
