@@ -44,22 +44,21 @@ class ReleasesController(
 
 	private def find(query : Query) : ReleasesModel = {
 	 	val now = new Instant
-
 		var result : List[SFinishedBuild] = null
-
-		var interval : Interval = new Interval(0L, 0L)
-
+		var interval = new Interval(0L, 0L)
 		val matching = if (query.contains("matching")) query.value("matching") else null
 
 		if (query.contains("since")) {
 			interval = new Interval(fromWhen(now, query), now)
 			result = buildFinder.find(new FilterOptions(interval, newBuildMatcher(matching)))
-		} else if (query.contains("last")) {
-			result = findLast(parseInt(query.value("last")), matching)
+		} else {
+			val lastHowMany = if (query.containsWithValue("last"))
+				parseInt(query.value("last"))
+			else DEFAULT_BUILD_COUNT
 
+			result = findLast(lastHowMany, matching)
 			interval = calculateInterval(result)
-		} else
-			throw new Exception("Currently you must supply either <since> or <last> query parameter.")
+		}
 
 		new ReleasesModel(toJavaList(result), interval, now)
 	}
@@ -103,24 +102,11 @@ class ReleasesController(
 		if (value != null) parse(now, value) else DEFAULT
 	}
 
-	private def filterByName(what : List[SFinishedBuild], by : String) : List[SFinishedBuild] = {
-		 what.filter((build : SFinishedBuild) =>
-			(
-				build.getBuildDescription != null &&
-				build.getBuildDescription.contains(by)
-			) || (
-				build.getBuildTypeName != null &&
-				build.getBuildTypeName.contains(by)
-			)
-		)
-	}
+	private def parse(now : Instant, what : String) = new InstantParser(now).parse(what)
 
-	private def parse(now : Instant, what : String) =
-		new InstantParser(now).parse(what)
-
-	private lazy val view 	= pluginDescriptor.getPluginResourcesPath + "/server/releases/default.jsp"
-	private var route 		= "/releases.html"
-
-	private lazy val sevenDaysAgo 	= new Instant().minus(days(7).toStandardDuration)
-	private lazy val DEFAULT 		= sevenDaysAgo
+	private lazy val view 			= pluginDescriptor.getPluginResourcesPath + "/server/releases/default.jsp"
+	private var route 							= "/releases.html"
+	private lazy val sevenDaysAgo 				= new Instant().minus(days(7).toStandardDuration)
+	private lazy val DEFAULT 					= sevenDaysAgo
+	private lazy val DEFAULT_BUILD_COUNT 		= 25
 }

@@ -70,12 +70,17 @@ class ReleasesControllerTests extends ControllerUnitTest {
 
 	@Test @Ignore
 	def you_can_only_ask_for_up_to_the_last_100_for_performance_reasons {
-		
+		 throw new Exception("PENDING")
 	}
 
 	@Test @Ignore
 	def you_can_only_ask_for_builds_since_a_maximum_31_days_ago_for_performance_reasons {
+		throw new Exception("PENDING")
+	}
 
+	@Test @Ignore
+	def if_you_do_not_supply_since_or_last_then_you_get_the_last_25_results {
+		throw new Exception("PENDING")
 	}
 
 	private def given_a_build_finder {
