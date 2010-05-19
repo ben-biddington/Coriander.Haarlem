@@ -4,11 +4,11 @@ import coriander.haarlem.core.Convert._
 import jetbrains.buildServer.serverSide.{SBuildType, SFinishedBuild, ProjectManager}
 import org.joda.time.{DateTimeZone, DateTime, Interval}
 import org.joda.time.Days._
+import java.util.Date
 
 class BuildFinder(val projectManager : ProjectManager) extends IBuildFinder {
 	
-	def last(howMany : Int, options : FilterOptions) : List[SFinishedBuild] = {
-		println("xxx")
+	def last(howMany : Int, options : FilterOptions) = {
 		allBuilds(options.filter).sort(byNewestFirst).slice(0, howMany)
 	}
 	
@@ -26,20 +26,17 @@ class BuildFinder(val projectManager : ProjectManager) extends IBuildFinder {
 		validate(interval)
 
 		builds.
-			filter((build : SFinishedBuild) => {
-				val finishedAtUTC = new DateTime(build.getFinishDate, DateTimeZone.UTC)
-			
-				interval contains(finishedAtUTC)
-			}).
+			filter(build => interval.contains(utc(build.getFinishDate))).
 			sort(byNewestFirst)
 	}
 
 	private def allBuilds(by : SFinishedBuild => Boolean) : List[SFinishedBuild] = {
-		
+		val filter = if (null == by) passThrough else by
+
 		toScalaList(projectManager.getAllBuildTypes).
 			map(buildType => fullHistory(buildType)).
 			flatten[SFinishedBuild].
-			filter(by)
+			filter(filter)
 	}
 
 	private def fullHistory(_of : SBuildType) =
@@ -56,4 +53,8 @@ class BuildFinder(val projectManager : ProjectManager) extends IBuildFinder {
 	
 	private val byNewestFirst = (left : SFinishedBuild, right: SFinishedBuild) =>
 		new DateTime(left.getFinishDate).isAfter(new DateTime(right.getFinishDate))
+
+	private val passThrough : SFinishedBuild => Boolean = b => true
+
+	private def utc(when : Date) = new DateTime(when, DateTimeZone.UTC)	
 }
