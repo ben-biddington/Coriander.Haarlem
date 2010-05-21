@@ -25,5 +25,10 @@
         <property name="route" value="/releases.html"/>
     </bean>
     <bean id="buildFinder" class="coriander.haarlem.core.calendar.BuildFinder" />
+    <bean id="greatestHitsController" class="coriander.haarlem.controllers.GreatestHitsController" init-method="register">
+        <property name="cacheSeconds" value="90" />
+        <property name="supportedMethods" value="GET" />
+        <property name="route" value="/phil_and_ben_rule.html"/>
+    </bean>
 </beans>
         
