@@ -1,12 +1,12 @@
 package coriander.haarlem.core.calendar
 
 import coriander.haarlem.core.Convert._
-import jetbrains.buildServer.serverSide.{SBuildType, SFinishedBuild, ProjectManager}
 import org.joda.time.{DateTimeZone, DateTime, Interval}
 import org.joda.time.Days._
 import java.util.Date
+import jetbrains.buildServer.serverSide.{BuildHistory, SBuildType, SFinishedBuild, ProjectManager}
 
-class BuildFinder(val projectManager : ProjectManager) extends IBuildFinder {
+class BuildFinder(buildHistory : BuildHistory) extends IBuildFinder {
 	
 	def last(howMany : Int, options : FilterOptions) = {
 		allBuilds(options.filter).sort(byNewestFirst).slice(0, howMany)
@@ -33,14 +33,10 @@ class BuildFinder(val projectManager : ProjectManager) extends IBuildFinder {
 	private def allBuilds(by : SFinishedBuild => Boolean) : List[SFinishedBuild] = {
 		val filter = if (null == by) passThrough else by
 
-		toScalaList(projectManager.getAllBuildTypes).
-			map(buildType => fullHistory(buildType)).
-			flatten[SFinishedBuild].
-			filter(filter)
+		val includeCancelled = true
+		
+		toScalaList(buildHistory.getEntries(includeCancelled)).filter(filter)
 	}
-
-	private def fullHistory(_of : SBuildType) =
-		toScalaList(_of.getHistoryFull(true))
 
 	private def validate(interval : Interval) = {
 		var howMany = 31
