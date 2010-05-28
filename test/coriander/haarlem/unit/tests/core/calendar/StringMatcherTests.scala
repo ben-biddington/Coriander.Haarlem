@@ -8,15 +8,14 @@ class StringMatcherTests extends Spec
 	with MustMatchers
 	with BeforeAndAfterEach {
 
-	describe("isMatch") {
-		it("matches words") {
+	describe("matches") {
+		it("handles whole words") {
 			matcher.matches("xxx", "yyy") must be(false)
 			matcher.matches("xxx", "xxx") must be(true)
 		}
 
-		it("matches patterns") {
-			val example = "aaa-bbb-ccc"
-
+		it("handles regex patterns") {
+			matcher.matches(example, example) must be(true)
 			matcher.matches(example, "ccc$") must be(true)
 			matcher.matches(example, "^aaa") must be(true)
 			matcher.matches(example, "^[a-c]{3}") must be(true)
@@ -24,7 +23,22 @@ class StringMatcherTests extends Spec
 			matcher.matches(example, "(aaa|ddd)") must be(true)
 			matcher.matches(example, "(ddd|fff)") must be(false)
 		}
+
+		it("handles null by returning false") {
+			matcher.matches(null, "xxx") must be(false)
+		}
+
+		it("handles null pattern by failing") {
+			intercept[IllegalArgumentException] {
+				matcher.matches("xxx", null) must be(false)
+			}
+		}
+
+		it("does case insensitive matching") {
+			matcher.matches("AAA", "^aaa$") must be(true)
+		}
 	}
 
+	private val example = "aaa-bbb-ccc"
 	private val matcher = new StringMatcher
 }

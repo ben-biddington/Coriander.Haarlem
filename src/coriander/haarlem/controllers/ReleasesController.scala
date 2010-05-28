@@ -12,6 +12,7 @@ import coriander.haarlem.http.query.Query
 import coriander.haarlem.core.calendar.{InstantParser, FilterOptions, IBuildFinder}
 import jetbrains.buildServer.serverSide.SFinishedBuild
 import java.lang.Integer._
+import coriander.haarlem.core.StringMatcher
 
 class ReleasesController(
 	pluginDescriptor 	: PluginDescriptor,
@@ -78,22 +79,17 @@ class ReleasesController(
 		howMany : Int,
 		matching : String
 	) = {
-		val options = if(matching != null) new FilterOptions(null, newBuildMatcher(matching)) else FilterOptions.NONE
+		val options =
+			if(matching != null) new FilterOptions(null, newBuildMatcher(matching))
+			else FilterOptions.NONE
 
 		buildFinder.last(howMany, options)
 	}
 
 	private def newBuildMatcher(thatMatches : String) : SFinishedBuild => Boolean = {
-		 build => {
-			(
-				build.getBuildDescription != null &&
-				build.getBuildDescription.contains(thatMatches)
-			) ||
-			(
-				build.getBuildTypeName != null &&
-				build.getBuildTypeName.contains(thatMatches)
-			)
-		}
+		 build =>
+			matcher.matches(build.getBuildDescription, thatMatches) ||
+			matcher.matches(build.getBuildTypeName, thatMatches)
 	}
 
 	private def fromWhen(now : Instant, query : Query) : Instant = {
@@ -109,4 +105,5 @@ class ReleasesController(
 	private lazy val sevenDaysAgo 				= new Instant().minus(days(7).toStandardDuration)
 	private lazy val DEFAULT 					= sevenDaysAgo
 	private lazy val DEFAULT_BUILD_COUNT 		= 25
+	private lazy val matcher 					= new StringMatcher()
 }

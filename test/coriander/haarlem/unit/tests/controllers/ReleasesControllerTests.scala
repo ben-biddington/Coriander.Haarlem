@@ -18,6 +18,7 @@ import org.junit.{Ignore, Before, Test}
 import coriander.haarlem.models.ReleasesModel
 import jetbrains.buildServer.serverSide.{SFinishedBuild, ProjectManager}
 import coriander.haarlem.core.Convert._
+import org.springframework.web.servlet.ModelAndView
 
 class ReleasesControllerTests extends ControllerUnitTest {
 	@Before
@@ -66,6 +67,21 @@ class ReleasesControllerTests extends ControllerUnitTest {
 	def accepts_matching_parameter {
 		when_matching_supplied_with_required_count_as(10, "live")
 		then_we_search_for_the_last_with_an_non_null_filter(10)
+	}
+
+	@Test
+	def the_matching_parameter_is_a_regex_pattern {
+		given_a_build_finder_that_returns(List(
+			newFakeBuildWithDescription("[live] release"),
+			newFakeBuildWithDescription("[uat] release")
+		))
+
+		when_matching_supplied_with_required_count_as(10, "live")
+		val result : ModelAndView = controller.go(request, response)
+		val model : ReleasesModel = result.getModel.get("results").asInstanceOf[ReleasesModel]
+		println(model.getBuilds.size)
+
+		assertThat(model.getBuilds.size, is(equalTo(2)))
 	}
 
 	@Test @Ignore
