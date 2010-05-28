@@ -81,17 +81,6 @@ class BuildFinderTests
 
 			result.length should equal(0)
 		}
-
-		it("rejects an interval greater than about one month") {
-			given_a_finder
-
-			val thirtyTwoDaysAgo 	= new Instant().minus(days(32).toStandardDuration)
-			val aBitOverAMonth 		= new Interval(thirtyTwoDaysAgo, now)
-
-			intercept[IllegalArgumentException] {
-				when_it_is_asked_to_find_sommit_in(aBitOverAMonth)
-			}
-		}
 	}
 
 	describe("BuildFinder.last") {
