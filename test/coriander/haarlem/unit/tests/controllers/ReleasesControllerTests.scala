@@ -8,7 +8,6 @@ import org.hamcrest.core.IsEqual._
 import org.mockito.Matchers._
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import jetbrains.buildServer.web.openapi.PluginDescriptor
-
 import coriander.haarlem.controllers.ReleasesController
 import coriander.haarlem.core.calendar.{FilterOptions, IBuildFinder}
 import org.joda.time.{Instant, Interval}

@@ -10,25 +10,30 @@ import org.joda.time._
 import org.joda.time.Days._
 import coriander.haarlem.http.query.Query
 import coriander.haarlem.core.calendar.{InstantParser, FilterOptions, IBuildFinder}
-import jetbrains.buildServer.serverSide.SFinishedBuild
 import java.lang.Integer._
 import coriander.haarlem.core.StringMatcher
+import jetbrains.buildServer.serverSide.{SFinishedBuild}
 
 class ReleasesController(
 	pluginDescriptor 	: PluginDescriptor,
 	buildFinder 		: IBuildFinder
 ) extends BaseController {
 	def register() {
-		val mgr = getApplicationContext.
-			getBean("webControllerManager", classOf[WebControllerManager])
+		val mgr = getApplicationContext.getBean(
+			"webControllerManager",
+			classOf[WebControllerManager]
+		)
 
 		mgr.registerController(route, this)
 	}
 
-	def setRoute(route : String) = this.route = route
+	def setRoute(route : String) {
+		this.route = route
+	}
 	
-	def go(request : HttpServletRequest, response : HttpServletResponse) =
+	def go(request : HttpServletRequest, response : HttpServletResponse) = {
 		doHandle(request, response)
+	}
 	
 	override protected def doHandle(
 		request : HttpServletRequest,
@@ -75,10 +80,7 @@ class ReleasesController(
 		new Interval(to, from)
 	}
 
-	private def findLast(
-		howMany : Int,
-		matching : String
-	) = {
+	private def findLast(howMany : Int, matching : String) = {
 		val options =
 			if(matching != null) new FilterOptions(null, newBuildMatcher(matching))
 			else FilterOptions.NONE
@@ -87,9 +89,10 @@ class ReleasesController(
 	}
 
 	private def newBuildMatcher(thatMatches : String) : SFinishedBuild => Boolean = {
-		 build =>
+		build => {
 			matcher.matches(build.getBuildDescription, thatMatches) ||
 			matcher.matches(build.getBuildTypeName, thatMatches)
+		}
 	}
 
 	private def fromWhen(now : Instant, query : Query) : Instant = {

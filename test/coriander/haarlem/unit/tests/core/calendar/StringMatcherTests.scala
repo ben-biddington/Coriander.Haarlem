@@ -3,6 +3,7 @@ package coriander.haarlem.unit.tests.core.calendar
 import org.scalatest.{Spec, BeforeAndAfterEach}
 import org.scalatest.matchers.MustMatchers
 import coriander.haarlem.core.StringMatcher
+import java.util.regex.PatternSyntaxException
 
 class StringMatcherTests extends Spec
 	with MustMatchers
@@ -36,6 +37,17 @@ class StringMatcherTests extends Spec
 
 		it("does case insensitive matching") {
 			matcher.matches("AAA", "^aaa$") must be(true)
+		}
+
+		it("handles malformed patterns by throwing PatternSyntaxException") {
+			intercept[PatternSyntaxException] {
+				matcher.matches("AAA", "[li")
+			}
+		}
+
+		it("handles character groups") {
+			matcher.matches("systest xxx smoke", "systest.+smoke") must be(true)
+			matcher.matches("systest xxx smoke", "systest[a-z\\s]+smoke") must be(true)
 		}
 	}
 
