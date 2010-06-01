@@ -2,8 +2,8 @@ package coriander.haarlem.core.calendar
 
 import java.lang.Integer._
 import util.matching.Regex
-import org.joda.time.{Instant}
 import org.joda.time.Days._
+import org.joda.time.{DateMidnight, Instant}
 
 class InstantParser(val now : Instant) {
 	def parse(what : String) : Instant = {
@@ -30,6 +30,6 @@ class InstantParser(val now : Instant) {
 	private def weeksAgo(howMany : Int) =
 		daysAgo(howMany * 7)
 
-	private def daysAgo(howMany : Int) =
-		now.minus(days(howMany).toStandardDuration)
+	private def daysAgo(howMany : Int) : Instant = 
+		new DateMidnight(now).minus(days(howMany)).toInstant
 }

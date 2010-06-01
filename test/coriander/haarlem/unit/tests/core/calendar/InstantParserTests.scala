@@ -3,9 +3,9 @@ package coriander.haarlem.unit.tests.core.calendar
 import org.scalatest.{Spec, BeforeAndAfterEach}
 import org.joda.time.Days._
 import coriander.haarlem.core.calendar.InstantParser
-import org.joda.time.{Interval, Instant}
 import org.joda.time.DateTimeFieldType._
 import org.scalatest.matchers.{ShouldMatchers, MustMatchers}
+import org.joda.time.{DateMidnight, Interval, Instant}
 
 class InstantParserTests extends Spec
 	with ShouldMatchers
@@ -38,10 +38,16 @@ class InstantParserTests extends Spec
 			then_result_is_more_or_less(yesterday)
 		}
 
-		it("Fails when number equal to zero") {
+		it("fails when number equal to zero") {
 			intercept[IllegalArgumentException] {
 				when_parsing("0-day-ago")
 			}
+		}
+
+		it("rounds down the to nearest prior midnight") {
+			when_parsing("1-day-ago")
+			then_result_is_more_or_less(yesterday)
+			then_the_time_is_midnight()
 		}
 	}
 
@@ -60,6 +66,12 @@ class InstantParserTests extends Spec
 
 			when_parsing("1-weeks-ago")
 			then_result_is_more_or_less(sevenDaysAgo)
+		}
+
+		it("rounds down the to nearest prior midnight") {
+			when_parsing("1-week-ago")
+			then_result_is_more_or_less(sevenDaysAgo)
+			then_the_time_is_midnight()
 		}
 	}
 
@@ -88,9 +100,17 @@ class InstantParserTests extends Spec
 		result.get(year) should equal(when.get(year))
 		result.get(monthOfYear) should equal(when.get(monthOfYear))
 		result.get(dayOfMonth) should equal(when.get(dayOfMonth))
-		result.get(hourOfDay) should equal(when.get(hourOfDay))
-		result.get(minuteOfDay) should equal(when.get(minuteOfDay))
-		result.get(secondOfDay) should be(when.get(secondOfDay) plusOrMinus 30)
+
+		then_the_time_is_midnight
+	}
+
+	private def then_the_time_is_midnight() {
+		result.get(hourOfDay) should equal(0)
+		result.get(minuteOfHour) should equal(0)
+		result.get(secondOfMinute) should equal(0)
+		result.get(millisOfSecond) should equal(0)
+
+		//DateMidnight.
 	}
 
 	private val now = new Instant
