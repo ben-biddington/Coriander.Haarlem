@@ -2,7 +2,6 @@ package coriander.haarlem.core.calendar
 
 import coriander.haarlem.core.Convert._
 import org.joda.time.{DateTimeZone, DateTime, Interval}
-import org.joda.time.Days._
 import java.util.Date
 import jetbrains.buildServer.serverSide.{BuildHistory, SFinishedBuild}
 
@@ -15,7 +14,10 @@ class BuildFinder(buildHistory : BuildHistory) extends IBuildFinder {
 	def find(options : FilterOptions) = {
 		val all = allBuilds(options.filter)
 		
-		if (options.interval != null) filterByInterval(all, options.interval) else all
+		if (options.interval != null)
+			filterByInterval(all, options.interval)
+		else
+			all
 	}
 
 	private def filterByInterval(builds : List[SFinishedBuild], interval : Interval) :

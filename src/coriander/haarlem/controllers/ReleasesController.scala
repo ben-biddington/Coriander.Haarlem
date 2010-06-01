@@ -1,6 +1,5 @@
 package coriander.haarlem.controllers
 
-import jetbrains.buildServer.controllers.BaseController
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import org.springframework.web.servlet.ModelAndView
 import jetbrains.buildServer.web.openapi.{WebControllerManager, PluginDescriptor}
@@ -17,34 +16,17 @@ import jetbrains.buildServer.serverSide.{SFinishedBuild}
 class ReleasesController(
 	pluginDescriptor 	: PluginDescriptor,
 	buildFinder 		: IBuildFinder
-) extends BaseController {
-	def register() {
-		val mgr = getApplicationContext.getBean(
-			"webControllerManager",
-			classOf[WebControllerManager]
-		)
+) extends Controller {
+	this.route = DEFAULT_ROUTE
 
-		mgr.registerController(route, this)
-	}
-
-	def setRoute(route : String) {
-		this.route = route
-	}
-	
-	def go(request : HttpServletRequest, response : HttpServletResponse) = {
-		doHandle(request, response)
-	}
-	
 	override protected def doHandle(
 		request : HttpServletRequest,
 		response : HttpServletResponse
 	) : ModelAndView = {
-		val query = Query(request.getQueryString)
-
 		new ModelAndView(
 			view,
 			"results",
-			find(query) 
+			find(Query(request.getQueryString)) 
 		)
 	}
 
@@ -73,9 +55,9 @@ class ReleasesController(
 		if (builds.size == 0)
 			 return new Interval(0L, 0L)
 
-		var from = new DateTime(builds.first.getFinishDate, DateTimeZone.UTC)
+		val from = new DateTime(builds.first.getFinishDate, DateTimeZone.UTC)
 
-		var to = new DateTime(builds.last.getFinishDate, DateTimeZone.UTC)
+		val to = new DateTime(builds.last.getFinishDate, DateTimeZone.UTC)
 
 		new Interval(to, from)
 	}
@@ -104,9 +86,9 @@ class ReleasesController(
 	private def parse(now : Instant, what : String) = new InstantParser(now).parse(what)
 
 	private lazy val view 			= pluginDescriptor.getPluginResourcesPath + "/server/releases/default.jsp"
-	private var route 							= "/releases.html"
 	private lazy val sevenDaysAgo 				= new Instant().minus(days(7).toStandardDuration)
 	private lazy val DEFAULT 					= sevenDaysAgo
 	private lazy val DEFAULT_BUILD_COUNT 		= 25
+	private lazy val DEFAULT_ROUTE 				= "releases.html"
 	private lazy val matcher 					= new StringMatcher()
 }
