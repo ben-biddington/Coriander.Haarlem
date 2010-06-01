@@ -8,8 +8,11 @@ import org.joda.time.{DateMidnight, Instant}
 class InstantParser(val now : Instant) {
 	def parse(what : String) : Instant = {
 
-		if (todayPattern.findFirstIn(what) != None)
+		if (todayPattern.findFirstIn(what).isDefined)
 			return new DateMidnight(now).toInstant
+		
+		if (yesterdayPattern.findFirstIn(what).isDefined)
+			return new DateMidnight(now).minus(days(1)).toInstant
 
 		parseDaysOrWeeks(what)
 	}
@@ -36,5 +39,6 @@ class InstantParser(val now : Instant) {
 	private def weeksAgo(howMany : Int) = daysAgo(howMany * 7)
 	private def daysAgo(howMany : Int) = new DateMidnight(now).minus(days(howMany)).toInstant
 	private val todayPattern = new Regex("(?i)^today$")
+	private val yesterdayPattern = new Regex("(?i)^yesterday")
 	private val daysOrWeeksPattern = new Regex("(?i)([\\d]+)-(day|week)s?-ago$", "count", "unit")
 }

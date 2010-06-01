@@ -107,6 +107,14 @@ class InstantParserTests extends Spec
 			then_result_is(midnight.toInstant)
 		}
 
+		it("like \"yesterday\", which is also case-insensitive") {
+			when_parsing("yesterday")
+			then_result_is(midnightYesterday.toInstant)
+
+			when_parsing("YESTERDay")
+			then_result_is(midnightYesterday.toInstant)
+		}
+
 		it("things like \"yesterday\" or \"last week\"") {
 			(pending)
 		}
