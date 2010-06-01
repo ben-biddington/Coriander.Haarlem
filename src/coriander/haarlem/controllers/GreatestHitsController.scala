@@ -2,8 +2,7 @@ package coriander.haarlem.controllers
 
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import org.springframework.web.servlet.ModelAndView
-import jetbrains.buildServer.controllers.BaseController
-import jetbrains.buildServer.web.openapi.{WebControllerManager, PluginDescriptor}
+import jetbrains.buildServer.web.openapi.{PluginDescriptor}
 import jetbrains.buildServer.serverSide.{SBuildType, SBuildServer, ProjectManager}
 import coriander.haarlem.models.GreatestHitsModel
 import coriander.haarlem.core.Convert
@@ -13,19 +12,8 @@ class GreatestHitsController(
 	pluginDescriptor : PluginDescriptor,
 	projectManager : ProjectManager,
 	buildServer : SBuildServer
-) extends BaseController {
-	def register() {
-		val mgr = getApplicationContext.
-			getBean("webControllerManager", classOf[WebControllerManager])
-
-		mgr.registerController(route, this)
-	}
-
-	def setRoute(route : String) = this.route = route
-
-	def go(request : HttpServletRequest, response : HttpServletResponse) =
-		doHandle(request, response)
-
+) extends Controller {
+	this.route = DEFAULT_ROUTE
 	var key = "buildTypeId"
 
 	override protected def doHandle(
@@ -46,5 +34,5 @@ class GreatestHitsController(
 	}
 
 	private lazy val view 	= pluginDescriptor.getPluginResourcesPath + "/server/greatesthits/default.jsp"
-	private var route 		= "/phil.html"
+	private val DEFAULT_ROUTE = "/phil.html"
 }
