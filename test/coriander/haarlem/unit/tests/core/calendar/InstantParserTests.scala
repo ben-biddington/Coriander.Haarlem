@@ -4,7 +4,7 @@ import org.scalatest.{Spec, BeforeAndAfterEach}
 import org.joda.time.Days._
 import coriander.haarlem.core.calendar.InstantParser
 import org.joda.time.DateTimeFieldType._
-import org.scalatest.matchers.{ShouldMatchers, MustMatchers}
+import org.scalatest.matchers.MustMatchers
 import org.joda.time.{DateMidnight, Interval, Instant}
 
 class InstantParserTests extends Spec
