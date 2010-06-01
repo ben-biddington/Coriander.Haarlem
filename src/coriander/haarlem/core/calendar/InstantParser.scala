@@ -1,15 +1,21 @@
 package coriander.haarlem.core.calendar
 
-import java.lang.Integer._
 import util.matching.Regex
+import java.lang.Integer._
 import org.joda.time.Days._
 import org.joda.time.{DateMidnight, Instant}
 
 class InstantParser(val now : Instant) {
 	def parse(what : String) : Instant = {
-		val pattern : Regex = new Regex("([\\d]+)-(day|week)s?-ago$", "count", "unit")
 
-		val theMatch = pattern.findFirstMatchIn(what)
+		if (todayPattern.findFirstIn(what) != None)
+			return new DateMidnight(now).toInstant
+
+		parseDaysOrWeeks(what)
+	}
+
+	private def parseDaysOrWeeks(what : String) = {
+		val theMatch = daysOrWeeksPattern.findFirstMatchIn(what)
 
 		if (theMatch == None)
 			throw new Exception(
@@ -27,9 +33,8 @@ class InstantParser(val now : Instant) {
 		if (unit == "day") daysAgo(count) else weeksAgo(count)
 	}
 
-	private def weeksAgo(howMany : Int) =
-		daysAgo(howMany * 7)
-
-	private def daysAgo(howMany : Int) : Instant = 
-		new DateMidnight(now).minus(days(howMany)).toInstant
+	private def weeksAgo(howMany : Int) = daysAgo(howMany * 7)
+	private def daysAgo(howMany : Int) = new DateMidnight(now).minus(days(howMany)).toInstant
+	private val todayPattern = new Regex("(?i)^today$")
+	private val daysOrWeeksPattern = new Regex("(?i)([\\d]+)-(day|week)s?-ago$", "count", "unit")
 }
