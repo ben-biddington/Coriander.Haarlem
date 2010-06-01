@@ -10,7 +10,6 @@ import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import jetbrains.buildServer.web.openapi.PluginDescriptor
 import coriander.haarlem.controllers.ReleasesController
 import coriander.haarlem.core.calendar.{FilterOptions, IBuildFinder}
-import org.joda.time.{Instant, Interval}
 import org.joda.time.Days._
 import coriander.haarlem.matchers.FilterOptionsMatcher._
 import org.junit.{Ignore, Before, Test}
@@ -18,6 +17,7 @@ import coriander.haarlem.models.ReleasesModel
 import jetbrains.buildServer.serverSide.{SFinishedBuild, ProjectManager}
 import coriander.haarlem.core.Convert._
 import org.springframework.web.servlet.ModelAndView
+import org.joda.time.{DateMidnight, Instant, Interval}
 
 class ReleasesControllerTests extends ControllerUnitTest {
 	@Before
@@ -165,9 +165,9 @@ class ReleasesControllerTests extends ControllerUnitTest {
 	private var matching 		: String = null
 
 	private lazy val now 				= new Instant
-	private lazy val yesterday 			= new Instant().minus(days(1).toStandardDuration)
-	private lazy val fourteenDaysAgo 	= new Instant().minus(days(14).toStandardDuration)
-	private lazy val sevenDaysAgo 		= new Instant().minus(days(7).toStandardDuration)
+	private lazy val yesterday 			= new DateMidnight(now).minus(days(1)).toInstant //new Instant().minus(days(1).toStandardDuration)
+	private lazy val fourteenDaysAgo 	= new DateMidnight(now).minus(days(14)).toInstant
+	private lazy val sevenDaysAgo 		= new DateMidnight(now).minus(days(7)).toInstant
 	private lazy val theLastTwoWeeks 	= new Interval(fourteenDaysAgo, now)
 	private lazy val theLastSevenDays 	= new Interval(sevenDaysAgo, now)
 	private lazy val theLastDay 		= new Interval(yesterday, now)

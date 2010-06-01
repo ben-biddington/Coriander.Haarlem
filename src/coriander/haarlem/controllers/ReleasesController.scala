@@ -2,7 +2,7 @@ package coriander.haarlem.controllers
 
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import org.springframework.web.servlet.ModelAndView
-import jetbrains.buildServer.web.openapi.{WebControllerManager, PluginDescriptor}
+import jetbrains.buildServer.web.openapi.{PluginDescriptor}
 import coriander.haarlem.models.ReleasesModel
 import coriander.haarlem.core.Convert._
 import org.joda.time._
@@ -86,7 +86,7 @@ class ReleasesController(
 	private def parse(now : Instant, what : String) = new InstantParser(now).parse(what)
 
 	private lazy val view 			= pluginDescriptor.getPluginResourcesPath + "/server/releases/default.jsp"
-	private lazy val sevenDaysAgo 				= new Instant().minus(days(7).toStandardDuration)
+	private lazy val sevenDaysAgo 				= new DateMidnight(new Instant).minus(days(7)).toInstant
 	private lazy val DEFAULT 					= sevenDaysAgo
 	private lazy val DEFAULT_BUILD_COUNT 		= 25
 	private lazy val DEFAULT_ROUTE 				= "releases.html"
