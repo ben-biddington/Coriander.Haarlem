@@ -1,11 +1,11 @@
 package coriander.haarlem.unit.tests.controllers
 
 import org.mockito.Mockito._
+import org.mockito.Matchers._
 import org.junit.Assert._
 import org.hamcrest.core.Is._
 import org.hamcrest.core.IsNot._
 import org.hamcrest.core.IsEqual._
-import org.mockito.Matchers._
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import jetbrains.buildServer.web.openapi.PluginDescriptor
 import coriander.haarlem.controllers.ReleasesController
@@ -76,9 +76,9 @@ class ReleasesControllerTests extends ControllerUnitTest {
 		))
 
 		when_matching_supplied_with_required_count_as(10, "live")
+		
 		val result : ModelAndView = controller.go(request, response)
 		val model : ReleasesModel = result.getModel.get("results").asInstanceOf[ReleasesModel]
-		println(model.getBuilds.size)
 
 		assertThat(model.getBuilds.size, is(equalTo(2)))
 	}

@@ -1,4 +1,6 @@
 <%@ page import="java.util.Collection" %>
+<%@ page import="org.joda.time.DateTime" %>
+<%@ page import="org.joda.time.format.DateTimeFormat" %>
 <%@page import="jetbrains.buildServer.serverSide.tracker.EventSubscription" %>
 <%@include file="../include-internal.jsp"%>
 <c:set var="loadingWarningDisabled" value="true" scope="request"/>
@@ -18,8 +20,8 @@
     </jsp:attribute>
 
     <jsp:attribute name="body_include">
-        <p>${results.now}</p>
-        <p>Results (from: ${results.interval.start} to: ${results.interval.end})</p>
+        <p>${results.today}</p>
+        <p>Results (${results.count}) for ${results.intervalInDays} days (${results.intervalStart} - ${results.intervalEnd})</p>
 
         <!-- @see: ROOT/WEB-INF/tags/historyTable.tag -->
         <table cellspacing="0" class="testList historyList dark borderBottom">
