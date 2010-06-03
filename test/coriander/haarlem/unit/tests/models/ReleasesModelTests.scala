@@ -12,7 +12,7 @@ import coriander.haarlem.core.Convert._
 import collection.mutable.ListBuffer
 import org.mockito.Mockito._
 import org.mockito.Matchers._
-import org.joda.time.{Period, DateMidnight, Interval}
+import org.joda.time.{DateTime, Period, DateMidnight, Interval}
 
 class ReleasesModelTests extends Spec
 	with MustMatchers
@@ -20,6 +20,7 @@ class ReleasesModelTests extends Spec
 
 	override def beforeEach() {
 		model = null
+		today = DEFAULT_TODAY
 	}
 
 	describe("getIntervalInDays") {
@@ -50,9 +51,18 @@ class ReleasesModelTests extends Spec
 
 	describe("getIntervalEnd") {
 		it("is a string representing the end of the interval") {
+			given_today_is(firstBikiniDisplayedInParis.plusDays(1))
 			given_a_one_day_interval_from_the_day_before_the_first_bikini_to_the_day_of_the_first_bikini
 			
 			model.getIntervalEnd must equal("03 Jun 1946")
+		}
+
+		it("is \"Today\" if the interval ends on today") {
+			given_today_is(firstBikiniDisplayedInParis)
+			
+			given_a_one_day_interval_from_the_day_before_the_first_bikini_to_the_day_of_the_first_bikini
+
+			model.getIntervalEnd must equal("Today")
 		}
 	}
 
@@ -73,6 +83,14 @@ class ReleasesModelTests extends Spec
 		}
 	}
 
+	private def given_today_is(when : DateMidnight) {
+		given_today_is(when.toDateTime)
+	}
+
+	private def given_today_is(when : DateTime) {
+		today = when
+	}
+
 	private def given_zero_builds() {
 		given_builds(0)
 	}
@@ -80,23 +98,27 @@ class ReleasesModelTests extends Spec
 	private def given_builds(howMany : Int) {
 		val theList = (0 until howMany).map(count => mock(classOf[SFinishedBuild]))
 		
-		val interval = new Interval(oneDay, firstBikiniDisplayedInParis)
-		model = new ReleasesModel(toJavaList(theList), interval, firstBikiniDisplayedInParis)
+		val interval = new Interval(oneDay, firstBikiniDisplayedInParis.toInstant)
+		model = new ReleasesModel(toJavaList(theList), interval, today.toInstant)
 	}
 
 	private def given_a_one_day_interval_from_the_day_before_the_first_bikini_to_the_day_of_the_first_bikini() {
-		val interval = new Interval(oneDay, firstBikiniDisplayedInParis)
-		model = new ReleasesModel(null, interval, firstBikiniDisplayedInParis)
+		val interval = new Interval(oneDay, firstBikiniDisplayedInParis.toInstant)
+
+		println(today)
+		model = new ReleasesModel(null, interval, today.toInstant)
 	}
 
 	private def given_a_three_hour_interval_on_the_day_of_the_first_bikini() {
-		val interval = new Interval(threeHours, firstBikiniDisplayedInParis)
+		val interval = new Interval(threeHours, firstBikiniDisplayedInParis.toInstant)
 
-		model = new ReleasesModel(null, interval, firstBikiniDisplayedInParis)
+		model = new ReleasesModel(null, interval, today.toInstant)
 	}
 
 	private var model : ReleasesModel = null
-	private lazy val firstBikiniDisplayedInParis = new DateMidnight(1946, JUNE, 3, UTC).toInstant
+	private lazy val firstBikiniDisplayedInParis = new DateMidnight(1946, JUNE, 3, UTC)
+	private var today : DateTime = null
+	private val DEFAULT_TODAY = new DateTime
 	private lazy val threeHours = new Period(hours(3))
 	private lazy val oneDay = new Period(days(1))
 	private lazy val twoDays = new Period(days(2))
