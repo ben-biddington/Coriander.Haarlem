@@ -105,7 +105,6 @@ class ReleasesModelTests extends Spec
 	private def given_a_one_day_interval_from_the_day_before_the_first_bikini_to_the_day_of_the_first_bikini() {
 		val interval = new Interval(oneDay, firstBikiniDisplayedInParis.toInstant)
 
-		println(today)
 		model = new ReleasesModel(null, interval, today.toInstant)
 	}
 

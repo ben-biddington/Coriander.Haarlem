@@ -36,7 +36,7 @@
             includes="**/*.*"
         />
         <copyfile
-            src="${basedir}\teamcity-plugin.xml"
+            src="build/teamcity-plugin.xml"
             dest="${basedir}\buildServerResources"
         />
     </target>
@@ -95,7 +95,7 @@
 
         <copy file="${jar.home}\${jar.name}" todir="${zip.home}\temp\server" />
         <copy file="${lib.home}\scala-library.jar" todir="${zip.home}\temp\server" />
-        <copy file="${basedir}\teamcity-plugin.xml" todir="${zip.home}\temp" />
+        <copy file="build/teamcity-plugin.xml" todir="${zip.home}\temp" />
 
         <zip destfile="${zip.path}">
             <fileset dir="${zip.home}\temp\" />
