@@ -39,7 +39,7 @@
             }
             div#today div.day h1 { margin:0; line-spacing:0px; line-height:normal; }
             div#today div.month { color: black; }
-            div#info    { float:left; padding-left:5px; padding-right:5px;}
+            div#info    { float:left; padding-right:5px;}
             div#results { float:left; }
             div#results table.testList { width:900px; }
             div#results p.summary { padding:2px; padding-left:5px; }
