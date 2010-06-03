@@ -4,7 +4,7 @@ import org.scalatest.{Spec, BeforeAndAfterEach}
 import org.scalatest.matchers.{MustMatchers}
 import coriander.haarlem.models.ReleasesModel
 import org.joda.time.Days._
-import org.joda.time.{DateMidnight, Interval}
+import org.joda.time.Hours._
 import org.joda.time.DateTimeConstants._
 import org.joda.time.DateTimeZone._
 import jetbrains.buildServer.serverSide.SFinishedBuild
@@ -12,6 +12,7 @@ import coriander.haarlem.core.Convert._
 import collection.mutable.ListBuffer
 import org.mockito.Mockito._
 import org.mockito.Matchers._
+import org.joda.time.{Period, DateMidnight, Interval}
 
 class ReleasesModelTests extends Spec
 	with MustMatchers
@@ -23,25 +24,33 @@ class ReleasesModelTests extends Spec
 
 	describe("getIntervalInDays") {
 		it("returns the same number of days as the interval supplied") { 
-			given_a_two_day_interval_from_two_days_before_the_first_bikini
+			given_a_one_day_interval_from_the_day_before_the_first_bikini_to_the_day_of_the_first_bikini
 
 			val numberOfDays = model.getIntervalInDays
 
-			numberOfDays must equal(2)
+			numberOfDays must equal(1)
+		}
+
+		it("returns 1 when the interval start and end are less than 24 hours apart") {
+			given_a_three_hour_interval_on_the_day_of_the_first_bikini
+
+			val numberOfDays = model.getIntervalInDays
+
+			numberOfDays must equal(1)
 		}
 	}
 
 	describe("getIntervalStart") {
 		it("is a string representing the start of the interval") {
-			given_a_two_day_interval_from_two_days_before_the_first_bikini
+			given_a_one_day_interval_from_the_day_before_the_first_bikini_to_the_day_of_the_first_bikini
 
-			model.getIntervalStart must equal("01 Jun 1946")
+			model.getIntervalStart must equal("02 Jun 1946")
 		}
 	}
 
 	describe("getIntervalEnd") {
 		it("is a string representing the end of the interval") {
-			given_a_two_day_interval_from_two_days_before_the_first_bikini
+			given_a_one_day_interval_from_the_day_before_the_first_bikini_to_the_day_of_the_first_bikini
 			
 			model.getIntervalEnd must equal("03 Jun 1946")
 		}
@@ -71,14 +80,24 @@ class ReleasesModelTests extends Spec
 	private def given_builds(howMany : Int) {
 		val theList = (0 until howMany).map(count => mock(classOf[SFinishedBuild]))
 		
-		model = new ReleasesModel(toJavaList(theList), twoDays, firstBikiniDisplayedInParis)
+		val interval = new Interval(oneDay, firstBikiniDisplayedInParis)
+		model = new ReleasesModel(toJavaList(theList), interval, firstBikiniDisplayedInParis)
 	}
 
-	private def given_a_two_day_interval_from_two_days_before_the_first_bikini() {
-		model = new ReleasesModel(null, twoDays, firstBikiniDisplayedInParis)
+	private def given_a_one_day_interval_from_the_day_before_the_first_bikini_to_the_day_of_the_first_bikini() {
+		val interval = new Interval(oneDay, firstBikiniDisplayedInParis)
+		model = new ReleasesModel(null, interval, firstBikiniDisplayedInParis)
+	}
+
+	private def given_a_three_hour_interval_on_the_day_of_the_first_bikini() {
+		val interval = new Interval(threeHours, firstBikiniDisplayedInParis)
+
+		model = new ReleasesModel(null, interval, firstBikiniDisplayedInParis)
 	}
 
 	private var model : ReleasesModel = null
 	private lazy val firstBikiniDisplayedInParis = new DateMidnight(1946, JUNE, 3, UTC).toInstant
-	private lazy val twoDays = new Interval(days(2).toPeriod, firstBikiniDisplayedInParis)
+	private lazy val threeHours = new Period(hours(3))
+	private lazy val oneDay = new Period(days(1))
+	private lazy val twoDays = new Period(days(2))
 }

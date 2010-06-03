@@ -15,6 +15,6 @@ class ReleasesModel(
 	def getToday 			= now.toDateTime.toLocalDateTime.toString("dd MMM yyyy")
 	def getIntervalStart 	= interval.getStart.toLocalDateTime.toString("dd MMM yyyy")
 	def getIntervalEnd 		= interval.getEnd.toLocalDateTime.toString("dd MMM yyyy")
-	def getIntervalInDays 	= daysIn(interval).getDays
+	def getIntervalInDays 	= Math.max(daysIn(interval).getDays, 1)
 	def getCount			= builds.size
 }
