@@ -17,6 +17,9 @@ class ReleasesModel(
 	def getIntervalEnd 		= selectIntervalEnd
 	def getIntervalInDays 	= Math.max(daysIn(interval).getDays, 1)
 	def getCount			= builds.size
+	def getDayOfMonth		= now.toDateTime.toLocalDateTime.getDayOfMonth
+	def getMonthOfYear		= now.toDateTime.toLocalDateTime.toString("MMM")
+	def getError			= now.toDateTime.toLocalDateTime.toString("MMM")
 
 	private def selectIntervalEnd : String = {
 		if (
@@ -25,4 +28,10 @@ class ReleasesModel(
 		) "Today"
 		else interval.getEnd.toLocalDateTime.toString("dd MMM yyyy")
 	}
+
+	def addError(what : String) {
+		error.append(what)
+	}
+
+	private lazy val error : StringBuffer = new StringBuffer()
 }

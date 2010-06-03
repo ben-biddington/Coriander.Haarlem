@@ -83,6 +83,24 @@ class ReleasesModelTests extends Spec
 		}
 	}
 
+	describe("getDayOfMonth") {
+		it("returns the day of the month") {
+			given_today_is(firstBikiniDisplayedInParis)
+			given_a_new_model
+			
+			model.getDayOfMonth must equal(3)
+		}
+	}
+
+	describe("getMonthOfYear") {
+		it("returns the day of the month") {
+			given_today_is(firstBikiniDisplayedInParis)
+			given_a_new_model
+
+			model.getMonthOfYear must equal("Jun")
+		}
+	}
+
 	private def given_today_is(when : DateMidnight) {
 		given_today_is(when.toDateTime)
 	}
@@ -91,7 +109,11 @@ class ReleasesModelTests extends Spec
 		today = when
 	}
 
-	private def given_zero_builds() {
+	private def given_a_new_model {
+		given_zero_builds
+	}
+
+	private def given_zero_builds {
 		given_builds(0)
 	}
 
