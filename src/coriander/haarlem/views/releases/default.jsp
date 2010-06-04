@@ -1,12 +1,12 @@
 <%@ page import="java.util.Collection" %>
 <%@ page import="org.joda.time.DateTime" %>
+<%@ page import="org.joda.time.Interval" %>
 <%@ page import="org.joda.time.format.DateTimeFormat" %>
 <%@page import="jetbrains.buildServer.serverSide.tracker.EventSubscription" %>
 <%@include file="../include-internal.jsp"%>
 <c:set var="loadingWarningDisabled" value="true" scope="request"/>
 <c:set var="title" value="Recent releases" scope="request"/>
 <jsp:useBean id="currentUser" type="jetbrains.buildServer.users.SUser" scope="request"/>
-
 <bs:page>
     <jsp:attribute name="head_include">
         <bs:linkCSS>
@@ -47,23 +47,26 @@
         <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Vollkorn|Lobster|Droid+Serif" />
         <style type="text/css">
             div#results { }
-            div#info { position:relative; }
 
             div#today, div#intervalStart {
-                width:50px; border: 1px solid #D0D0D0;
-                padding:2px; text-align: center;
+                width: 75px;
+                padding: 2px;
+                border: 1px solid #D0D0D0;
+                text-align: center;
                 border-top-left-radius: 4px;
                 border-top-right-radius: 4px;
+                border-bottom-right-radius: 4px;
+                border-bottom-left-radius: 4px;
                 -moz-border-top-left-radius: 4px;
                 -moz-border-top-right-radius: 4px;
+                -moz-border-bottom-right-radius: 4px;
+                -moz-border-bottom-left-radius: 4px;
                 -webkit-border-top-left-radius: 4px;
-                -webkit-border-bottom-left-radius: 4px;
                 -webkit-border-top-right-radius: 4px;
                 -webkit-border-bottom-right-radius: 4px;
+                -webkit-border-bottom-left-radius: 4px;
             }
 
-            div#today { margin-left: 10px; position:relative; }
-            div#today, div#intervalStart { float: left; }
             div#today div.day {
                 color: #FF0000;
                 background-color: #F0F0F0;
@@ -73,19 +76,19 @@
             div#today div.day, div#intervalStart div.day {
                 font-family: "Droid Serif";
                 font-size: 2em;
-                background-color: #F0F0F0;
+                background-color: #FFF;
                 padding: 2px;
                 height: 50px;
             }
 
             div#intervalStart div.day {
                 color: #00FF00;
-                background-color: #F0F0F0;
             }
 
             div.day h1 { margin:0; line-spacing:0px; line-height:normal; }
 
             div#results table.testList { width:100%; }
+
             div#results table.testList a.project {
                 width:100px;
                 overflow:hidden;
@@ -96,6 +99,11 @@
             div#results p.summary { padding:2px; padding-left:5px; }
 
             table.buildTypeHeader td.header { width: 125px; }
+            table.buildTypeHeader td#info {
+                padding-right:10px;
+                padding-left:10px;
+                text-align:center;
+            }
         </style>
     </jsp:attribute>
 
@@ -105,16 +113,14 @@
         <table class="buildTypeHeader" cellspacing="0">
             <tbody>
                 <tr>
-                    <td class="header">
-                        <div id="info">
-                            <div id="intervalStart" title="${results.intervalStart}">
-                                <div class="day"><h1>${results.dayOfMonth}</h1></div>
-                                <div class="month">${results.monthOfYear}</div>
-                            </div>
-                            <div id="today" title="${results.today}">
-                                <div class="day"><h1>${results.dayOfMonth}</h1></div>
-                                <div class="month">${results.monthOfYear}</div>
-                            </div>
+                    <td id="info" class="header">
+                        <div id="intervalStart" title="${results.intervalStart}">
+                            <div class="day"><h1>${results.intervalStartDay}</h1></div>
+                            <div class="month">${results.intervalStartMonth}</div>
+                        </div>
+                        <div id="today" title="${results.today}">
+                            <div class="day"><h1>${results.dayOfMonth}</h1></div>
+                            <div class="month">${results.monthOfYear}</div>
                         </div>
                     </td>
                     <td class="details">

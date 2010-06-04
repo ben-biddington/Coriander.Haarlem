@@ -10,17 +10,19 @@ class ReleasesModel(
 	val interval : Interval,
 	val now : Instant
 ) {
-	def getBuilds 			= builds 	
-	def getInterval 		= interval
-	def getNow 				= now
-	def getToday 			= now.toDateTime.toLocalDateTime.toString("dd MMM yyyy")
-	def getIntervalStart 	= interval.getStart.toLocalDateTime.toString("dd MMM yyyy")
-	def getIntervalEnd 		= selectIntervalEnd
-	def getIntervalInDays 	= Math.max(daysIn(interval).getDays, 1)
-	def getCount			= builds.size
-	def getDayOfMonth		= now.toDateTime.toLocalDateTime.getDayOfMonth
-	def getMonthOfYear		= now.toDateTime.toLocalDateTime.toString("MMM")
-	def getErrors : String	= if (errors.isEmpty) "" else errors.toList.reduceLeft(_+ NEWLINE +_)
+	def getBuilds 				= builds
+	def getInterval 			= interval
+	def getNow 					= now
+	def getToday 				= now.toDateTime.toLocalDateTime.toString("dd MMM yyyy")
+	def getIntervalStart 		= interval.getStart.toLocalDateTime.toString("dd MMM yyyy")
+	def getIntervalStartDay 	= interval.getStart.toLocalDateTime.getDayOfMonth
+	def getIntervalStartMonth 	= interval.getStart.toLocalDateTime.toString("MMM")
+	def getIntervalEnd 			= selectIntervalEnd
+	def getIntervalInDays 		= Math.max(daysIn(interval).getDays, 1)
+	def getCount				= builds.size
+	def getDayOfMonth			= now.toDateTime.toLocalDateTime.getDayOfMonth
+	def getMonthOfYear			= now.toDateTime.toLocalDateTime.toString("MMM")
+	def getErrors : String		= if (errors.isEmpty) "" else errors.toList.reduceLeft(_+ NEWLINE +_)
 
 	def addError(what : String) = errors += what
 
