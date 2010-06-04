@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <project name="jarify" basedir="..\">
+    <property environment="env"/>
     <property name="app.name" value="Coriander.Haarlem"/>
     <property name="plugin.name" value="coriander-haarlem"/>
     <property name="plugin.dirname" value="coriander-haarlem"/>
-    <property name="plugin.directory" value="C:\Documents\.BuildServer\plugins"/>
     <property name="app.path" value="\${app.name}"/>
     <property name="app.version" value="0.0.1"/>
     <property name="src.home" value="${basedir}\src"/>
@@ -64,17 +64,17 @@
     </target>
 
     <target name="local.package.and.deploy" depends="jar,zip">
-        <exec executable="cmd">
+        <echo message="${env.PATH}" />
+        <exec executable="cmd" failonerror="true" >
             <arg value="/c"/>
             <arg value="build\local.deploy.bat ${zip.path}"/>
-            <arg value="-p"/>
         </exec>
 
         <antcall target="local.teamcity.restart" />
     </target>
 
-     <target name="local.clean">
-        <exec executable="cmd">
+    <target name="local.clean">
+        <exec executable="cmd" newenvironment="true">
             <arg value="/c"/>
             <arg value="build\local.clean.bat ${zip.path}"/>
             <arg value="-p"/>
@@ -100,5 +100,25 @@
         <zip destfile="${zip.path}">
             <fileset dir="${zip.home}\temp\" />
         </zip>
+    </target>
+
+    <target name="set teamcity build server root">
+        <input message="Enter the path to BuildServer root:"
+            addproperty="teamcity.buildserver.root"
+            defaultvalue=""
+        />
+                       
+        <exec executable="setx" failonerror="true" failifexecutionfails="true">
+            <arg value="TEAMCITY_BUILDSERVER_ROOT" />
+            <arg value="${teamcity.buildserver.root}" />
+        </exec>
+
+        <echo message="The teamcity build root has been set to ${teamcity.buildserver.root}" />
+    </target>
+
+    <target name="test">
+        <property environment="env"/>
+        <echo message="${env.HOME}"/>
+        <echo message="${zip.home}"/>
     </target>
 </project>
