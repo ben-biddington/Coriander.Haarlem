@@ -106,11 +106,11 @@ class ReleasesModelTests extends Spec
 			model = new ReleasesModel(null, null, null)
 
 			model.addError("1. Phil Murphy's hair.")
-			model.addError("2. The pedestrianization of Norwich city centre.")
+			model.addError("2. The pedestrianisation of Norwich city centre.")
 
 			model.getErrors must equal(
 				"1. Phil Murphy's hair." + NEWLINE +
-				"2. The pedestrianization of Norwich city centre."
+				"2. The pedestrianisation of Norwich city centre."
 			)
 		}
 
