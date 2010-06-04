@@ -83,6 +83,21 @@ class ReleasesControllerTests extends ControllerUnitTest {
 		assertThat(model.getBuilds.size, is(equalTo(2)))
 	}
 
+	@Test
+	def if_the_matching_parameter_is_not_a_valid_regex_then_an_error_is_returned() {
+		given_a_build_finder_that_returns(List(
+			newFakeBuildWithDescription("[live] release"),
+			newFakeBuildWithDescription("[uat] release")
+		))
+
+		when_matching_supplied_with_required_count_as(10, "[this is meant to be invalid[")
+
+		val result : ModelAndView = controller.go(request, response)
+		val model : ReleasesModel = result.getModel.get("results").asInstanceOf[ReleasesModel]
+
+		assertThat(model.getBuilds.size, is(equalTo(2)))
+	}
+
 	@Test @Ignore
 	def you_can_only_ask_for_up_to_the_last_100_for_performance_reasons {
 		 throw new Exception("PENDING")

@@ -101,6 +101,20 @@ class ReleasesModelTests extends Spec
 		}
 	}
 
+	describe("getErrors") {
+		it("returns the list of errors as one string") {
+			model = new ReleasesModel(null, null, null)
+
+			model.addError("1. Phil Murphy's hair.")
+			model.addError("2. The pedestrianization of Norwich city centre.")
+
+			model.getErrors must equal(
+				"1. Phil Murphy's hair." + NEWLINE +
+				"2. The pedestrianization of Norwich city centre."
+			)
+		}
+	}
+
 	private def given_today_is(when : DateMidnight) {
 		given_today_is(when.toDateTime)
 	}
@@ -143,4 +157,5 @@ class ReleasesModelTests extends Spec
 	private lazy val threeHours = new Period(hours(3))
 	private lazy val oneDay = new Period(days(1))
 	private lazy val twoDays = new Period(days(2))
+	private val NEWLINE = System.getProperty("line.separator")
 }
