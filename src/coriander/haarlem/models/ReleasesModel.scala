@@ -20,7 +20,7 @@ class ReleasesModel(
 	def getCount			= builds.size
 	def getDayOfMonth		= now.toDateTime.toLocalDateTime.getDayOfMonth
 	def getMonthOfYear		= now.toDateTime.toLocalDateTime.toString("MMM")
-	def getErrors : String	= errors.toList.reduceLeft(_+ NEWLINE +_)
+	def getErrors : String	= if (errors.isEmpty) "" else errors.toList.reduceLeft(_+ NEWLINE +_)
 
 	def addError(what : String) = errors += what
 

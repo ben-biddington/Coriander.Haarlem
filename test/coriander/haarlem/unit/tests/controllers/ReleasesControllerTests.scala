@@ -95,7 +95,7 @@ class ReleasesControllerTests extends ControllerUnitTest {
 		val result : ModelAndView = controller.go(request, response)
 		val model : ReleasesModel = result.getModel.get("results").asInstanceOf[ReleasesModel]
 
-		assertThat(model.getBuilds.size, is(equalTo(2)))
+		assertThat(model.getErrors, is(equalTo("xxx")))
 	}
 
 	@Test @Ignore

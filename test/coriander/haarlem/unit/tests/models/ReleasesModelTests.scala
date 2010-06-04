@@ -113,6 +113,11 @@ class ReleasesModelTests extends Spec
 				"2. The pedestrianization of Norwich city centre."
 			)
 		}
+
+		it("returns empty string when there are no errors") {
+			model = new ReleasesModel(null, null, null)
+			model.getErrors must equal("")
+		}
 	}
 
 	private def given_today_is(when : DateMidnight) {
