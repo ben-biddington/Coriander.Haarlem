@@ -70,7 +70,7 @@ class ReleasesControllerTests extends ControllerUnitTest {
 
 	@Test
 	def you_can_only_ask_for_builds_since_a_maximum_90_days_ago_for_performance_reasons {
-		when_since_supplied_as("900-days-ago")
+		when_since_supplied_as("91-days-ago")
 		then_builds_are_searched_in(theLastNinetyDays)
 	}
 
