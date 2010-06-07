@@ -44,10 +44,34 @@ class ReleasesControllerTests extends ControllerUnitTest {
 		then_builds_are_searched_in(theLastDay)
 	}
 
-	@Test @Ignore
+	@Test
 	def since_can_be_today {
-		throw new Exception("PENDING")
 		when_since_supplied_as("today")
+		then_builds_are_searched_in(today)
+	}
+
+	@Test
+	def since_can_be_yesterday {
+		when_since_supplied_as("yesterday")
+		then_builds_are_searched_in(theLastDay)
+	}
+
+	@Test
+	def since_can_have_count_zero_which_returns_builds_since_midnight_today {
+		when_since_supplied_as("0-days-ago")
+		then_builds_are_searched_in(today)
+	}
+	
+	@Test
+	def since_defaults_to_seven_days {
+		when_since_not_supplied
+		then_builds_are_searched_in(theLastSevenDays)
+	}
+
+	@Test
+	def you_can_only_ask_for_builds_since_a_maximum_90_days_ago_for_performance_reasons {
+		when_since_supplied_as("900-days-ago")
+		then_builds_are_searched_in(theLastNinetyDays)
 	}
 
 	@Test
@@ -55,13 +79,7 @@ class ReleasesControllerTests extends ControllerUnitTest {
 		when_last_supplied_as(10)
 		then_we_search_for_the_last_with_no_match(10)
 	}
-
-	@Test
-	def since_defaults_to_seven_days {
-		when_since_not_supplied
-		then_builds_are_searched_in(theLastSevenDays)
-	}
-
+	
 	@Test
 	def accepts_matching_parameter {
 		when_matching_supplied_with_required_count_as(10, "live")
@@ -83,7 +101,7 @@ class ReleasesControllerTests extends ControllerUnitTest {
 		assertThat(model.getBuilds.size, is(equalTo(2)))
 	}
 
-	@Test
+	@Test @Ignore
 	def if_the_matching_parameter_is_not_a_valid_regex_then_an_error_is_returned() {
 		given_a_build_finder_that_returns(List(
 			newFakeBuildWithDescription("[live] release"),
@@ -100,12 +118,7 @@ class ReleasesControllerTests extends ControllerUnitTest {
 
 	@Test @Ignore
 	def you_can_only_ask_for_up_to_the_last_100_for_performance_reasons {
-		 throw new Exception("PENDING")
-	}
-
-	@Test @Ignore
-	def you_can_only_ask_for_builds_since_a_maximum_31_days_ago_for_performance_reasons {
-		throw new Exception("PENDING")
+		fail("PENDING")
 	}
 
 	@Test @Ignore
@@ -180,10 +193,13 @@ class ReleasesControllerTests extends ControllerUnitTest {
 	private var matching 		: String = null
 
 	private lazy val now 				= new Instant
-	private lazy val yesterday 			= new DateMidnight(now).minus(days(1)).toInstant //new Instant().minus(days(1).toStandardDuration)
+	private lazy val yesterday 			= new DateMidnight(now).minus(days(1)).toInstant
 	private lazy val fourteenDaysAgo 	= new DateMidnight(now).minus(days(14)).toInstant
 	private lazy val sevenDaysAgo 		= new DateMidnight(now).minus(days(7)).toInstant
+	private lazy val ninetyDaysAgo 		= new DateMidnight(now).minus(days(90)).toInstant
+	private lazy val today 				= new Interval(new DateMidnight(now), now)
 	private lazy val theLastTwoWeeks 	= new Interval(fourteenDaysAgo, now)
 	private lazy val theLastSevenDays 	= new Interval(sevenDaysAgo, now)
+	private lazy val theLastNinetyDays 	= new Interval(ninetyDaysAgo, now)
 	private lazy val theLastDay 		= new Interval(yesterday, now)
 }

@@ -4,6 +4,15 @@
 <%@ page import="org.joda.time.format.DateTimeFormat" %>
 <%@page import="jetbrains.buildServer.serverSide.tracker.EventSubscription" %>
 <%@include file="../include-internal.jsp"%>
+<c:set var="xxx" scope="request" value="${pageContext.request.contextPath}"/>
+<c:set var="currentUrl" scope="request">
+    <c:url value="/releases.html">
+        <c:param name="matching" value="${param.matching}"/>
+        <c:param name="last" value="${param.last}"/>
+        <c:param name="since" value="${param.since}"/>
+    </c:url>
+</c:set>
+                        
 <c:set var="loadingWarningDisabled" value="true" scope="request"/>
 <c:set var="title" value="Recent releases" scope="request"/>
 <jsp:useBean id="currentUser" type="jetbrains.buildServer.users.SUser" scope="request"/>
@@ -45,6 +54,8 @@
             /js/bs/buildType.js
         </bs:linkScript>
         <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Vollkorn|Lobster|Droid+Serif" />
+        <link rel="stylesheet" type="text/css" href="releases.css" />
+
         <style type="text/css">
             div#results { }
 
@@ -52,7 +63,7 @@
                 width: 75px;
                 padding: 2px;
                 border: 1px solid #D0D0D0;
-                text-align: center;
+                margin: 0px auto;
                 border-top-left-radius: 4px;
                 border-top-right-radius: 4px;
                 border-bottom-right-radius: 4px;
@@ -108,10 +119,27 @@
     </jsp:attribute>
 
     <jsp:attribute name="body_include">
-        <p class="summary">Results (${results.count}) for ${results.intervalInDays} days (${results.intervalStart} - ${results.intervalEnd})</p>            
+
+        <c:out value="${xxx}" />
+        <p class="summary">
+            Results (${results.count})
+            for ${results.intervalInDays} days
+            (${results.intervalStart} - ${results.intervalEnd})
+        </p>            
 
         <table class="buildTypeHeader" cellspacing="0">
             <tbody>
+                <tr>
+                    <td class="header">&nbsp;</td>
+                    <td class="details">
+                        <form method="get" action="${xxx}">
+                            <input type="text" id="matching" name="matching"
+                                size="100" style="margin:0; padding:0; width: 8em;"
+                                value="${param.matching}" />
+                            <input type="submit" value="Filter" />
+                        </form>
+                    </td>
+                </tr>
                 <tr>
                     <td id="info" class="header">
                         <div id="intervalStart" title="${results.intervalStart}">

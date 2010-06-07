@@ -37,10 +37,9 @@ class InstantParserTests extends Spec
 			then_result_is(midnightYesterday)
 		}
 
-		it("fails when number equal to zero") {
-			intercept[IllegalArgumentException] {
-				when_parsing("0-day-ago")
-			}
+		it("just returns midnight today when number equal to zero") {
+			when_parsing("0-day-ago")
+			then_result_is(midnightToday)
 		}
 
 		it("rounds down the to nearest prior midnight") {
@@ -154,6 +153,7 @@ class InstantParserTests extends Spec
 	private var result : Instant = null
 
 	private val midnight 				= new DateMidnight(now)
+	private val midnightToday 			= midnight.toInstant
 	private val midnightYesterday 		= midnight.minus(days(1)).toInstant
 	private val midnightSevenDaysAgo 	= midnight.minus(days(7)).toInstant
 	private val fourteenDaysAgo 		= midnight.minus(days(14)).toInstant

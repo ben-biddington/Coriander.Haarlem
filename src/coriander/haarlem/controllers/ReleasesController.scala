@@ -37,7 +37,11 @@ class ReleasesController(
 		val matching = if (query.contains("matching")) query.value("matching") else null
 
 		if (query.contains("since")) {
-			interval = new Interval(fromWhen(now, query), now)
+			val sinceWhen = fromWhen(now, query)
+
+			println(sinceWhen)
+
+			interval = new Interval(sinceWhen, now)
 			result = buildFinder.find(new FilterOptions(interval, newBuildMatcher(matching)))
 		} else {
 			val lastHowMany = if (query.containsWithValue("last"))
@@ -79,15 +83,26 @@ class ReleasesController(
 
 	private def fromWhen(now : Instant, query : Query) : Instant = {
 		var value = query.value("since")
+		var result = DEFAULT_DAYS_AGO
+		
+		if (value != null) {
+			result = parse(now, value)
+		
+			if (result.isBefore(MAX_DAYS_AGO)) {
+				result = new DateMidnight(now).minus(days(90)).toInstant
+			}
+		}
 
-		if (value != null) parse(now, value) else DEFAULT
+		return result
 	}
 
 	private def parse(now : Instant, what : String) = new InstantParser(now).parse(what)
 
-	private lazy val view 			= pluginDescriptor.getPluginResourcesPath + "/server/releases/default.jsp"
+	private lazy val view 						= pluginDescriptor.getPluginResourcesPath + "/server/releases/default.jsp"
 	private lazy val sevenDaysAgo 				= new DateMidnight(new Instant).minus(days(7)).toInstant
-	private lazy val DEFAULT 					= sevenDaysAgo
+	private lazy val ninetyDaysAgo 				= new DateMidnight(new Instant).minus(days(90)).toInstant
+	private lazy val DEFAULT_DAYS_AGO 			= sevenDaysAgo
+	private lazy val MAX_DAYS_AGO 				= ninetyDaysAgo
 	private lazy val DEFAULT_BUILD_COUNT 		= 25
 	private lazy val DEFAULT_ROUTE 				= "releases.html"
 	private lazy val matcher 					= new StringMatcher()
