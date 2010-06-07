@@ -72,6 +72,15 @@ class ReleasesControllerTests extends ControllerUnitTest {
 	def you_can_only_ask_for_builds_since_a_maximum_90_days_ago_for_performance_reasons {
 		when_since_supplied_as("91-days-ago")
 		then_builds_are_searched_in(theLastNinetyDays)
+		then_there_is_an_error("Maximum limit <90> exceeded.")
+	}
+
+	private def then_there_is_an_error(what : String) {
+		require(result != null)
+		assertTrue(
+			"Expected <" + result.getErrors + "> " +
+			"to contain <" + what + ">", result.getErrors.contains(what)
+		)
 	}
 
 	@Test
@@ -149,7 +158,8 @@ class ReleasesControllerTests extends ControllerUnitTest {
 	private def when_since_supplied_as(what : String) {
 		stub(request.getQueryString).toReturn("since=" + what)
 
-		controller.go(request, response)
+		result = controller.go(request, response).
+			getModel.get("results").asInstanceOf[ReleasesModel]
 	}
 
 	private def when_last_supplied_as(howMany : Int) {

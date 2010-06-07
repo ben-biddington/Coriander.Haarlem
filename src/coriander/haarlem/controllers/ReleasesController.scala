@@ -12,6 +12,7 @@ import coriander.haarlem.core.calendar.{InstantParser, FilterOptions, IBuildFind
 import java.lang.Integer._
 import coriander.haarlem.core.StringMatcher
 import jetbrains.buildServer.serverSide.{SFinishedBuild}
+import collection.mutable.ListBuffer
 
 class ReleasesController(
 	pluginDescriptor 	: PluginDescriptor,
@@ -23,10 +24,13 @@ class ReleasesController(
 		request : HttpServletRequest,
 		response : HttpServletResponse
 	) : ModelAndView = {
+		val model = find(Query(request.getQueryString))
+		errors.foreach(err => model.addError(err))
+		
 		new ModelAndView(
 			view,
 			"results",
-			find(Query(request.getQueryString)) 
+			model
 		)
 	}
 
@@ -89,7 +93,9 @@ class ReleasesController(
 			result = parse(now, value)
 		
 			if (result.isBefore(MAX_DAYS_AGO)) {
-				result = new DateMidnight(now).minus(days(90)).toInstant
+				result = new DateMidnight(now).minus(days(MAX_DAY_COUNT)).toInstant
+
+				errors += "Maximum limit <" + MAX_DAY_COUNT + "> exceeded."
 			}
 		}
 
@@ -98,12 +104,14 @@ class ReleasesController(
 
 	private def parse(now : Instant, what : String) = new InstantParser(now).parse(what)
 
+	private lazy val MAX_DAY_COUNT 				= 90
+	private lazy val DEFAULT_BUILD_COUNT 		= 25
 	private lazy val view 						= pluginDescriptor.getPluginResourcesPath + "/server/releases/default.jsp"
 	private lazy val sevenDaysAgo 				= new DateMidnight(new Instant).minus(days(7)).toInstant
-	private lazy val ninetyDaysAgo 				= new DateMidnight(new Instant).minus(days(90)).toInstant
+	private lazy val ninetyDaysAgo 				= new DateMidnight(new Instant).minus(days(MAX_DAY_COUNT)).toInstant
 	private lazy val DEFAULT_DAYS_AGO 			= sevenDaysAgo
 	private lazy val MAX_DAYS_AGO 				= ninetyDaysAgo
-	private lazy val DEFAULT_BUILD_COUNT 		= 25
 	private lazy val DEFAULT_ROUTE 				= "releases.html"
 	private lazy val matcher 					= new StringMatcher()
+	private lazy val errors						= new ListBuffer[String]()
 }
