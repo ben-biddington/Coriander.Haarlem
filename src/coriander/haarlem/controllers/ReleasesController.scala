@@ -24,9 +24,10 @@ class ReleasesController(
 		request : HttpServletRequest,
 		response : HttpServletResponse
 	) : ModelAndView = {
+		errors.clear
 		val model = find(Query(request.getQueryString))
-		errors.foreach(err => model.addError(err))
-		
+		errors.foreach(model.addError(_))
+
 		new ModelAndView(
 			view,
 			"results",
@@ -35,31 +36,42 @@ class ReleasesController(
 	}
 
 	private def find(query : Query) : ReleasesModel = {
-	 	val now = new Instant
 		var result : List[SFinishedBuild] = null
 		var interval = new Interval(0L, 0L)
 		val matching = if (query.contains("matching")) query.value("matching") else null
-
-		if (query.contains("since")) {
-			val sinceWhen = fromWhen(now, query)
-
-			println(sinceWhen)
-
-			interval = new Interval(sinceWhen, now)
-			result = buildFinder.find(new FilterOptions(interval, newBuildMatcher(matching)))
-		} else {
-			val lastHowMany = if (query.containsWithValue("last"))
-				parseInt(query.value("last"))
+		val lastHowMany = if (query.containsWithValue("last"))
+			parseInt(query.value("last"))
 			else DEFAULT_BUILD_COUNT
-
+		val since = query.value("since")
+		
+		if (query.contains("since")) {
+			val sinceWhen = fromWhen(now, since)
+			interval = new Interval(sinceWhen, now)
+			result = findSince(interval, matching)
+		} else {
 			result = findLast(lastHowMany, matching)
-			interval = calculateInterval(result)
+			interval = calculateSpanningInterval(result)
 		}
 
 		new ReleasesModel(toJavaList(result), interval, now)
 	}
 
-	private def calculateInterval(builds : List[SFinishedBuild]) : Interval = {
+	private def findSince(in : Interval, matching : String) = {
+		val matcher : SFinishedBuild => Boolean =
+			if (matching != null) newBuildMatcher(matching) else build => true
+		
+		buildFinder.find(new FilterOptions(in, matcher))
+	}
+
+	private def findLast(howMany : Int, matching : String) = {
+		val options =
+			if (matching != null) new FilterOptions(null, newBuildMatcher(matching))
+			else FilterOptions.NONE
+
+		buildFinder.last(howMany, options)
+	}
+
+	private def calculateSpanningInterval(builds : List[SFinishedBuild]) : Interval = {
 		if (builds.size == 0)
 			 return new Interval(0L, 0L)
 
@@ -70,14 +82,6 @@ class ReleasesController(
 		new Interval(to, from)
 	}
 
-	private def findLast(howMany : Int, matching : String) = {
-		val options =
-			if(matching != null) new FilterOptions(null, newBuildMatcher(matching))
-			else FilterOptions.NONE
-
-		buildFinder.last(howMany, options)
-	}
-
 	private def newBuildMatcher(thatMatches : String) : SFinishedBuild => Boolean = {
 		build => {
 			matcher.matches(build.getBuildDescription, thatMatches) ||
@@ -85,33 +89,35 @@ class ReleasesController(
 		}
 	}
 
-	private def fromWhen(now : Instant, query : Query) : Instant = {
-		var value = query.value("since")
+	private def fromWhen(now : Instant, since : String) : Instant = {
 		var result = DEFAULT_DAYS_AGO
 		
-		if (value != null) {
-			result = parse(now, value)
-		
+		if (since != null) {
+			result = parse(now, since)
+
 			if (result.isBefore(MAX_DAYS_AGO)) {
 				result = new DateMidnight(now).minus(days(MAX_DAY_COUNT)).toInstant
 
-				errors += "Maximum limit <" + MAX_DAY_COUNT + "> exceeded."
+				error("The requested number of days exceeds the limit of <" + MAX_DAY_COUNT + ">, results have been truncated")
 			}
 		}
 
 		return result
 	}
 
+	private def error(what : String) = errors += what
+
 	private def parse(now : Instant, what : String) = new InstantParser(now).parse(what)
 
-	private lazy val MAX_DAY_COUNT 				= 90
-	private lazy val DEFAULT_BUILD_COUNT 		= 25
-	private lazy val view 						= pluginDescriptor.getPluginResourcesPath + "/server/releases/default.jsp"
-	private lazy val sevenDaysAgo 				= new DateMidnight(new Instant).minus(days(7)).toInstant
-	private lazy val ninetyDaysAgo 				= new DateMidnight(new Instant).minus(days(MAX_DAY_COUNT)).toInstant
-	private lazy val DEFAULT_DAYS_AGO 			= sevenDaysAgo
-	private lazy val MAX_DAYS_AGO 				= ninetyDaysAgo
-	private lazy val DEFAULT_ROUTE 				= "releases.html"
-	private lazy val matcher 					= new StringMatcher()
-	private lazy val errors						= new ListBuffer[String]()
+	private lazy val now 					= new Instant
+	private lazy val MAX_DAY_COUNT 			= 90
+	private lazy val DEFAULT_BUILD_COUNT 	= 25
+	private lazy val view 					= pluginDescriptor.getPluginResourcesPath + "/server/releases/default.jsp"
+	private lazy val sevenDaysAgo 			= new DateMidnight(new Instant).minus(days(7)).toInstant
+	private lazy val ninetyDaysAgo 			= new DateMidnight(new Instant).minus(days(MAX_DAY_COUNT)).toInstant
+	private lazy val DEFAULT_DAYS_AGO 		= sevenDaysAgo
+	private lazy val MAX_DAYS_AGO 			= ninetyDaysAgo
+	private lazy val DEFAULT_ROUTE 			= "releases.html"
+	private lazy val matcher 				= new StringMatcher()
+	private var errors						= new ListBuffer[String]()
 }

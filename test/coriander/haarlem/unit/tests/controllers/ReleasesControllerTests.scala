@@ -72,7 +72,9 @@ class ReleasesControllerTests extends ControllerUnitTest {
 	def you_can_only_ask_for_builds_since_a_maximum_90_days_ago_for_performance_reasons {
 		when_since_supplied_as("91-days-ago")
 		then_builds_are_searched_in(theLastNinetyDays)
-		then_there_is_an_error("Maximum limit <90> exceeded.")
+		then_there_is_an_error(
+			"The requested number of days exceeds the limit of <90>, results have been truncated"
+		)
 	}
 
 	private def then_there_is_an_error(what : String) {
@@ -92,7 +94,7 @@ class ReleasesControllerTests extends ControllerUnitTest {
 	@Test
 	def accepts_matching_parameter {
 		when_matching_supplied_with_required_count_as(10, "live")
-		then_we_search_for_the_last_with_an_non_null_filter(10)
+		then_we_search_for_the_last_with_a_non_null_filter(10)
 	}
 
 	@Test
@@ -110,6 +112,12 @@ class ReleasesControllerTests extends ControllerUnitTest {
 		assertThat(model.getBuilds.size, is(equalTo(2)))
 	}
 
+	@Test
+	def matching_parameter_may_be_omitted {
+		when_matching_supplied_with_required_count_as(10, null)
+		then_we_search_for_the_last_with_a_non_null_filter(10)
+	}
+
 	@Test @Ignore
 	def if_the_matching_parameter_is_not_a_valid_regex_then_an_error_is_returned() {
 		given_a_build_finder_that_returns(List(
@@ -120,9 +128,9 @@ class ReleasesControllerTests extends ControllerUnitTest {
 		when_matching_supplied_with_required_count_as(10, "[this is meant to be invalid[")
 
 		val result : ModelAndView = controller.go(request, response)
-		val model : ReleasesModel = result.getModel.get("results").asInstanceOf[ReleasesModel]
+		val model : ReleasesModel = result.getModel.get("results").asInstanceOf[ReleasesModel];
 
-		assertThat(model.getErrors, is(equalTo("xxx")))
+		//assertThat(model.getErrors, contains("xxx"))
 	}
 
 	@Test @Ignore
@@ -132,7 +140,7 @@ class ReleasesControllerTests extends ControllerUnitTest {
 
 	@Test @Ignore
 	def if_you_do_not_supply_since_or_last_then_you_get_the_last_25_results {
-		throw new Exception("PENDING")
+		fail("PENDING")
 	}
 
 	private def given_a_build_finder {
@@ -179,13 +187,15 @@ class ReleasesControllerTests extends ControllerUnitTest {
 
 	private def then_builds_are_searched_in(interval : Interval) {
 		verify(buildFinder).find(argThat(hasMatching(interval)))
+
+		// TODO: verify the interval returned is similar to expected
 	}
 
 	private def then_we_search_for_the_last_with_no_match(howMany : Int) {
 		verify(buildFinder).last(argThat(is(howMany)), argThat(is(FilterOptions.NONE)))
 	}
 
-	private def then_we_search_for_the_last_with_an_non_null_filter(howMany : Int) {
+	private def then_we_search_for_the_last_with_a_non_null_filter(howMany : Int) {
 		verify(buildFinder).last(argThat(is(howMany)), argThat(is(not(FilterOptions.NONE))))
 	}
 

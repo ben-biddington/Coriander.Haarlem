@@ -115,40 +115,53 @@
                 padding-left:10px;
                 text-align:center;
             }
+
+            div.error { margin-left:auto; }
+            div.error img { float:left; margin-right:5px; }
         </style>
     </jsp:attribute>
 
     <jsp:attribute name="body_include">
-
-        <c:out value="${xxx}" />
-        <p class="summary">
-            Results (${results.count})
-            for ${results.intervalInDays} days
-            (${results.intervalStart} - ${results.intervalEnd})
-        </p>            
-
+        <c:if test="${not empty results.errors}">
+            <div class="error">
+                <c:forEach var="entry" items="${results.errors}">
+                    <p><img src="/img/attentionCommentRed.gif" border="0" /><c:out value="${entry}" escapeXml="true" /></p>
+                </c:forEach>
+            </div>            
+        </c:if>
         <table class="buildTypeHeader" cellspacing="0">
             <tbody>
                 <tr>
                     <td class="header">&nbsp;</td>
                     <td class="details">
-                        <form method="get" action="${xxx}">
+                        <form method="get" action="${currentUrl}">
                             <input type="text" id="matching" name="matching"
                                 size="100" style="margin:0; padding:0; width: 8em;"
                                 value="${param.matching}" />
+                            <input type="hidden" name="since" id="since" value="${param.since}" />
+                            <input type="hidden" name="last" id="last" value="${param.last}" />
                             <input type="submit" value="Filter" />
                         </form>
                     </td>
                 </tr>
                 <tr>
+                    <td class="header">Results (${results.count})</td>
+                    <td class="details">
+                        <p class="summary">
+                            spanning ${results.intervalInDays} days
+                            (${results.intervalStart} - ${results.intervalEnd})
+                        </p>
+                    </td>
+                </tr>
+                <tr>
                     <td id="info" class="header">
+                        <div id="today" title="${results.intervalEnd}">
+                            <div class="day"><h1>${results.intervalEndDay}</h1></div>
+                            <div class="month">${results.intervalEndMonth}</div>
+                        </div>
                         <div id="intervalStart" title="${results.intervalStart}">
                             <div class="day"><h1>${results.intervalStartDay}</h1></div>
                             <div class="month">${results.intervalStartMonth}</div>
-                        </div>
-                        <div id="today" title="${results.today}">
-                            <div class="day"><h1>${results.dayOfMonth}</h1></div>
-                            <div class="month">${results.monthOfYear}</div>
                         </div>
                     </td>
                     <td class="details">

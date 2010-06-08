@@ -41,11 +41,20 @@ class ReleasesModelTests extends Spec
 		}
 	}
 
+	describe("getToday") {
+		it("is a string representing the start of the interval") {
+			given_today_is(firstBikiniDisplayedInParis.plusDays(1))
+			given_a_one_day_interval_from_the_day_before_the_first_bikini_to_the_day_of_the_first_bikini
+
+			model.getToday must equal("Tue, 04 Jun 1946")
+		}
+	}
+
 	describe("getIntervalStart") {
 		it("is a string representing the start of the interval") {
 			given_a_one_day_interval_from_the_day_before_the_first_bikini_to_the_day_of_the_first_bikini
 
-			model.getIntervalStart must equal("02 Jun 1946")
+			model.getIntervalStart must equal("Sun, 02 Jun 1946")
 		}
 	}
 
@@ -54,7 +63,7 @@ class ReleasesModelTests extends Spec
 			given_today_is(firstBikiniDisplayedInParis.plusDays(1))
 			given_a_one_day_interval_from_the_day_before_the_first_bikini_to_the_day_of_the_first_bikini
 			
-			model.getIntervalEnd must equal("03 Jun 1946")
+			model.getIntervalEnd must equal("Mon, 03 Jun 1946")
 		}
 
 		it("is \"Today\" if the interval ends on today") {
