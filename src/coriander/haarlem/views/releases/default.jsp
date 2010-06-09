@@ -233,7 +233,7 @@
                     </div>
                     </td>
                 </tr>
-                <c:if test="${true || results.rickrollable}">
+                <c:if test="${results.rickrollable}">
                     <tr>
                         <td class="header">Special!</td>
                         <td class="details">
