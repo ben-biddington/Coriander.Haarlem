@@ -73,15 +73,8 @@ class ReleasesControllerTests extends ControllerUnitTest {
 		when_since_supplied_as("91-days-ago")
 		then_builds_are_searched_in(theLastNinetyDays)
 		then_there_is_an_error(
-			"The requested number of days exceeds the limit of <90>, results have been truncated"
-		)
-	}
-
-	private def then_there_is_an_error(what : String) {
-		require(result != null)
-		assertTrue(
-			"Expected <" + result.getErrors + "> " +
-			"to contain <" + what + ">", result.getErrors.contains(what)
+			"The requested number of days exceeds the limit of <90>, " +
+			"results have been truncated"
 		)
 	}
 
@@ -89,6 +82,16 @@ class ReleasesControllerTests extends ControllerUnitTest {
 	def accepts_last_parameter {
 		when_last_supplied_as(10)
 		then_we_search_for_the_last_with_no_filter_options(10)
+	}
+
+	@Test
+	def you_can_only_ask_for_up_to_the_last_200_builds_for_performance_reasons {
+		when_last_supplied_as(201)
+		then_we_search_for_the_last_with_no_filter_options(200)
+		then_there_is_an_error(
+			"The requested number of results exceeds the limit of <200>, " +
+			"results have been truncated"
+		)
 	}
 	
 	@Test
@@ -134,11 +137,6 @@ class ReleasesControllerTests extends ControllerUnitTest {
 	}
 
 	@Test @Ignore
-	def you_can_only_ask_for_up_to_the_last_100_for_performance_reasons {
-		fail("PENDING")
-	}
-
-	@Test @Ignore
 	def if_you_do_not_supply_since_or_last_then_you_get_the_last_25_results {
 		fail("PENDING")
 	}
@@ -166,14 +164,13 @@ class ReleasesControllerTests extends ControllerUnitTest {
 	private def when_since_supplied_as(what : String) {
 		stub(request.getQueryString).toReturn("since=" + what)
 
-		result = controller.go(request, response).
-			getModel.get("results").asInstanceOf[ReleasesModel]
+		doIt
 	}
 
 	private def when_last_supplied_as(howMany : Int) {
 		stub(request.getQueryString).toReturn("last=" + howMany.toString)
 
-		controller.go(request, response)
+		doIt
 	}
 
 	private def when_matching_supplied_with_required_count_as(howMany : Int, what : String) {
@@ -181,8 +178,7 @@ class ReleasesControllerTests extends ControllerUnitTest {
 
 		stub(request.getQueryString).toReturn("last=" + howMany + "&matching=" + what)
 
-		result = controller.go(request, response).
-			getModel.get("results").asInstanceOf[ReleasesModel]
+		doIt
 	}
 
 	private def then_builds_are_searched_in(interval : Interval) {
@@ -199,11 +195,24 @@ class ReleasesControllerTests extends ControllerUnitTest {
 		verify(buildFinder).last(argThat(is(howMany)), argThat(is(not(FilterOptions.NONE))))
 	}
 
+	private def then_there_is_an_error(what : String) {
+		require(result != null)
+		assertTrue(
+			"Expected <" + result.getErrors + "> " +
+			"to contain <" + what + ">", result.getErrors.contains(what)
+		)
+	}
+
 	private def newFakeBuildWithDescription(what : String) = {
 		val result = mock(classOf[SFinishedBuild])
 		stub(result.getBuildDescription).toReturn(what)
 
 		result
+	}
+
+	private def doIt {
+		result = controller.go(request, response).
+			getModel.get("results").asInstanceOf[ReleasesModel]
 	}
 
 	private var projectManager 	: ProjectManager = null

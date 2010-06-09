@@ -39,7 +39,7 @@ class ReleasesController(
 		var result : List[SFinishedBuild] = null
 		var interval = new Interval(0L, 0L)
 		val matching = if (query.containsWithValue("matching")) query.value("matching") else null
-		val lastHowMany = if (query.containsWithValue("last"))
+		var lastHowMany = if (query.containsWithValue("last"))
 			parseInt(query.value("last"))
 			else DEFAULT_BUILD_COUNT
 		val since = query.value("since")
@@ -64,11 +64,20 @@ class ReleasesController(
 	}
 
 	private def findLast(howMany : Int, matching : String) = {
+		var lastHowMany = howMany
+		if (lastHowMany > MAX_BUILD_COUNT) {
+			lastHowMany  = MAX_BUILD_COUNT
+			error(
+				"The requested number of results exceeds the limit of <" + MAX_BUILD_COUNT + ">, " +
+				"results have been truncated"
+			)
+		}
+		
 		val options =
 			if (matching != null) new FilterOptions(null, newBuildMatcher(matching))
 			else FilterOptions.NONE
 
-		buildFinder.last(howMany, options)
+		buildFinder.last(lastHowMany, options)
 	}
 
 	private def calculateSpanningInterval(builds : List[SFinishedBuild]) : Interval = {
@@ -112,6 +121,7 @@ class ReleasesController(
 	private lazy val now 					= new Instant
 	private lazy val MAX_DAY_COUNT 			= 90
 	private lazy val DEFAULT_BUILD_COUNT 	= 25
+	private lazy val MAX_BUILD_COUNT 		= 200
 	private lazy val view 					= pluginDescriptor.getPluginResourcesPath + "/server/releases/default.jsp"
 	private lazy val sevenDaysAgo 			= new DateMidnight(new Instant).minus(days(7)).toInstant
 	private lazy val ninetyDaysAgo 			= new DateMidnight(new Instant).minus(days(MAX_DAY_COUNT)).toInstant
