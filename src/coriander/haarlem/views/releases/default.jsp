@@ -176,16 +176,12 @@
                         <c:set var="cols" value="7"/>
                         <table cellspacing="0" class="testList historyList dark borderBottom">
                             <tr>
-                                <!--<th>#</th>-->
+                                <th class="firstcell">&nbsp;</th>
                                 <th>Project</th>
                                 <th>Build</th>
                                 <th>Results</th>
-                                <!--<th>Artifacts</th>-->
-                                <!--<th>Changes</th>-->
                                 <th class="sorted">Completed</th>
                                 <th>Duration</th>
-                                <!--<th>Agent</th>-->
-                                <!--<th>Tags</th>-->
                                 <th class="autopin">&nbsp;</th>
                             </tr>
                             <c:if test="${empty results.builds}">
@@ -199,15 +195,8 @@
                                     <c:set var="rowClass" value="${rowClass} ${entry.outOfChangesSequence ? 'outOfSequence ' : ''}"/>
 
                                     <tr <c:if test="${not empty highlightRecord && recordStatus.count == highlightRecord + 1}">style="background-color: #FFFFCC;"</c:if>>
-                                        <!--<td style="text-align:center;" class="${rowClass}">
-                                          <bs:buildNumber buildData="${entry}"/>
-                                          <bs:buildCommentIcon build="${entry}"/>
-                                        </td>
-                                        -->
-
-                                        <td>
-                                            <strong><a title="Open &lt;${entry.buildType.projectName}&gt; project page" class="project" href="/project.html?projectId=${entry.buildType.projectId}">${entry.buildType.projectName}</a></strong>
-                                        </td>
+                                        <td style="text-align:center;"><c:out value="${recordStatus.index + 1}"/></td>
+                                        <td><strong><a title="Open &lt;${entry.buildType.projectName}&gt; project page" class="project" href="/project.html?projectId=${entry.buildType.projectId}">${entry.buildType.projectName}</a></strong></td>
 
                                         <td>
                                             <a title="Open build page" href="/viewType.html?buildTypeId=${entry.buildTypeId}">${entry.buildTypeName}</a>
@@ -218,26 +207,11 @@
                                           <bs:resultsLink build="${entry}" skipChangesArtifacts="true">${entry.statusDescriptor.text}</bs:resultsLink>
                                         </td>
 
-                                        <!--<td class="${rowClass}">
-                                          <c:if test="${entry.artifactsExists}">
-                                            <bs:artefactsIcon/>
-                                            <bs:artefactsLink build="${entry}">View</bs:artefactsLink>
-                                          </c:if>
-                                          <c:if test="${not entry.artifactsExists}">
-                                            <span style="color: #888;">None</span>
-                                          </c:if>
-                                        </td>
-                                        -->
-                                        <!--<td class="${rowClass}"><bs:changesLinkFull buildPromotion="${entry.buildPromotion}"/></td>-->
-
                                         <td class="${rowClass}"><bs:date value="${entry.finishDate}"/></td>
 
                                         <td class="${rowClass}">
                                           <bs:printTime time="${entry.duration}" showIfNotPositiveTime="&lt; 1s"/>
                                         </td>
-
-                                        <!--<td class="${rowClass}"><bs:agentDetailsLink agentName="${entry.agentName}"/></td>-->
-                                        <!--<td class="${rowClass}"><t:tagsInfo build="${entry}"/></td>-->
 
                                         <td class="${rowClass}">
                                           <c:if test="${entry.usedByOtherBuilds}">
