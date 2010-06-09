@@ -67,17 +67,25 @@ class ReleasesController(
 		var lastHowMany = howMany
 		if (lastHowMany > MAX_BUILD_COUNT) {
 			lastHowMany  = MAX_BUILD_COUNT
-			error(
-				"The requested number of results exceeds the limit of <" + MAX_BUILD_COUNT + ">, " +
-				"results have been truncated"
-			)
 		}
 		
 		val options =
 			if (matching != null) new FilterOptions(null, newBuildMatcher(matching))
 			else FilterOptions.NONE
 
-		buildFinder.last(lastHowMany, options)
+		val result = buildFinder.last(lastHowMany, options)
+
+		if (howMany > MAX_BUILD_COUNT) {
+			val hasProbablyBeenTruncated = result.size == 200
+			if (hasProbablyBeenTruncated) {
+				error(
+					"The requested number of results exceeds the limit of <" + MAX_BUILD_COUNT + ">, " +
+					"results have been truncated"
+				)
+			}
+		}
+
+		result
 	}
 
 	private def calculateSpanningInterval(builds : List[SFinishedBuild]) : Interval = {
@@ -107,7 +115,10 @@ class ReleasesController(
 			if (result.isBefore(MAX_DAYS_AGO)) {
 				result = new DateMidnight(now).minus(days(MAX_DAY_COUNT)).toInstant
 
-				error("The requested number of days exceeds the limit of <" + MAX_DAY_COUNT + ">, results have been truncated")
+				error(
+					"The requested number of days exceeds the limit of <" + MAX_DAY_COUNT + ">, " +
+					"results have been truncated"
+				)
 			}
 		}
 

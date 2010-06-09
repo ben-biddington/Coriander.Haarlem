@@ -88,10 +88,6 @@ class ReleasesControllerTests extends ControllerUnitTest {
 	def you_can_only_ask_for_up_to_the_last_200_builds_for_performance_reasons {
 		when_last_supplied_as(201)
 		then_we_search_for_the_last_with_no_filter_options(200)
-		then_there_is_an_error(
-			"The requested number of results exceeds the limit of <200>, " +
-			"results have been truncated"
-		)
 	}
 	
 	@Test
