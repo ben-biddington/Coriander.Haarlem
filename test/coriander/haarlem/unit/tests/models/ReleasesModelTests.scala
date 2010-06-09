@@ -12,7 +12,7 @@ import coriander.haarlem.core.Convert._
 import collection.mutable.ListBuffer
 import org.mockito.Mockito._
 import org.mockito.Matchers._
-import org.joda.time.{DateTime, Period, DateMidnight, Interval}
+import org.joda.time._
 
 class ReleasesModelTests extends Spec
 	with MustMatchers
@@ -38,6 +38,28 @@ class ReleasesModelTests extends Spec
 			val numberOfDays = model.getIntervalInDays
 
 			numberOfDays must equal(1)
+		}
+
+		it("returns 2 when start is yesterday and end is anytime today, i.e., should treat today as a whole day") {
+			val start 	= new DateTime(2010,6,7,0,0,0,0)
+			val end 	= new DateTime(2010,6,8,15,6,36,700)
+
+			val interval = new Interval(start, end)
+
+			val model = new ReleasesModel(null, interval, new Instant)
+
+			model.getIntervalInDays must equal(2)
+		}
+
+		it("works when interval contains months") {
+			val start 	= new DateTime(2010,3,9,8,39,0,0)
+			val end 	= new DateTime(2010,5,11,8,3,17,700)
+
+			val interval = new Interval(start, end)
+
+			val model = new ReleasesModel(null, interval, new Instant)
+
+			model.getIntervalInDays must equal(63)
 		}
 	}
 
@@ -111,21 +133,18 @@ class ReleasesModelTests extends Spec
 	}
 
 	describe("getErrors") {
-		it("returns the list of errors as one string") {
+		it("returns a list of errors") {
 			model = new ReleasesModel(null, null, null)
 
 			model.addError("1. Phil Murphy's hair.")
 			model.addError("2. The pedestrianisation of Norwich city centre.")
-
-			model.getErrors must equal(
-				"1. Phil Murphy's hair." + NEWLINE +
-				"2. The pedestrianisation of Norwich city centre."
-			)
+			
+			model.getErrors.size must equal(2)
 		}
 
-		it("returns empty string when there are no errors") {
+		it("returns empty list when there are no errors") {
 			model = new ReleasesModel(null, null, null)
-			model.getErrors must equal("")
+			model.getErrors.size must equal(0)
 		}
 	}
 
@@ -165,11 +184,11 @@ class ReleasesModelTests extends Spec
 	}
 
 	private var model : ReleasesModel = null
-	private lazy val firstBikiniDisplayedInParis = new DateMidnight(1946, JUNE, 3, UTC)
+	private val firstBikiniDisplayedInParis = new DateMidnight(1946, JUNE, 3, UTC)
 	private var today : DateTime = null
 	private val DEFAULT_TODAY = new DateTime
-	private lazy val threeHours = new Period(hours(3))
-	private lazy val oneDay = new Period(days(1))
-	private lazy val twoDays = new Period(days(2))
+	private val threeHours = new Period(hours(3))
+	private val oneDay = new Period(days(1))
+	private val twoDays = new Period(days(2))
 	private val NEWLINE = System.getProperty("line.separator")
 }

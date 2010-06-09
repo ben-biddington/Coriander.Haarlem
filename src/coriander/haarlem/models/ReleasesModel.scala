@@ -13,6 +13,7 @@ class ReleasesModel(
 ) {
 	def getBuilds 				= builds
 	def getInterval 			= interval
+	def getIntervalString 		= interval.getStart + " -> " + interval.getEnd
 	def getNow 					= now
 	def getToday 				= now.toDateTime.toLocalDateTime.toString("EEE, dd MMM yyyy")
 	def getIntervalStart 		= interval.getStart.toLocalDateTime.toString("EEE, dd MMM yyyy")
@@ -21,13 +22,22 @@ class ReleasesModel(
 	def getIntervalEndDay 		= interval.getEnd.toLocalDateTime.getDayOfMonth
 	def getIntervalEndMonth 	= interval.getEnd.toLocalDateTime.toString("MMM")
 	def getIntervalEnd 			= selectIntervalEnd
-	def getIntervalInDays 		= Math.max(daysIn(interval).getDays, 1)
+	def getIntervalInDays 		= Math.max(getTotalDays(interval), 1)
 	def getCount				= builds.size
 	def getDayOfMonth			= now.toDateTime.toLocalDateTime.getDayOfMonth
 	def getMonthOfYear			= now.toDateTime.toLocalDateTime.toString("MMM")
 	def getErrors 				= toJavaList(errors)
 	def addError(what : String) = errors += what
 	def clearErrors 			= errors.clear
+
+	private def getTotalDays(interval : Interval) = {
+		val days = daysIn(interval).getDays
+		val hours = interval.toPeriod.getHours
+
+		val totalHours = days*24 + hours
+
+		Math.ceil(totalHours.toFloat/24).intValue
+	}
 
 	private def selectIntervalEnd : String = {
 		if (
