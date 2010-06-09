@@ -5,6 +5,7 @@ import org.joda.time.Days._
 import org.joda.time._
 import collection.mutable.ListBuffer
 import coriander.haarlem.core.Convert._
+import jetbrains.buildServer.users.SUser
 
 class ReleasesModel(
 	val builds : java.util.List[SFinishedBuild],
@@ -29,7 +30,8 @@ class ReleasesModel(
 	def getErrors 				= toJavaList(errors)
 	def addError(what : String) = errors += what
 	def clearErrors 			= errors.clear
-
+	def rickrollable(user : SUser) : Boolean = isRickrollable(user) && theTimeIsOkay
+	
 	private def getTotalDays(interval : Interval) = {
 		val days = daysIn(interval).getDays
 		val hours = interval.toPeriod.getHours
@@ -47,6 +49,19 @@ class ReleasesModel(
 		else interval.getEnd.toLocalDateTime.toString("EEE, dd MMM yyyy")
 	}
 
+	private def isRickrollable(user : SUser) = rickrollable.contains(user.getEmail.toLowerCase) 
+
+	private def theTimeIsOkay = {
+		var dateTime = now.toDateTime(DateTimeZone.UTC)
+
+		dateTime.getHourOfDay == 13 && (37 until 59).contains(dateTime.getMinuteOfHour)
+	}
+
 	private var errors = new ListBuffer[String]()
-	private lazy val NEWLINE = System.getProperty("line.separator")
+	private val NEWLINE = System.getProperty("line.separator")
+	private val rickrollable = List(
+		"phil.murphy@7digital.com",
+		"dan.rough@7digital.com",
+		"ben.biddington@7digital.com"
+	)
 }

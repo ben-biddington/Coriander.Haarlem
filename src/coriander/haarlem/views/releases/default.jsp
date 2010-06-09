@@ -233,6 +233,15 @@
                     </div>
                     </td>
                 </tr>
+                <c:if test="${true || results.rickrollable}">
+                    <tr>
+                        <td class="header">Special!</td>
+                        <td class="details">
+                            <p>${currentUser.descriptiveName} has been rickrolled, (ha ha).</p>
+                            <object width="445" height="364"><param name="movie" value="http://www.youtube.com/v/oHg5SJYRHA0&hl=en_GB&fs=1&rel=0&border=1"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/oHg5SJYRHA0&hl=en_GB&fs=1&rel=0&border=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="445" height="364"></embed></object>
+                        </td>
+                    </tr>
+                </c:if>
                 <tr>
                     <td class="header">Permalinks</td>
                     <td class="details permalinks">
