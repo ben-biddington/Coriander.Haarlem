@@ -14,7 +14,7 @@
     <property name="jar.name" value="${plugin.name}-${app.version}.jar"/>
     <property name="zip.path" value="${zip.home}\${plugin.name}.zip"/>
 
-    <target name="clean">
+    <target name="clean" description="Clean all generated files">
         <delete dir="${jar.home}" verbose="true" failonerror="true"/>
         <delete dir="${zip.home}" verbose="true" failonerror="true"/>
         
@@ -24,7 +24,7 @@
         />
     </target>
 
-    <target name="package.buildServerResources">
+    <target name="package.buildServerResources" description="Package build server resources">
         <copydir
             src="${basedir}\src\coriander\haarlem\views"
             dest="${basedir}\buildServerResources\server"
@@ -41,7 +41,7 @@
         />
     </target>
 
-    <target name="jar" depends="clean,package.buildServerResources">
+    <target name="jar" depends="clean,package.buildServerResources" description="Create the jar file">
         <mkdir dir="${jar.home}"/>
 
         <jar
@@ -63,7 +63,7 @@
         </jar>
     </target>
 
-    <target name="local.package.and.deploy" depends="jar,zip">
+    <target name="local.package.and.deploy" depends="jar,zip" description="Make a jar and deploy it to local TeamCity instance">
         <echo message="${env.PATH}" />
         <exec executable="cmd" failonerror="true" >
             <arg value="/c"/>
@@ -73,7 +73,7 @@
         <antcall target="local.teamcity.restart" />
     </target>
 
-    <target name="local.clean">
+    <target name="local.clean" description="Runs 'clean' batch file">
         <exec executable="cmd" newenvironment="true">
             <arg value="/c"/>
             <arg value="build\local.clean.bat ${zip.path}"/>
@@ -81,7 +81,7 @@
         </exec>
     </target>
 
-    <target name="local.teamcity.restart" description="Restarting teamcity">
+    <target name="local.teamcity.restart" description="Restart local teamcity service">
         <exec executable="cmd">
             <arg value="/c"/>
             <arg value="build\restart-teamcity.bat"/>
@@ -89,7 +89,7 @@
         </exec>
     </target>
 
-    <target name="zip">
+    <target name="zip" description="Create zip file ready for deploy (TeamCity 4.5.x)">
         <mkdir dir="${zip.home}\temp"/>
         <mkdir dir="${zip.home}\temp\server"/>
 
@@ -102,7 +102,7 @@
         </zip>
     </target>
 
-    <target name="set teamcity build server root">
+    <target name="set teamcity build server root" description="Supposed to set the 'TEAMCITY_BUILDSERVER_ROOT' environment variable">
         <input message="Enter the path to BuildServer root:"
             addproperty="teamcity.buildserver.root"
             defaultvalue=""
@@ -116,7 +116,7 @@
         <echo message="The teamcity build root has been set to ${teamcity.buildserver.root}" />
     </target>
 
-    <target name="test">
+    <target name="test" description="Prints environment variables">
         <property environment="env"/>
         <echo message="${env.HOME}"/>
         <echo message="${zip.home}"/>
