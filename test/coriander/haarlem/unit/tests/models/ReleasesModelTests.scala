@@ -171,7 +171,7 @@ class ReleasesModelTests extends Spec
 
 			val phil = newFakeUser("phil.murphy@7digital.com")
 
-			model.rickrollable(phil) must be(true)
+			model.getRickrollable(phil) must be(true)
 		}
 
 		it("DRough is okay") {
@@ -179,7 +179,7 @@ class ReleasesModelTests extends Spec
 
 			val dan = newFakeUser("dan.rough@7digital.com")
 
-			model.rickrollable(dan) must be(true)
+			model.getRickrollable(dan) must be(true)
 		}
 
 		it("Anyone else is not okay") {
@@ -187,7 +187,7 @@ class ReleasesModelTests extends Spec
 
 			val anyoneElse = newFakeUser("(_xxx_xxx_xxx_)")
 
-			model.rickrollable(anyoneElse) must be(false)
+			model.getRickrollable(anyoneElse) must be(false)
 		}
 
 		it("only happens between 13:37 and 13:59 GMT") {
@@ -198,19 +198,19 @@ class ReleasesModelTests extends Spec
 			val rickrollableUser = newFakeUser("phil.murphy@7digital.com")
 
 			model = new ReleasesModel(null, null, before)
-			model.rickrollable(rickrollableUser) must be(false)
+			model.getRickrollable(rickrollableUser) must be(false)
 
 			model = new ReleasesModel(null, null, rollTimeStart)
-			model.rickrollable(rickrollableUser) must be(true)
+			model.getRickrollable(rickrollableUser) must be(true)
 
 			model = new ReleasesModel(null, null, during)
-			model.rickrollable(rickrollableUser) must be(true)
+			model.getRickrollable(rickrollableUser) must be(true)
 
 			model = new ReleasesModel(null, null, rollTimeEnd)
-			model.rickrollable(rickrollableUser) must be(false)
+			model.getRickrollable(rickrollableUser) must be(false)
 
 			model = new ReleasesModel(null, null, after)
-			model.rickrollable(rickrollableUser) must be(false)
+			model.getRickrollable(rickrollableUser) must be(false)
 		}
 	}
 

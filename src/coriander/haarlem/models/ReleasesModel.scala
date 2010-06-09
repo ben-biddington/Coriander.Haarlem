@@ -30,7 +30,7 @@ class ReleasesModel(
 	def getErrors 				= toJavaList(errors)
 	def addError(what : String) = errors += what
 	def clearErrors 			= errors.clear
-	def rickrollable(user : SUser) : Boolean = isRickrollable(user) && theTimeIsOkay
+	def getRickrollable(user : SUser) : Boolean = theTimeIsOkay && isRickrollable(user)
 	
 	private def getTotalDays(interval : Interval) = {
 		val days = daysIn(interval).getDays
