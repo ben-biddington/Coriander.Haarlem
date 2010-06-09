@@ -63,9 +63,9 @@ class ReleasesControllerTests extends ControllerUnitTest {
 	}
 	
 	@Test
-	def since_defaults_to_seven_days {
+	def when_since_is_missing_then_you_get_the_last_twenty_five_builds {
 		when_since_not_supplied
-		then_builds_are_searched_in(theLastSevenDays)
+		then_we_search_for_the_last_with_no_filter_options(25)
 	}
 
 	@Test
@@ -88,7 +88,7 @@ class ReleasesControllerTests extends ControllerUnitTest {
 	@Test
 	def accepts_last_parameter {
 		when_last_supplied_as(10)
-		then_we_search_for_the_last_with_no_match(10)
+		then_we_search_for_the_last_with_no_filter_options(10)
 	}
 	
 	@Test
@@ -191,7 +191,7 @@ class ReleasesControllerTests extends ControllerUnitTest {
 		// TODO: verify the interval returned is similar to expected
 	}
 
-	private def then_we_search_for_the_last_with_no_match(howMany : Int) {
+	private def then_we_search_for_the_last_with_no_filter_options(howMany : Int) {
 		verify(buildFinder).last(argThat(is(howMany)), argThat(is(FilterOptions.NONE)))
 	}
 

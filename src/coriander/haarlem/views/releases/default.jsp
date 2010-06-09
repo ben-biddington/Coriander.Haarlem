@@ -4,7 +4,6 @@
 <%@ page import="org.joda.time.format.DateTimeFormat" %>
 <%@page import="jetbrains.buildServer.serverSide.tracker.EventSubscription" %>
 <%@include file="../include-internal.jsp"%>
-<c:set var="xxx" scope="request" value="${pageContext.request.contextPath}"/>
 <c:set var="currentUrl" scope="request">
     <c:url value="/releases.html">
         <c:param name="matching" value="${param.matching}"/>
@@ -14,6 +13,7 @@
 </c:set>
                         
 <c:set var="loadingWarningDisabled" value="true" scope="request"/>
+<c:set var="showCalendars" value="false" scope="request"/>
 <c:set var="title" value="Recent releases" scope="request"/>
 <jsp:useBean id="currentUser" type="jetbrains.buildServer.users.SUser" scope="request"/>
 <bs:page>
@@ -101,7 +101,7 @@
             div#results table.testList { width:100%; }
 
             div#results table.testList a.project {
-                width:100px;
+                max-width:300px;
                 overflow:hidden;
                 display: inline-block;
                 text-overflow: ellipsis;
@@ -118,6 +118,8 @@
 
             div.error { margin-left:auto; }
             div.error img { float:left; margin-right:5px; }
+
+            form label { float:none; vertical-align:center; }
         </style>
     </jsp:attribute>
 
@@ -135,6 +137,7 @@
                     <td class="header">&nbsp;</td>
                     <td class="details">
                         <form method="get" action="${currentUrl}">
+                            <label for="matching">Filter by build:</label>
                             <input type="text" id="matching" name="matching"
                                 size="100" style="margin:0; padding:0; width: 8em;"
                                 value="${param.matching}" />
@@ -147,7 +150,7 @@
                 <tr>
                     <td class="header">Results (${results.count})</td>
                     <td class="details">
-                        <p class="summary">
+                        <p class="summary" title="${results.intervalString}">
                             spanning ${results.intervalInDays} days
                             (${results.intervalStart} - ${results.intervalEnd})
                         </p>
@@ -155,34 +158,38 @@
                 </tr>
                 <tr>
                     <td id="info" class="header">
-                        <div id="today" title="${results.intervalEnd}">
-                            <div class="day"><h1>${results.intervalEndDay}</h1></div>
-                            <div class="month">${results.intervalEndMonth}</div>
-                        </div>
-                        <div id="intervalStart" title="${results.intervalStart}">
-                            <div class="day"><h1>${results.intervalStartDay}</h1></div>
-                            <div class="month">${results.intervalStartMonth}</div>
-                        </div>
+                        <c:if test="${showCalendars}">
+                            <div id="today" title="${results.intervalEnd}">
+                                <div class="day"><h1>${results.intervalEndDay}</h1></div>
+                                <div class="month">${results.intervalEndMonth}</div>
+                            </div>
+                            <div id="intervalStart" title="${results.intervalStart}">
+                                <div class="day"><h1>${results.intervalStartDay}</h1></div>
+                                <div class="month">${results.intervalStartMonth}</div>
+                            </div>
+                        </c:if>
+                        <c:if test="${not showCalendars}">&nbsp;</c:if>
                     </td>
                     <td class="details">
                     <div id="results">
                         <!-- @see: ROOT/WEB-INF/tags/historyTable.tag -->
+                        <c:set var="cols" value="7"/>
                         <table cellspacing="0" class="testList historyList dark borderBottom">
                             <tr>
-                                <th class="firstCell">#</th>
+                                <!--<th>#</th>-->
                                 <th>Project</th>
                                 <th>Build</th>
                                 <th>Results</th>
-                                <th>Artifacts</th>
+                                <!--<th>Artifacts</th>-->
                                 <!--<th>Changes</th>-->
-                                <th class="sorted">Started</th>
+                                <th class="sorted">Completed</th>
                                 <th>Duration</th>
                                 <!--<th>Agent</th>-->
                                 <!--<th>Tags</th>-->
                                 <th class="autopin">&nbsp;</th>
                             </tr>
                             <c:if test="${empty results.builds}">
-                                <td colspan="9">No results</td>
+                                <td colspan="${cols}">No results</td>
                             </c:if>
                             <c:if test="${not empty results.builds}">
                                 <c:forEach var="entry" items="${results.builds}" varStatus="recordStatus">
@@ -192,10 +199,11 @@
                                     <c:set var="rowClass" value="${rowClass} ${entry.outOfChangesSequence ? 'outOfSequence ' : ''}"/>
 
                                     <tr <c:if test="${not empty highlightRecord && recordStatus.count == highlightRecord + 1}">style="background-color: #FFFFCC;"</c:if>>
-                                        <td style="text-align:center;" class="${rowClass}">
+                                        <!--<td style="text-align:center;" class="${rowClass}">
                                           <bs:buildNumber buildData="${entry}"/>
                                           <bs:buildCommentIcon build="${entry}"/>
                                         </td>
+                                        -->
 
                                         <td>
                                             <strong><a title="Open &lt;${entry.buildType.projectName}&gt; project page" class="project" href="/project.html?projectId=${entry.buildType.projectId}">${entry.buildType.projectName}</a></strong>
@@ -210,7 +218,7 @@
                                           <bs:resultsLink build="${entry}" skipChangesArtifacts="true">${entry.statusDescriptor.text}</bs:resultsLink>
                                         </td>
 
-                                        <td class="${rowClass}">
+                                        <!--<td class="${rowClass}">
                                           <c:if test="${entry.artifactsExists}">
                                             <bs:artefactsIcon/>
                                             <bs:artefactsLink build="${entry}">View</bs:artefactsLink>
@@ -219,10 +227,10 @@
                                             <span style="color: #888;">None</span>
                                           </c:if>
                                         </td>
-
+                                        -->
                                         <!--<td class="${rowClass}"><bs:changesLinkFull buildPromotion="${entry.buildPromotion}"/></td>-->
 
-                                        <td class="${rowClass}"><bs:date value="${entry.startDate}"/></td>
+                                        <td class="${rowClass}"><bs:date value="${entry.finishDate}"/></td>
 
                                         <td class="${rowClass}">
                                           <bs:printTime time="${entry.duration}" showIfNotPositiveTime="&lt; 1s"/>

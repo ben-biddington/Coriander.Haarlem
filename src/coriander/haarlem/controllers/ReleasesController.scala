@@ -38,13 +38,13 @@ class ReleasesController(
 	private def find(query : Query) : ReleasesModel = {
 		var result : List[SFinishedBuild] = null
 		var interval = new Interval(0L, 0L)
-		val matching = if (query.contains("matching")) query.value("matching") else null
+		val matching = if (query.containsWithValue("matching")) query.value("matching") else null
 		val lastHowMany = if (query.containsWithValue("last"))
 			parseInt(query.value("last"))
 			else DEFAULT_BUILD_COUNT
 		val since = query.value("since")
 		
-		if (query.contains("since")) {
+		if (query.containsWithValue("since")) {
 			val sinceWhen = fromWhen(now, since)
 			interval = new Interval(sinceWhen, now)
 			result = findSince(interval, matching)
