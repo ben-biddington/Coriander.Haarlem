@@ -112,13 +112,13 @@ class ReleasesControllerTests extends ControllerUnitTest {
 	}
 
 	@Test
-	def matching_parameter_may_be_omitted {
+	def the_matching_parameter_may_be_omitted {
 		when_matching_supplied_with_required_count_as(10, null)
 		then_we_search_for_the_last_with_a_non_null_filter(10)
 	}
 
-	@Test @Ignore
-	def if_the_matching_parameter_is_not_a_valid_regex_then_an_error_is_returned() {
+	@Test
+	def the_matching_parameter_must_be_a_valid_regex_otherwise_an_error_is_returned_and_no_results() {
 		given_a_build_finder_that_returns(List(
 			newFakeBuildWithDescription("[live] release"),
 			newFakeBuildWithDescription("[uat] release")
@@ -126,10 +126,8 @@ class ReleasesControllerTests extends ControllerUnitTest {
 
 		when_matching_supplied_with_required_count_as(10, "[this is meant to be invalid[")
 
-		val result : ModelAndView = controller.go(request, response)
-		val model : ReleasesModel = result.getModel.get("results").asInstanceOf[ReleasesModel];
-
-		//assertThat(model.getErrors, contains("xxx"))
+		then_there_is_an_error("Invalid regex")
+		assertThat(result.getBuilds.size, is(equalTo(0)))
 	}
 
 	@Test @Ignore

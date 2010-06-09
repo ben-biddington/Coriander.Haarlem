@@ -13,7 +13,7 @@ class ReleasesModel(
 ) {
 	def getBuilds 				= builds
 	def getInterval 			= interval
-	def getIntervalString 		= interval.getStart + " -> " + interval.getEnd
+	def getIntervalString 		= if (interval != null) interval.getStart + " -> " + interval.getEnd else ""
 	def getNow 					= now
 	def getToday 				= now.toDateTime.toLocalDateTime.toString("EEE, dd MMM yyyy")
 	def getIntervalStart 		= interval.getStart.toLocalDateTime.toString("EEE, dd MMM yyyy")
@@ -22,7 +22,7 @@ class ReleasesModel(
 	def getIntervalEndDay 		= interval.getEnd.toLocalDateTime.getDayOfMonth
 	def getIntervalEndMonth 	= interval.getEnd.toLocalDateTime.toString("MMM")
 	def getIntervalEnd 			= selectIntervalEnd
-	def getIntervalInDays 		= Math.max(getTotalDays(interval), 1)
+	def getIntervalInDays 		= if (interval != null) Math.max(getTotalDays(interval), 1) else 0
 	def getCount				= builds.size
 	def getDayOfMonth			= now.toDateTime.toLocalDateTime.getDayOfMonth
 	def getMonthOfYear			= now.toDateTime.toLocalDateTime.toString("MMM")

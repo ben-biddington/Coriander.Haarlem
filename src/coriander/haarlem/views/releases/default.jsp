@@ -144,16 +144,20 @@
                             <input type="hidden" name="since" id="since" value="${param.since}" />
                             <input type="hidden" name="last" id="last" value="${param.last}" />
                             <input type="submit" value="Filter" />
+                            <input type="checkbox" checked="checked" id="useRegexp" name="useRegexp" disabled="disabled" />
+                            <label for="useRegexp">Regexp</label>
                         </form>
                     </td>
                 </tr>
                 <tr>
                     <td class="header">Results (${results.count})</td>
                     <td class="details">
-                        <p class="summary" title="${results.intervalString}">
-                            spanning ${results.intervalInDays} days
-                            (${results.intervalStart} - ${results.intervalEnd})
-                        </p>
+                        <c:if test="${results.interval != null}">
+                            <p class="summary" title="${results.intervalString}">
+                                spanning ${results.intervalInDays} days
+                                (${results.intervalStart} - ${results.intervalEnd})
+                            </p>
+                        </c:if>
                     </td>
                 </tr>
                 <tr>

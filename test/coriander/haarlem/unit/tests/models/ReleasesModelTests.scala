@@ -61,6 +61,12 @@ class ReleasesModelTests extends Spec
 
 			model.getIntervalInDays must equal(63)
 		}
+
+		it("returns zero when interval is null") {
+			val model = new ReleasesModel(null, null, null)
+
+			model.getIntervalInDays must equal(0)
+		}
 	}
 
 	describe("getToday") {
@@ -145,6 +151,14 @@ class ReleasesModelTests extends Spec
 		it("returns empty list when there are no errors") {
 			model = new ReleasesModel(null, null, null)
 			model.getErrors.size must equal(0)
+		}
+	}
+
+	describe("getIntervalString") {
+		it("returns empty when interval is null") {
+			model = new ReleasesModel(null, null, null)
+
+			model.getIntervalString must equal("")
 		}
 	}
 

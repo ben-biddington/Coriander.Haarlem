@@ -13,6 +13,8 @@ import java.lang.Integer._
 import coriander.haarlem.core.StringMatcher
 import jetbrains.buildServer.serverSide.{SFinishedBuild}
 import collection.mutable.ListBuffer
+import java.util.regex.PatternSyntaxException
+import java.util.ArrayList
 
 class ReleasesController(
 	pluginDescriptor 	: PluginDescriptor,
@@ -25,14 +27,28 @@ class ReleasesController(
 		response : HttpServletResponse
 	) : ModelAndView = {
 		errors.clear
-		val model = find(Query(request.getQueryString))
+		
+		val model = tryFind(Query(request.getQueryString))
+		
 		errors.foreach(model.addError(_))
 
-		new ModelAndView(
-			view,
-			"results",
-			model
+		new ModelAndView(view, "results", model)
+	}
+
+	private def tryFind(query : Query) = {
+		var model = new ReleasesModel(
+			new ArrayList[SFinishedBuild](),
+			null,
+			now
 		)
+
+		try {
+			model = find(query)
+		} catch {
+			case e : PatternSyntaxException => error("Invalid regexp")
+		}
+
+		model
 	}
 
 	private def find(query : Query) : ReleasesModel = {
