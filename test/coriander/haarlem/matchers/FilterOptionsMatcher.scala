@@ -20,10 +20,19 @@ class FilterOptionsMatcher(expected : Interval)
 	}
 
 	def describeTo(description : Description) {
-    	description.appendText(
-			"Expected: interval between \n\t<" + format(expected.getStart) + "> and <" + format(expected.getEnd) + "> \n" +
-			"Actual: interval between \n\t<" + format(actual.interval.getStart) + "> and <" + format(actual.interval.getEnd) + "> "
+		description.appendText(
+			"Expected: interval between \n\t<" + format(expected.getStart) + "> and <" + format(expected.getEnd) + "> \n"
 		)
+
+		if (actual != null) {
+			description.appendText(
+				"Actual: interval between \n\t<" + format(actual.interval.getStart) + "> and <" + format(actual.interval.getEnd) + "> "
+			)
+		} else {
+			description.appendText(
+				"Actual: <null>"
+			)
+		}
   	}
 
 	private def format(what : DateTime) =
