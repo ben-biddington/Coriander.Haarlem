@@ -153,6 +153,28 @@ class ReleasesControllerTests extends ControllerUnitTest {
 		assertThat(result.getRickrollable, is(true))
 	}
 
+	@Test
+	def no_one_can_be_rickrolled_before_leet_o_clock_gmt {
+		given_the_greenwich_mean_time_is(leetOClock.minusMinutes(1))
+		given_the_plonkers("anyone.else@xxx.com")
+		given_the_current_user_has_email("anyone.else@xxx.com")
+
+		doIt
+
+		assertThat(result.getRickrollable, is(false))
+	}
+
+	@Test
+	def no_one_can_be_rickrolled_after_13_59_gmt {
+		given_the_greenwich_mean_time_is(justBeforeTwo.plusMinutes(1))
+		given_the_plonkers("anyone.else@xxx.com")
+		given_the_current_user_has_email("anyone.else@xxx.com")
+
+		doIt
+
+		assertThat(result.getRickrollable, is(false))
+	}
+
 	private def given_the_greenwich_mean_time_is(when : TimeOfDay) {
 		clock = mock(classOf[Clock])
 
@@ -288,4 +310,5 @@ class ReleasesControllerTests extends ControllerUnitTest {
 	private lazy val theLastNinetyDays 	= new Interval(ninetyDaysAgo, now)
 	private lazy val theLastDay 		= new Interval(yesterday, now)
 	private lazy val leetOClock 		= new TimeOfDay(13, 37)
+	private lazy val justBeforeTwo		= new TimeOfDay(13, 59)
 }
