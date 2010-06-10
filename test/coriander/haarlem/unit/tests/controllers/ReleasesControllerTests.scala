@@ -16,9 +16,12 @@ import coriander.haarlem.models.ReleasesModel
 import jetbrains.buildServer.serverSide.{SFinishedBuild, ProjectManager}
 import coriander.haarlem.core.Convert._
 import org.springframework.web.servlet.ModelAndView
-import org.joda.time.{DateMidnight, Instant, Interval}
 import jetbrains.buildServer.users.SUser
 import javax.servlet.http.{HttpSession, HttpServletResponse, HttpServletRequest}
+import coriander.haarlem.core.scheduling.{SystemClock, Clock}
+import org.joda.time._
+import org.joda.time.DateTimeConstants._
+import org.joda.time.DateTimeZone._
 
 class ReleasesControllerTests extends ControllerUnitTest {
 	@Before
@@ -27,10 +30,11 @@ class ReleasesControllerTests extends ControllerUnitTest {
 		response 			= mock(classOf[HttpServletResponse])
 		pluginDescriptor 	= mock(classOf[PluginDescriptor])
 		buildFinder 		= mock(classOf[IBuildFinder])
+		clock				= new SystemClock
 		result				= null
-		
+		plonkers 			= null
+
 		given_a_build_finder
-		given_a_controller
 	}
 
 	@Test
@@ -139,13 +143,35 @@ class ReleasesControllerTests extends ControllerUnitTest {
 	}
 
 	@Test
-	def anyone_in_the_plonker_list_can_be_rickrolled {
+	def anyone_in_the_plonker_list_can_be_rickrolled_at_leet_o_clock_gmt {
+		given_the_greenwich_mean_time_is(leetOClock)
 		given_the_plonkers("anyone.else@xxx.com")
 		given_the_current_user_has_email("anyone.else@xxx.com")
+
+		doIt
+
+		assertThat(result.getRickrollable, is(true))
+	}
+
+	private def given_the_greenwich_mean_time_is(when : TimeOfDay) {
+		clock = mock(classOf[Clock])
+
+		val millenniumBridgeClosed = new DateTime(
+			2001,
+			JUNE,
+			10,
+			when.getHourOfDay,
+			when.getMinuteOfHour,
+			when.getSecondOfMinute,
+			when.getMillisOfSecond,
+			UTC
+		)
+
+		stub(clock.now).toReturn(millenniumBridgeClosed.toInstant)
 	}
 
 	private def given_the_plonkers(what : String) {
-		controller.setPlonkers(what)
+		plonkers = what
 	}
 
 	private def given_the_current_user_has_email(what : String) {
@@ -163,13 +189,6 @@ class ReleasesControllerTests extends ControllerUnitTest {
 	private def given_a_build_finder_that_returns(what : List[SFinishedBuild]) {
 		stub(buildFinder.find(any(classOf[FilterOptions]))).toReturn(what)
 		stub(buildFinder.last(any(classOf[Int]), any(classOf[FilterOptions]))).toReturn(what)
-	}
-
-	private def given_a_controller {
-		controller = new ReleasesController(
-			pluginDescriptor,
-			buildFinder
-		);
 	}
 
 	private def when_since_not_supplied {
@@ -238,11 +257,25 @@ class ReleasesControllerTests extends ControllerUnitTest {
 			getModel.get("results").asInstanceOf[ReleasesModel]
 	}
 
+	private def controller = {
+		val result = new ReleasesController(
+			pluginDescriptor,
+			buildFinder,
+			clock
+		)
+
+		result.setPlonkers(plonkers)
+
+		result
+	}
+
 	private var projectManager 	: ProjectManager = null
-	private var controller 		: ReleasesController = null
+	private var _controller 		: ReleasesController = null
 	private var buildFinder 	: IBuildFinder = null
+	private var clock 			: Clock = null
 	private var result 			: ReleasesModel = null
 	private var matching 		: String = null
+	private var plonkers 		: String = null
 
 	private lazy val now 				= new Instant
 	private lazy val yesterday 			= new DateMidnight(now).minus(days(1)).toInstant
@@ -254,4 +287,5 @@ class ReleasesControllerTests extends ControllerUnitTest {
 	private lazy val theLastSevenDays 	= new Interval(sevenDaysAgo, now)
 	private lazy val theLastNinetyDays 	= new Interval(ninetyDaysAgo, now)
 	private lazy val theLastDay 		= new Interval(yesterday, now)
+	private lazy val leetOClock 		= new TimeOfDay(13, 37)
 }

@@ -16,16 +16,18 @@ import collection.mutable.ListBuffer
 import java.util.regex.PatternSyntaxException
 import java.util.ArrayList
 import jetbrains.buildServer.users.SUser
-import coriander.haarlem.core.astley.{RickrollEligibility, Rick}
+import coriander.haarlem.core.astley.{Rick}
+import coriander.haarlem.core.scheduling.Clock
 
 class ReleasesController(
 	pluginDescriptor 	: PluginDescriptor,
-	buildFinder 		: IBuildFinder
+	buildFinder 		: IBuildFinder,
+	clock 				: Clock
 ) extends Controller {
 	this.route = DEFAULT_ROUTE
 
 	def setPlonkers(who : String) {
-		plonkers = who.split(",").toList
+		plonkers = if (who != null) who.split(",").toList else List()
 	}
 
 	override protected def doHandle(
@@ -41,6 +43,7 @@ class ReleasesController(
 		if (false == plonkers.isEmpty) {
 			val rick = new Rick(plonkers)
 			val user = request.getSession.getValue("USER_KEY").asInstanceOf[SUser]
+
 			model.setRickrollable(rick.rollable(user, now))	
 		}
 
@@ -157,7 +160,7 @@ class ReleasesController(
 
 	private def parse(now : Instant, what : String) = new InstantParser(now).parse(what)
 
-	private lazy val now 					= new Instant
+	private lazy val now 					= clock.now
 	private lazy val MAX_DAY_COUNT 			= 90
 	private lazy val DEFAULT_BUILD_COUNT 	= 25
 	private lazy val MAX_BUILD_COUNT 		= 200
