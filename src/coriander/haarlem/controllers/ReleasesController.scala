@@ -15,12 +15,18 @@ import jetbrains.buildServer.serverSide.{SFinishedBuild}
 import collection.mutable.ListBuffer
 import java.util.regex.PatternSyntaxException
 import java.util.ArrayList
+import jetbrains.buildServer.users.SUser
+import coriander.haarlem.core.astley.{RickrollEligibility, Rick}
 
 class ReleasesController(
 	pluginDescriptor 	: PluginDescriptor,
 	buildFinder 		: IBuildFinder
 ) extends Controller {
 	this.route = DEFAULT_ROUTE
+
+	def setPlonkers(who : String) {
+		plonkers = who.split(",").toList
+	}
 
 	override protected def doHandle(
 		request : HttpServletRequest,
@@ -31,6 +37,12 @@ class ReleasesController(
 		val model = tryFind(Query(request.getQueryString))
 		
 		errors.foreach(model.addError(_))
+
+		if (false == plonkers.isEmpty) {
+			val rick = new Rick(plonkers)
+			val user = request.getSession.getValue("USER_KEY").asInstanceOf[SUser]
+			model.setRickrollable(rick.rollable(user, now))	
+		}
 
 		new ModelAndView(view, "results", model)
 	}
@@ -157,4 +169,5 @@ class ReleasesController(
 	private lazy val DEFAULT_ROUTE 			= "releases.html"
 	private lazy val matcher 				= new StringMatcher()
 	private var errors						= new ListBuffer[String]()
+	private var plonkers : List[String]		= List()
 }

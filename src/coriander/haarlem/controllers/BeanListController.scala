@@ -1,13 +1,12 @@
 package coriander.haarlem.controllers
 
 import jetbrains.buildServer.controllers.BaseController
-import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import org.springframework.web.servlet.ModelAndView
-import java.io.{PrintWriter}
-import coriander.haarlem.core.Convert
+import coriander.haarlem.core.Convert._
 import jetbrains.buildServer.web.openapi.{PluginDescriptor, WebControllerManager}
 import jetbrains.buildServer.serverSide.SBuildServer
 import coriander.haarlem.models.BeanListModel
+import javax.servlet.http.{HttpSession, HttpServletResponse, HttpServletRequest}
 
 class BeanListController(
 	buildServer : SBuildServer,
@@ -17,21 +16,26 @@ class BeanListController(
 		request : HttpServletRequest,
 		response : HttpServletResponse
 	) : ModelAndView = {
-
-		val test = getApplicationContext().getBean("buildGraphController")
+		val ctx = getApplicationContext
 		
-		val allBeans = getApplicationContext().getBeanDefinitionNames.
-			toList.sort((left, right) => left < right)
+		val allBeans = ctx.getBeanDefinitionNames.toList.sort(_<_).map(name =>
+			name + " (" + ctx.getBean(name) + ") "
+		)
+
+		val session : HttpSession = request.getSession
+		val sessionInfo = session.getValueNames.map(name =>
+			name + " = \"" + session.getValue(name) + "\" (" + session.getValue(name).getClass + ")"
+		)
 
 		val viewPath = pluginDescriptor.getPluginResourcesPath + "server/beans/default.jsp"
 
-		val result = new BeanListModel(Convert.toJavaList(allBeans))
-
-		new ModelAndView(
-			viewPath,
-			"results",
-		    result
+		val result = new BeanListModel(
+			toJavaList(allBeans),
+			ctx.getBeanDefinitionCount,
+			toJavaList(sessionInfo)
 		)
+
+		new ModelAndView(viewPath, "results", result)
 	}
 
 	def register() {
@@ -40,16 +44,4 @@ class BeanListController(
 
 		mgr.registerController("/beans.html", this)
 	}
-	
-	private def printInterfaces(c : java.lang.Object, out : PrintWriter) {
-    	val interfaces = c.getClass.getInterfaces
-
-		if (false == interfaces.isEmpty) {
-			out.write("<ul>")
-			interfaces.foreach(interface => out.write("<li>[" + c.getClass.toString + "]" + interface + "</li>"));
-			out.write("</ul>")
-		}
-	}
-
-	private val BEAN_NAME = "beanListController"
 }

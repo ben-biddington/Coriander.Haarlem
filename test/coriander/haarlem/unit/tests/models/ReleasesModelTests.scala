@@ -4,18 +4,13 @@ import org.scalatest.{Spec, BeforeAndAfterEach}
 import org.scalatest.matchers.{MustMatchers}
 import coriander.haarlem.models.ReleasesModel
 import org.joda.time.Days._
-import org.joda.time.Seconds._
-import org.joda.time.Minutes._
 import org.joda.time.Hours._
-import org.joda.time.DateTimeConstants._
-import org.joda.time.DateTimeZone._
 import jetbrains.buildServer.serverSide.SFinishedBuild
 import coriander.haarlem.core.Convert._
-import collection.mutable.ListBuffer
 import org.mockito.Mockito._
-import org.mockito.Matchers._
 import org.joda.time._
-import jetbrains.buildServer.users.SUser
+import org.joda.time.DateTimeConstants._
+import org.joda.time.DateTimeZone._
 
 class ReleasesModelTests extends Spec
 	with MustMatchers
@@ -165,55 +160,6 @@ class ReleasesModelTests extends Spec
 		}
 	}
 
-	describe("rickrolling") {
-		it("The Crack is okay") {
-			model = new ReleasesModel(null, null, rollTimeStart)
-
-			val phil = newFakeUser("phil.murphy@7digital.com")
-
-			model.getRickrollable(phil) must be(true)
-		}
-
-		it("DRough is okay") {
-			model = new ReleasesModel(null, null, rollTimeStart)
-
-			val dan = newFakeUser("dan.rough@7digital.com")
-
-			model.getRickrollable(dan) must be(true)
-		}
-
-		it("Anyone else is not okay") {
-			model = new ReleasesModel(null, null, rollTimeStart)
-
-			val anyoneElse = newFakeUser("(_xxx_xxx_xxx_)")
-
-			model.getRickrollable(anyoneElse) must be(false)
-		}
-
-		it("only happens between 13:37 and 13:59 GMT") {
-			val before 	= rollTimeStart.minus(minutes(1).toStandardDuration)
-			val during 	= rollTimeStart.plus(minutes(1).toStandardDuration)
-			val after 	= rollTimeEnd.plus(minutes(1).toStandardDuration)
-
-			val rickrollableUser = newFakeUser("phil.murphy@7digital.com")
-
-			model = new ReleasesModel(null, null, before)
-			model.getRickrollable(rickrollableUser) must be(false)
-
-			model = new ReleasesModel(null, null, rollTimeStart)
-			model.getRickrollable(rickrollableUser) must be(true)
-
-			model = new ReleasesModel(null, null, during)
-			model.getRickrollable(rickrollableUser) must be(true)
-
-			model = new ReleasesModel(null, null, rollTimeEnd)
-			model.getRickrollable(rickrollableUser) must be(false)
-
-			model = new ReleasesModel(null, null, after)
-			model.getRickrollable(rickrollableUser) must be(false)
-		}
-	}
-
 	private def given_today_is(when : DateMidnight) {
 		given_today_is(when.toDateTime)
 	}
@@ -249,13 +195,6 @@ class ReleasesModelTests extends Spec
 		model = new ReleasesModel(null, interval, today.toInstant)
 	}
 
-	private def newFakeUser(email : String) = {
-		val result : SUser = mock(classOf[SUser])
-		stub(result.getEmail).toReturn(email)
-
-		result
-	}
-
 	private var model : ReleasesModel = null
 	private val firstBikiniDisplayedInParis = new DateMidnight(1946, JUNE, 3, UTC)
 	private var today : DateTime = null
@@ -264,6 +203,4 @@ class ReleasesModelTests extends Spec
 	private val oneDay = new Period(days(1))
 	private val twoDays = new Period(days(2))
 	private val NEWLINE = System.getProperty("line.separator")
-	private val rollTimeStart = new DateTime(2010, 6, 9, 13, 37, 0, 1, DateTimeZone.UTC).toInstant
-	private val rollTimeEnd = new DateTime(2010, 6, 9, 14, 00, 0, 1, DateTimeZone.UTC).toInstant
 }

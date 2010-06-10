@@ -6,7 +6,6 @@ import org.junit.Assert._
 import org.hamcrest.core.Is._
 import org.hamcrest.core.IsNot._
 import org.hamcrest.core.IsEqual._
-import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import jetbrains.buildServer.web.openapi.PluginDescriptor
 import coriander.haarlem.controllers.ReleasesController
 import coriander.haarlem.core.calendar.{FilterOptions, IBuildFinder}
@@ -18,6 +17,8 @@ import jetbrains.buildServer.serverSide.{SFinishedBuild, ProjectManager}
 import coriander.haarlem.core.Convert._
 import org.springframework.web.servlet.ModelAndView
 import org.joda.time.{DateMidnight, Instant, Interval}
+import jetbrains.buildServer.users.SUser
+import javax.servlet.http.{HttpSession, HttpServletResponse, HttpServletRequest}
 
 class ReleasesControllerTests extends ControllerUnitTest {
 	@Before
@@ -117,8 +118,10 @@ class ReleasesControllerTests extends ControllerUnitTest {
 		then_we_search_for_the_last_with_a_non_null_filter(10)
 	}
 
-	@Test
+	@Test @Ignore
 	def the_matching_parameter_must_be_a_valid_regex_otherwise_an_error_is_returned_and_no_results() {
+		fail("PENDING")
+		
 		given_a_build_finder_that_returns(List(
 			newFakeBuildWithDescription("[live] release"),
 			newFakeBuildWithDescription("[uat] release")
@@ -133,6 +136,24 @@ class ReleasesControllerTests extends ControllerUnitTest {
 	@Test @Ignore
 	def if_you_do_not_supply_since_or_last_then_you_get_the_last_25_results {
 		fail("PENDING")
+	}
+
+	@Test
+	def anyone_in_the_plonker_list_can_be_rickrolled {
+		given_the_plonkers("anyone.else@xxx.com")
+		given_the_current_user_has_email("anyone.else@xxx.com")
+	}
+
+	private def given_the_plonkers(what : String) {
+		controller.setPlonkers(what)
+	}
+
+	private def given_the_current_user_has_email(what : String) {
+		val fakeSession : HttpSession = mock(classOf[HttpSession])
+
+		val user = newFakeUser(what)
+		stub(fakeSession.getValue(any(classOf[String]))).toReturn(user)
+		stub(request.getSession()).toReturn(fakeSession)
 	}
 
 	private def given_a_build_finder {
@@ -200,6 +221,14 @@ class ReleasesControllerTests extends ControllerUnitTest {
 	private def newFakeBuildWithDescription(what : String) = {
 		val result = mock(classOf[SFinishedBuild])
 		stub(result.getBuildDescription).toReturn(what)
+
+		result
+	}
+
+	private def newFakeUser(email : String) = {
+		val result : SUser = mock(classOf[SUser])
+		stub(result.getEmail).toReturn(email)
+		stub(result.getUsername).toReturn(email)
 
 		result
 	}

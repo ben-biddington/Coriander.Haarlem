@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="jarify" basedir="..\">
+<project name="coriander.haarlem" basedir="..\">
     <property environment="env"/>
     <property name="app.name" value="Coriander.Haarlem"/>
     <property name="plugin.name" value="coriander-haarlem"/>
@@ -116,9 +116,11 @@
         <echo message="The teamcity build root has been set to ${teamcity.buildserver.root}" />
     </target>
 
-    <target name="test" description="Prints environment variables">
+    <target name="info" description="Prints environment variables">
         <property environment="env"/>
-        <echo message="${env.HOME}"/>
-        <echo message="${zip.home}"/>
+        <echo message="ENV.HOME:            ${env.HOME}"/>
+        <echo message="Application name:    ${app.name} v${app.version}"/>
+        <echo message="Jar:                 ${jar.name}"/>
+        <echo message="TeamCity plugin:     ${plugin.name}"/>
     </target>
 </project>
