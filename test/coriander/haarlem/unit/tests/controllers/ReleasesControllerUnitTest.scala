@@ -1,12 +1,12 @@
-package coriander.haarlem.controllers
+package coriander.haarlem.unit.tests.controllers
 
-import coriander.haarlem.unit.tests.controllers.ControllerUnitTest
 import org.joda.time.{TimeOfDay, Interval, DateMidnight, Instant}
 import coriander.haarlem.models.ReleasesModel
 import coriander.haarlem.core.scheduling.Clock
 import coriander.haarlem.core.calendar.IBuildFinder
 import jetbrains.buildServer.serverSide.ProjectManager
 import org.joda.time.Days._
+import coriander.haarlem.controllers.ReleasesController
 
 class ReleasesControllerUnitTest extends ControllerUnitTest {
 	protected def doIt {
