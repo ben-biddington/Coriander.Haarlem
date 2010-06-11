@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import coriander.haarlem.core.scheduling.{SystemClock}
 
-class ReleasesControllerTests extends ReleasesControllerUnitTest {
+class Matching extends ReleasesControllerUnitTest {
 	@Before
 	def before {
 		request 			= mock(classOf[HttpServletRequest])
