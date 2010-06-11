@@ -7,9 +7,7 @@ import org.hamcrest.core.Is._
 import org.hamcrest.core.IsNot._
 import org.hamcrest.core.IsEqual._
 import jetbrains.buildServer.web.openapi.PluginDescriptor
-import coriander.haarlem.controllers.ReleasesController
 import coriander.haarlem.core.calendar.{FilterOptions, IBuildFinder}
-import org.joda.time.Days._
 import coriander.haarlem.matchers.FilterOptionsMatcher._
 import org.junit.{Ignore, Before, Test}
 import coriander.haarlem.models.ReleasesModel
@@ -22,8 +20,9 @@ import coriander.haarlem.core.scheduling.{SystemClock, Clock}
 import org.joda.time._
 import org.joda.time.DateTimeConstants._
 import org.joda.time.DateTimeZone._
+import coriander.haarlem.controllers.{ReleasesControllerUnitTest, ReleasesController}
 
-class ReleasesControllerTests extends ControllerUnitTest {
+class ReleasesControllerTests extends ReleasesControllerUnitTest {
 	@Before
 	def before {
 		request 			= mock(classOf[HttpServletRequest])
@@ -143,9 +142,18 @@ class ReleasesControllerTests extends ControllerUnitTest {
 		assertThat(result.getBuilds.size, is(equalTo(0)))
 	}
 
-	@Test @Ignore
+	@Test
 	def if_you_do_not_supply_since_or_last_then_you_get_the_last_25_results {
-		fail("PENDING")
+		doIt
+
+		then_we_search_for_the_last_with_no_filter_options(25)
+	}
+
+	@Test
+	def if_you_supply_matching_but_not_since_or_last_then_you_get_at_most_250_results {
+		doIt
+
+		then_we_search_for_the_last_with_no_filter_options(25)
 	}
 
 	@Test
@@ -279,42 +287,4 @@ class ReleasesControllerTests extends ControllerUnitTest {
 
 		result
 	}
-
-	private def doIt {
-		result = controller.go(request, response).
-			getModel.get("results").asInstanceOf[ReleasesModel]
-	}
-
-	private def controller = {
-		val result = new ReleasesController(
-			pluginDescriptor,
-			buildFinder,
-			clock
-		)
-
-		result.setPlonkers(plonkers)
-
-		result
-	}
-
-	private var projectManager 	: ProjectManager = null
-	private var _controller 		: ReleasesController = null
-	private var buildFinder 	: IBuildFinder = null
-	private var clock 			: Clock = null
-	private var result 			: ReleasesModel = null
-	private var matching 		: String = null
-	private var plonkers 		: String = null
-
-	private lazy val now 				= new Instant
-	private lazy val yesterday 			= new DateMidnight(now).minus(days(1)).toInstant
-	private lazy val fourteenDaysAgo 	= new DateMidnight(now).minus(days(14)).toInstant
-	private lazy val sevenDaysAgo 		= new DateMidnight(now).minus(days(7)).toInstant
-	private lazy val ninetyDaysAgo 		= new DateMidnight(now).minus(days(90)).toInstant
-	private lazy val today 				= new Interval(new DateMidnight(now), now)
-	private lazy val theLastTwoWeeks 	= new Interval(fourteenDaysAgo, now)
-	private lazy val theLastSevenDays 	= new Interval(sevenDaysAgo, now)
-	private lazy val theLastNinetyDays 	= new Interval(ninetyDaysAgo, now)
-	private lazy val theLastDay 		= new Interval(yesterday, now)
-	private lazy val leetOClock 		= new TimeOfDay(13, 37)
-	private lazy val justBeforeTwo		= new TimeOfDay(13, 59)
 }
