@@ -94,6 +94,12 @@ class ReleasesControllerTests extends ControllerUnitTest {
 		when_last_supplied_as(201)
 		then_we_search_for_the_last_with_no_filter_options(200)
 	}
+
+	@Test
+	def the_last_parameter_ignores_sign {
+		when_last_supplied_as(-1)
+		then_we_search_for_the_last_with_no_filter_options(1)
+	}
 	
 	@Test
 	def accepts_matching_parameter {

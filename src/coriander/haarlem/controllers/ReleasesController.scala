@@ -71,7 +71,7 @@ class ReleasesController(
 		var interval = new Interval(0L, 0L)
 		val matching = if (query.containsWithValue("matching")) query.value("matching") else null
 		var lastHowMany = if (query.containsWithValue("last"))
-			parseInt(query.value("last"))
+			Math.abs(parseInt(query.value("last")))
 			else DEFAULT_BUILD_COUNT
 		val since = query.value("since")
 		
