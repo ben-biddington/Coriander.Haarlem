@@ -10,14 +10,9 @@ import org.hamcrest.core.IsEqual._
 import jetbrains.buildServer.web.openapi.PluginDescriptor
 import coriander.haarlem.core.calendar.{IBuildFinder}
 import coriander.haarlem.models.ReleasesModel
-import coriander.haarlem.core.Convert._
 import org.springframework.web.servlet.ModelAndView
-import jetbrains.buildServer.users.SUser
-import javax.servlet.http.{HttpSession, HttpServletResponse, HttpServletRequest}
-import coriander.haarlem.core.scheduling.{SystemClock, Clock}
-import org.joda.time._
-import org.joda.time.DateTimeConstants._
-import org.joda.time.DateTimeZone._
+import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
+import coriander.haarlem.core.scheduling.{SystemClock}
 
 class ReleasesControllerTests extends ReleasesControllerUnitTest {
 	@Before
@@ -34,29 +29,11 @@ class ReleasesControllerTests extends ReleasesControllerUnitTest {
 	}
 
 	@Test
-	def accepts_last_parameter {
-		when_last_supplied_as(10)
-		then_we_search_for_the_last_with_no_filter_options(10)
-	}
-
-	@Test
-	def you_can_only_ask_for_up_to_the_last_200_builds_for_performance_reasons {
-		when_last_supplied_as(201)
-		then_we_search_for_the_last_with_no_filter_options(200)
-	}
-
-	@Test
-	def the_last_parameter_ignores_sign {
-		when_last_supplied_as(-1)
-		then_we_search_for_the_last_with_no_filter_options(1)
-	}
-	
-	@Test
 	def accepts_matching_parameter {
 		when_matching_supplied_with_required_count_as(10, "live")
 		then_we_search_for_the_last_with_a_non_null_filter(10)
 	}
-
+	
 	@Test
 	def the_matching_parameter_is_a_regex_pattern {
 		given_a_build_finder_that_returns(List(
@@ -105,12 +82,6 @@ class ReleasesControllerTests extends ReleasesControllerUnitTest {
 		doIt
 
 		then_we_search_for_the_last_with_no_filter_options(25)
-	}
-
-	private def when_last_supplied_as(howMany : Int) {
-		stub(request.getQueryString).toReturn("last=" + howMany.toString)
-
-		doIt
 	}
 
 	private def when_matching_supplied_with_required_count_as(howMany : Int, what : String) {
