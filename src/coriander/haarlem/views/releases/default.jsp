@@ -14,7 +14,8 @@
                         
 <c:set var="loadingWarningDisabled" value="true" scope="request"/>
 <c:set var="showCalendars" value="false" scope="request"/>
-<c:set var="title" value="Recent releases" scope="request"/>
+<c:set var="title" value="${results.title}" scope="request"/>
+<c:set var="description" value="${results.description}" scope="request"/>
 <jsp:useBean id="currentUser" type="jetbrains.buildServer.users.SUser" scope="request"/>
 <bs:page>
     <jsp:attribute name="head_include">
@@ -54,8 +55,7 @@
             /js/bs/buildType.js
         </bs:linkScript>
         <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Vollkorn|Lobster|Droid+Serif" />
-        <link rel="stylesheet" type="text/css" href="releases.css" />
-
+        
         <style type="text/css">
             div#results { }
 
@@ -121,6 +121,16 @@
 
             form label { float:none; vertical-align:center; }
         </style>
+        <script type="text/javascript">
+            <!--
+            BS.Navigation.items = [
+                {
+                    title: "<bs:escapeForJs text="${title}" forHTMLAttribute="true"/> <small><bs:escapeForJs text="${description}" forHTMLAttribute="true"/></small>",
+                    selected: true
+                }
+            ];
+            //-->
+        </script>
     </jsp:attribute>
 
     <jsp:attribute name="body_include">

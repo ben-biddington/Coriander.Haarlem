@@ -28,13 +28,13 @@ class Rickrolling extends ReleasesControllerUnitTest {
 		plonkers 			= null
 
 		given_a_build_finder
+		given_the_plonkers("anyone.else@xxx.com")
+		given_the_current_user_has_email("anyone.else@xxx.com")
 	}
 
 	@Test
 	def anyone_in_the_plonker_list_can_be_rickrolled_at_leet_o_clock_gmt {
 		given_the_greenwich_mean_time_is(leetOClock)
-		given_the_plonkers("anyone.else@xxx.com")
-		given_the_current_user_has_email("anyone.else@xxx.com")
 
 		doIt
 
@@ -44,8 +44,6 @@ class Rickrolling extends ReleasesControllerUnitTest {
 	@Test
 	def no_one_can_be_rickrolled_before_leet_o_clock_gmt {
 		given_the_greenwich_mean_time_is(leetOClock.minusMinutes(1))
-		given_the_plonkers("anyone.else@xxx.com")
-		given_the_current_user_has_email("anyone.else@xxx.com")
 
 		doIt
 
@@ -55,8 +53,6 @@ class Rickrolling extends ReleasesControllerUnitTest {
 	@Test
 	def no_one_can_be_rickrolled_after_13_59_gmt {
 		given_the_greenwich_mean_time_is(justBeforeTwo.plusMinutes(1))
-		given_the_plonkers("anyone.else@xxx.com")
-		given_the_current_user_has_email("anyone.else@xxx.com")
 
 		doIt
 

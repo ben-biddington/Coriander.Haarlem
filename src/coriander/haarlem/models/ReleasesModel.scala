@@ -31,7 +31,9 @@ class ReleasesModel(
 	def clearErrors 			= errors.clear
 	def getRickrollable 		= rickroll
 	def setRickrollable(on : Boolean) = rickroll = on
-
+	def getTitle 				= title
+	def getDescription 			= description
+	
 	private def getTotalDays(interval : Interval) = {
 		val days = daysIn(interval).getDays
 		val hours = interval.toPeriod.getHours
@@ -49,7 +51,9 @@ class ReleasesModel(
 		else interval.getEnd.toLocalDateTime.toString("EEE, dd MMM yyyy")
 	}
 
-	private var errors = new ListBuffer[String]()
-	private var rickroll = false
-	private val NEWLINE = System.getProperty("line.separator")
+	private var errors 		= new ListBuffer[String]()
+	private var rickroll 	= false
+	private val NEWLINE 	= System.getProperty("line.separator")
+	var title 				= "Recent releases search"
+	var description 		= "Search for builds across all projects"
 }

@@ -26,6 +26,8 @@ class ReleasesController(
 ) extends Controller {
 	this.route = DEFAULT_ROUTE
 
+	def setTitle(what : String) = title = what
+	def setDescription(what : String) = description = what
 	def setPlonkers(who : String) {
 		plonkers = if (who != null) who.split(",").toList else List()
 	}
@@ -46,6 +48,9 @@ class ReleasesController(
 
 			model.setRickrollable(rick.rollable(user, now))	
 		}
+
+		model.title 		= title
+		model.description 	= description
 
 		new ModelAndView(view, "results", model)
 	}
@@ -173,4 +178,6 @@ class ReleasesController(
 	private lazy val matcher 				= new StringMatcher()
 	private var errors						= new ListBuffer[String]()
 	private var plonkers : List[String]		= List()
+	private var title 						= ""
+	private var description					= ""
 }

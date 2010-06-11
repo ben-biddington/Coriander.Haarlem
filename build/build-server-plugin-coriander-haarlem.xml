@@ -2,10 +2,10 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans default-autowire="constructor">
-    <bean id="clock" class="coriander.haarlem.core.scheduling.SystemClock" />
-    <bean id="beanListController" class="coriander.haarlem.controllers.BeanListController" init-method="register"/>
     <bean id="carrotTab" class="coriander.haarlem.tabs.CarrotTab" init-method="register" />
     <bean id="stickTab" class="coriander.haarlem.tabs.StickTab" init-method="register" />
+    <bean id="metricsTab" class="coriander.haarlem.tabs.MetricsTab" init-method="register" />
+    <bean id="beanListController" class="coriander.haarlem.controllers.BeanListController" init-method="register"/>
     <bean id="dilbertController" class="coriander.haarlem.controllers.DilbertController" init-method="register">
         <property name="cacheSeconds" value="7200"/>
         <property name="supportedMethods" value="GET"/>
@@ -20,18 +20,20 @@
         <property name="cacheSeconds" value="7200"/>
         <property name="supportedMethods" value="GET"/>
     </bean>
-    <bean id="metricsTab" class="coriander.haarlem.tabs.MetricsTab" init-method="register" />
     <bean id="releasesController" class="coriander.haarlem.controllers.ReleasesController" init-method="register">
         <property name="cacheSeconds" value="90" />
         <property name="supportedMethods" value="GET" />
         <property name="route" value="/releases.html"/>
         <property name="plonkers" value="dan.rough@7digital.com,phil.murphy@7digital.com"/>
+        <property name="title" value="Build search"/>
+        <property name="description" value="Find builds across all projects"/>
     </bean>
-    <bean id="buildFinder" class="coriander.haarlem.core.calendar.BuildFinder" />
     <bean id="greatestHitsController" class="coriander.haarlem.controllers.GreatestHitsController" init-method="register">
         <property name="cacheSeconds" value="90" />
         <property name="supportedMethods" value="GET" />
         <property name="route" value="/phil_and_ben_rule.html"/>
     </bean>
+    <bean id="buildFinder" class="coriander.haarlem.core.calendar.BuildFinder" />
+    <bean id="clock" class="coriander.haarlem.core.scheduling.SystemClock" />
 </beans>
         
