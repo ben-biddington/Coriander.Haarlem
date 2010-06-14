@@ -83,6 +83,11 @@ class Since extends ReleasesControllerUnitTest {
 		verify(clock, times(2)).now
 	}
 
+	@Test @Ignore
+	def if_last_is_also_supplied_then_you_get_a_truncated_result_set {
+		fail("PENDING")		
+	}
+
 	private def when_since_not_supplied {
 		when_since_supplied_as("")
 	}

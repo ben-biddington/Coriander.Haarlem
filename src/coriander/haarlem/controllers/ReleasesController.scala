@@ -67,7 +67,9 @@ class ReleasesController(
 		try {
 			model = find(query)
 		} catch {
-			case e : PatternSyntaxException => error("Invalid regexp")
+			case e : PatternSyntaxException => error(
+				e.getDescription + " Pattern: " + e.getPattern
+			)
 		}
 
 		model

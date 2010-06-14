@@ -4,6 +4,7 @@ import util.matching.Regex
 import java.lang.Integer._
 import org.joda.time.Days._
 import org.joda.time.{DateMidnight, Instant}
+import java.util.regex.PatternSyntaxException
 
 class InstantParser(val now : Instant) {
 	def parse(what : String) : Instant = {
@@ -21,9 +22,11 @@ class InstantParser(val now : Instant) {
 		val theMatch = daysOrWeeksPattern.findFirstMatchIn(what)
 
 		if (theMatch == None)
-			throw new Exception(
+			throw new PatternSyntaxException(
 				"Parse failed. " +
-				"The value <" + what + "> did not match expected pattern."
+				"The value <" + what + "> did not match expected pattern.",
+				daysOrWeeksPattern.toString,
+				0
 			)
 
 		val count = parseInt(theMatch.get.group("count"))

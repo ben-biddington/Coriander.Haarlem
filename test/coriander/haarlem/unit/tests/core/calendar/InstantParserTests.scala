@@ -6,6 +6,7 @@ import coriander.haarlem.core.calendar.InstantParser
 import org.joda.time.DateTimeFieldType._
 import org.scalatest.matchers.MustMatchers
 import org.joda.time.{DateMidnight, Interval, Instant}
+import java.util.regex.PatternSyntaxException
 
 class InstantParserTests extends Spec
 	with MustMatchers
@@ -90,8 +91,8 @@ class InstantParserTests extends Spec
 	}
 
 	describe("Parsing a string that does not match expected pattern") {
-		it("throws an exception") {
-			intercept[Exception] {
+		it("throws a pattern syntax exception") {
+			intercept[PatternSyntaxException] {
 				when_parsing("xxx_clearly_not_right_pattern_xxx")
 			}
 		}
@@ -112,10 +113,6 @@ class InstantParserTests extends Spec
 
 			when_parsing("YESTERDay")
 			then_result_is(midnightYesterday.toInstant)
-		}
-
-		it("things like \"yesterday\" or \"last week\"") {
-			(pending)
 		}
 	}
 
