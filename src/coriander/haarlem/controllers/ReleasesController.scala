@@ -36,6 +36,8 @@ class ReleasesController(
 		request : HttpServletRequest,
 		response : HttpServletResponse
 	) : ModelAndView = {
+		now = clock.now
+		
 		errors.clear
 		
 		val model = tryFind(Query(request.getQueryString))
@@ -165,17 +167,17 @@ class ReleasesController(
 
 	private def parse(now : Instant, what : String) = new InstantParser(now).parse(what)
 
-	private lazy val now 					= clock.now
-	private lazy val MAX_DAY_COUNT 			= 90
-	private lazy val DEFAULT_BUILD_COUNT 	= 25
-	private lazy val MAX_BUILD_COUNT 		= 200
-	private lazy val view 					= pluginDescriptor.getPluginResourcesPath + "/server/releases/default.jsp"
-	private lazy val sevenDaysAgo 			= new DateMidnight(new Instant).minus(days(7)).toInstant
-	private lazy val ninetyDaysAgo 			= new DateMidnight(new Instant).minus(days(MAX_DAY_COUNT)).toInstant
-	private lazy val DEFAULT_DAYS_AGO 		= sevenDaysAgo
-	private lazy val MAX_DAYS_AGO 			= ninetyDaysAgo
-	private lazy val DEFAULT_ROUTE 			= "releases.html"
-	private lazy val matcher 				= new StringMatcher()
+	private var now	: Instant 			= null
+	private val MAX_DAY_COUNT 			= 90
+	private val DEFAULT_BUILD_COUNT 	= 25
+	private val MAX_BUILD_COUNT 		= 200
+	private val view 					= pluginDescriptor.getPluginResourcesPath + "/server/releases/default.jsp"
+	private val sevenDaysAgo 			= new DateMidnight(new Instant).minus(days(7)).toInstant
+	private val ninetyDaysAgo 			= new DateMidnight(new Instant).minus(days(MAX_DAY_COUNT)).toInstant
+	private val DEFAULT_DAYS_AGO 		= sevenDaysAgo
+	private val MAX_DAYS_AGO 			= ninetyDaysAgo
+	private val DEFAULT_ROUTE 			= "releases.html"
+	private val matcher 				= new StringMatcher()
 	private var errors						= new ListBuffer[String]()
 	private var plonkers : List[String]		= List()
 	private var title 						= ""

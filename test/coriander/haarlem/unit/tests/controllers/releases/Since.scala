@@ -6,11 +6,11 @@ import org.junit.Assert._
 import org.hamcrest.core.Is._
 import org.hamcrest.core.IsNot._
 import org.hamcrest.core.IsEqual._
-import coriander.haarlem.core.scheduling.SystemClock
 import coriander.haarlem.core.calendar.IBuildFinder
 import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 import jetbrains.buildServer.web.openapi.PluginDescriptor
 import org.junit.{Test, Ignore, Before}
+import coriander.haarlem.core.scheduling.{Clock, SystemClock}
 
 class Since extends ReleasesControllerUnitTest {
 	@Before
@@ -70,6 +70,17 @@ class Since extends ReleasesControllerUnitTest {
 			"The requested number of days exceeds the limit of <90>, " +
 			"results have been truncated"
 		)
+	}
+
+	@Test
+	def controller_refreshes_its_time_on_each_call_because_instance_may_have_been_reused {
+		clock = mock(classOf[Clock])
+		
+		when_since_supplied_as("1-days-ago")
+
+		controller.go(request, response)
+
+		verify(clock, times(2)).now
 	}
 
 	private def when_since_not_supplied {
