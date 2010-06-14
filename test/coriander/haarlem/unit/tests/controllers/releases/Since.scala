@@ -85,6 +85,7 @@ class Since extends ReleasesControllerUnitTest {
 
 	@Test @Ignore
 	def if_last_is_also_supplied_then_you_get_a_truncated_result_set {
+		// Example: /since=yesterday&last=10 should give the newest 10 builds since yesterday
 		fail("PENDING")		
 	}
 
